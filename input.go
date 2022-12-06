@@ -35,6 +35,7 @@ func filename(day int) string {
 	return fmt.Sprintf("testdata/day%02d.txt", day)
 }
 
+/*
 // linesAsNumber converts strings into integer.
 func linesAsNumbers(lines []string) ([]int, error) {
 	var is []int
@@ -56,6 +57,7 @@ func numbersFromFilename(filename string) ([]int, error) {
 	}
 	return linesAsNumbers(ls)
 }
+*/
 
 // ParseCommaSeparatedNumbers returns a partial list in case parsing fails.
 func ParseCommaSeparatedNumbers(s string) ([]int, error) {

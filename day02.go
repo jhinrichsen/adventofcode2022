@@ -30,7 +30,7 @@ var scores = map[string]int{
 func Day02(lines []string) int {
 	sum := 0
 	for _, line := range lines {
-		score, _ := scores[line]
+		score := scores[line]
 		sum += score
 	}
 	return sum
