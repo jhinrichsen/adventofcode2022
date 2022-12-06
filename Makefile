@@ -1,21 +1,27 @@
+GO = CGO_ENABLED=0 go
+
 .PHONY: all
 all: lint test
 
+.PHONY: setup
+setup:
+	$(GO) install honnef.co/go/tools/cmd/staticcheck@latest
+	$(GO) get github.com/boumenot/gocover-cobertura
+
 .PHONY: bench
 bench:
-	CGO_ENABLED=0 go test -bench=. -run="" -benchmem
+	$(GO) test -bench=. -run="" -benchmem
 
 .PHONY: lint
 lint:
-	CGO_ENABLED=0 go vet
-	CGO_ENABLED=0 staticcheck
+	$(GO) vet
+	staticcheck
 
 .PHONY: test
 test:
-	CGO_ENABLED=0 go test -coverprofile=coverage.txt -covermode count gitlab.com/jhinrichsen/adventofcode2022
-	gocover-cobertura < coverage.txt > coverage.xml
+	$(GO) test -coverprofile=coverage.txt -covermode count gitlab.com/jhinrichsen/adventofcode2022
+	$(GO) run github.com/boumenot/gocover-cobertura < coverage.txt > coverage.xml
 
 prof:
-	go test -bench=. -benchmem -memprofile mprofile.out -cpuprofile cprofile.out
-	go tool pprof cpu.profile
-	# go tool pprof mem.profile
+	$(GO) -bench=. -benchmem -memprofile mprofile.out -cpuprofile cprofile.out
+	$(GO) pprof cpu.profile

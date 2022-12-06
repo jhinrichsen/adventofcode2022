@@ -16,6 +16,8 @@ include:
 
 test-job:
   stage: test
+  before_script:
+    - make setup
   script:
     - make lint test
   artifacts:
