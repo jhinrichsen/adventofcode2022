@@ -16,5 +16,7 @@ include:
 
 test-job:
   stage: test
+  before_script:
+    - go install honnef.co/go/tools/cmd/staticcheck@latest
   script:
     - make lint test
