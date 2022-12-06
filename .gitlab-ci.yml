@@ -16,7 +16,10 @@ include:
 
 test-job:
   stage: test
-  before_script:
-    - go install honnef.co/go/tools/cmd/staticcheck@latest
   script:
     - make lint test
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml

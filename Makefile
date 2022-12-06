@@ -12,7 +12,8 @@ lint:
 
 .PHONY: test
 test:
-	CGO_ENABLED=0 go test -cover
+	CGO_ENABLED=0 go test -coverprofile=coverage.txt -covermode count gitlab.com/jhinrichsen/adventofcode2022
+	gocover-cobertura < coverage.txt > coverage.xml
 
 prof:
 	go test -bench=. -benchmem -memprofile mprofile.out -cpuprofile cprofile.out
