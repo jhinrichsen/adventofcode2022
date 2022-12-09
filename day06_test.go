@@ -93,3 +93,15 @@ func BenchmarkDay06Part2(b *testing.B) {
 		Day06(s, day06SizePart2)
 	}
 }
+
+func BenchmarkDay06Window100(b *testing.B) {
+	buf, err := os.ReadFile(filename(6))
+	if err != nil {
+		b.Fatal(err)
+	}
+	s := string(buf)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		day06OnesCount(s, 100)
+	}
+}

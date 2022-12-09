@@ -27,8 +27,8 @@ for a solution avoid looking at those.
 | 3  | 1 |
 | 4  | 2 |
 | 5  | 1 |
-| 6  | 1 |
-| 7  | 2 |
+| 6  | 1 | 1
+| 7  | 2 | 1
 | 8  |  |
 | 9  |  |
 | 10 |  |
@@ -149,7 +149,7 @@ Much better. Want to know what happens under the hood?
 00108 (day06.go:52)	MOVL	DI, AX
 00110 (day06.go:52)	PCDATA	$1, $0
 00110 (day06.go:52)	CALL	math/bits.OnesCount32(SB)      ; call Go based implementation
-00115 (day06.go:52)	MOVQ	"".size+64(SP), CX             ; clean up stack
+00115 (day06.go:52)	MOVQ	"".size+64(SP), CX
 ----
 
 == Day 07
@@ -165,3 +165,4 @@ I do not cater for empty intermediate directories, i.e. i don't account for `b`
 in `/a/b/c/d.ext` if `b` has no files in it.
 Second try works.
 
+Second puzzle unit tests ran successfully the first time.

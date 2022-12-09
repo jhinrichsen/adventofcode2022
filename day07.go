@@ -1,14 +1,13 @@
 package adventofcode2022
 
 import (
+	"math"
 	"path/filepath"
 	"strconv"
 	"strings"
 )
 
-func Day07(lines []string) int {
-	const limit = 100000
-
+func Day07(lines []string, part1 bool) int {
 	var wd string                 // working directory
 	dirs := make(map[string]bool) // list of directories
 	sizes := make(map[string]int) // filename -> size
@@ -47,12 +46,38 @@ func Day07(lines []string) int {
 		}
 	}
 
-	// filter and sum
-	sum := 0
-	for _, size := range ds {
-		if size <= limit {
-			sum += size
+	if part1 {
+		const limit = 100000
+
+		// filter and sum
+		sum := 0
+		for _, size := range ds {
+			if size <= limit {
+				sum += size
+			}
+		}
+		return sum
+	}
+
+	// part 2
+	const (
+		available = 70_000_000
+		required  = 30_000_000
+	)
+	used := ds["/"]
+	free := available - used
+	scratch := required - free
+	if scratch < 0 {
+		return 0
+	}
+	var n int
+	Δmin := math.MaxInt
+	for _, v := range ds {
+		Δ := v - scratch
+		if Δ > 0 && Δ < Δmin {
+			Δmin = Δ
+			n = v
 		}
 	}
-	return sum
+	return n
 }
