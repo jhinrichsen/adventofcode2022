@@ -26,7 +26,7 @@ for a solution avoid looking at those.
 | 2  | 1 | 1
 | 3  | 1 |
 | 4  | 2 |
-| 5  |  |
+| 5  | 1 |
 | 6  |  |
 | 7  |  |
 | 8  |  |
@@ -100,3 +100,14 @@ not.
 	// Error: [4-94] [3-3] marked as fully contained. Spot the error?
 	return b1 <= a1 && b2 <= a2 || a1 <= b1 && b2 <= a2
 ----
+
+== Day 5
+During unit testing, i corrected these two errors:
+
+- Stacks are 1-based, not 0-based
+- The result consists of the _last_ crate of each stack, not the _first_
+
+----
+BenchmarkDay05-8   	  529513	      2985 ns/op	    4145 B/op	       3 allocs/op
+----
+
