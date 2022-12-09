@@ -8,11 +8,6 @@ import (
 	"strings"
 )
 
-func parseStacks(r io.Reader) []string {
-	var ss []string
-	return ss
-}
-
 func Day05(r io.Reader) (string, error) {
 	const width = len("[A] ")
 
