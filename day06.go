@@ -1,6 +1,13 @@
 package adventofcode2022
 
+import "math/bits"
+
 func Day06(s string, size int) int {
+	// return day06Hashmap(s, size)
+	return day06OnesCount(s, size)
+}
+
+func day06Hashmap(s string, size int) int {
 	window := make(map[byte]int)
 	add := func(c byte) {
 		window[c] += 1
@@ -31,6 +38,19 @@ func Day06(s string, size int) int {
 		add(s[i])
 		if hasMarker() {
 			return i + 1 // 1-based position
+		}
+	}
+	return 0
+}
+
+func day06OnesCount(s string, size int) int {
+	for i := 0; i < len(s)-size; i++ {
+		var marker uint32
+		for j := i; j < i+size; j++ {
+			marker |= 1 << (s[j] - 'a')
+		}
+		if bits.OnesCount32(marker) == size {
+			return i + size
 		}
 	}
 	return 0
