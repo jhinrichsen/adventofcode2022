@@ -1,4 +1,4 @@
-package adventofcode2021
+package adventofcode2022
 
 import (
 	"sort"

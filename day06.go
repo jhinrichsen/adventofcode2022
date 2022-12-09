@@ -1,4 +1,4 @@
-package adventofcode2021
+package adventofcode2022
 
 func Day06(s string, size int) int {
 	window := make(map[byte]int)

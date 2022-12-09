@@ -1,4 +1,4 @@
-package adventofcode2021
+package adventofcode2022
 
 // In absence of a generic Reverse() in Go's stdlib...
 // https://github.com/golang/go/issues/36887

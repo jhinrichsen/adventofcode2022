@@ -1,4 +1,4 @@
-package adventofcode2021
+package adventofcode2022
 
 func Day03(lines []string) int {
 	sum := 0
