@@ -118,5 +118,11 @@ Benchmark for puzzle input 1, 4 KB/ 4096 Bytes per op:
 BenchmarkDay06-8   	   10000	    105913 ns/op	       0 B/op	       0 allocs/op
 ----
 
+Generic implementation for part 1 and part 2:
+----
+BenchmarkDay06Part1-8   	   10270	    131068 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay06Part2-8   	    5142	    199927 ns/op	     653 B/op	       5 allocs/op
+----
+
 26 ns per byte, equals 39 MHz.
 

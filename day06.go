@@ -1,7 +1,6 @@
 package adventofcode2021
 
-func Day06(s string) int {
-	const size = 4
+func Day06(s string, size int) int {
 	window := make(map[byte]int)
 	add := func(c byte) {
 		window[c] += 1
