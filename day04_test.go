@@ -48,7 +48,7 @@ func TestDay04Example(t *testing.T) {
 }
 
 func TestDay04(t *testing.T) {
-	const want = 500 // too high
+	const want = 500
 	lines, err := linesFromFilename(filename(4))
 	if err != nil {
 		t.Fatal(err)

@@ -2,7 +2,6 @@ package adventofcode2021
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -34,7 +33,6 @@ func Day04(lines []string) (int, error) {
 				i+1, err)
 		}
 		if Contains(x1, x2, x3, x4) {
-			log.Printf("contained: [%d-%d] [%d-%d]\n", x1, x2, x3, x4)
 			count++
 		}
 	}
