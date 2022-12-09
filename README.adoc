@@ -28,7 +28,7 @@ for a solution avoid looking at those.
 | 4  | 2 |
 | 5  | 1 |
 | 6  | 1 |
-| 7  |  |
+| 7  | 2 |
 | 8  |  |
 | 9  |  |
 | 10 |  |
@@ -135,4 +135,33 @@ BenchmarkDay06Part1-8   	  156498	      7430 ns/op	       0 B/op	       0 allocs
 BenchmarkDay06Part2-8   	   40934	     27027 ns/op	       0 B/op	       0 allocs/op
 ----
 
-Much better.
+Much better. Want to know what happens under the hood?
+
+----
+00079 (day06.go:49)	MOVBQZX	runtime.x86HasPOPCNT(SB), DX   ; check if CPU supports POPCNT instruction
+00087 (day06.go:49)	TESTL	DX, DX
+00089 (day06.go:52)	JEQ	98                             ; no, continue at 98
+00091 (day06.go:52)	POPCNTL	DI, DI                         ; yes, execute
+00095 (day06.go:52)	NOP
+00096 (day06.go:52)	JMP	151                            ; continue next command
+00098 (day06.go:47)	MOVQ	BX, ""..autotmp_8+24(SP)       ; prepare stack based function call
+00103 (day06.go:49)	MOVQ	R8, ""..autotmp_9+16(SP)
+00108 (day06.go:52)	MOVL	DI, AX
+00110 (day06.go:52)	PCDATA	$1, $0
+00110 (day06.go:52)	CALL	math/bits.OnesCount32(SB)      ; call Go based implementation
+00115 (day06.go:52)	MOVQ	"".size+64(SP), CX             ; clean up stack
+----
+
+== Day 07
+
+Ok, pretty straightforward, but unit tests fail because of 'total size of at
+most 100000. I misread as "larger than 100000", because we are searching for big
+ones, no?
+
+First try fails miserably.
+A couple of checks all look good.
+In the end, i search for a working implementation, and trace back my error.
+I do not cater for empty intermediate directories, i.e. i don't account for `b`
+in `/a/b/c/d.ext` if `b` has no files in it.
+Second try works.
+
