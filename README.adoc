@@ -29,7 +29,7 @@ for a solution avoid looking at those.
 | 5  | 1 |
 | 6  | 1 | 1
 | 7  | 2 | 1
-| 8  |  |
+| 8  | 1 |
 | 9  |  |
 | 10 |  |
 | 11 |  |
@@ -166,3 +166,21 @@ in `/a/b/c/d.ext` if `b` has no files in it.
 Second try works.
 
 Second puzzle unit tests ran successfully the first time.
+
+== Day 8
+
+For the first time, personal leaderboard shows me in 5 digit position.
+
+----
+      --------Part 1---------   --------Part 2---------
+Day       Time    Rank  Score       Time    Rank  Score
+  8       >24h   75414      0          -       -      -
+  7       >24h   79816      0       >24h   78203      0
+  6       >24h  112214      0       >24h  111265      0
+  5       >24h  115470      0          -       -      -
+  4       >24h  133385      0          -       -      -
+  3       >24h  142512      0          -       -      -
+  2       >24h  167617      0       >24h  161452      0
+  1       >24h  197787      0       >24h  190653      0
+----
+
