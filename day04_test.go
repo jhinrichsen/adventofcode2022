@@ -70,6 +70,7 @@ func TestDay04Part2Example(t *testing.T) {
 	lines, err := linesFromFilename(exampleFilename(4))
 	die(err, t)
 	got, err := Day04(lines, false)
+	die(err, t)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
 	}
