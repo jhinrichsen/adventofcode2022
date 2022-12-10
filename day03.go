@@ -46,8 +46,8 @@ func Day03(lines []string, part1 bool) int {
 	} else {
 		// part 2: group of three
 		for i := 0; i < len(lines); i += 3 {
-			// Haskell teaches you that there is no function that
-			// has more than one parameter
+			// look mom functional decomposition
+			// λ(a, b, c) === λ(λ(a, b), c)
 			s := intersect(lines[i], lines[i+1], -1)
 			s = intersect(s, lines[i+2], 1)
 			sum += int(prio(s[0]))
