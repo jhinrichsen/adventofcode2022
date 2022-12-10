@@ -30,8 +30,8 @@ for a solution avoid looking at those.
 | 6  | 1 | 1
 | 7  | 2 | 1
 | 8  | 1 |
-| 9  |  |
-| 10 |  |
+| 9  | 1 |
+| 10 | 1 |
 | 11 |  |
 | 12 |  |
 | 13 |  |
@@ -85,8 +85,9 @@ We are churning draws at three times the CPU frequency of an Arduino.
 == Day 3
 
 ----
-BenchmarkDay03-8   	   22658	     48739 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay03-8   	   22658	     48739 ns/op	       0 B/op 0 allocs/op (1)
 ----
+(1) Go 1.18
 
 48739 ns/op for 300 op is 162 ns/op or 6 MHz.
 
@@ -99,6 +100,29 @@ not.
 ----
 	// Error: [4-94] [3-3] marked as fully contained. Spot the error?
 	return b1 <= a1 && b2 <= a2 || a1 <= b1 && b2 <= a2
+----
+
+Coming back for part 2.
+Slightly rearranging my code to separate the intersect() and prio() part.
+Haskell teaches you that there is no such thing as f(a, b).
+Karma is to be found within functional composition.
+`intersect(a, b, c) === intersect(intersect(a, b), c)`
+
+Although slightly more generic, part 1 shows
+
+----
+BenchmarkDay03Part1-8   	   26200	     43238 ns/op	    2400 B/op	     300 allocs/op (1)
+BenchmarkDay03Part2-8   	   10000	    150718 ns/op	    6192 B/op	     368 allocs/op
+----
+(1) Go 1.19
+
+When intersecting, the outer `intersect()` can stop after the first match (as
+does part 1).
+
+----
+name          old time/op    new time/op    delta
+Day03Part1-8    47.7µs ± 7%    48.2µs ±10%     ~     (p=0.481 n=10+10)
+Day03Part2-8     162µs ±10%     131µs ±15%  -19.41%  (p=0.000 n=10+10)
 ----
 
 == Day 5
