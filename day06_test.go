@@ -94,7 +94,7 @@ func BenchmarkDay06Part2(b *testing.B) {
 	}
 }
 
-func BenchmarkDay06Window100(b *testing.B) {
+func BenchmarkDay06Hashmap(b *testing.B) {
 	buf, err := os.ReadFile(filename(6))
 	if err != nil {
 		b.Fatal(err)
@@ -102,6 +102,6 @@ func BenchmarkDay06Window100(b *testing.B) {
 	s := string(buf)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		day06OnesCount(s, 100)
+		day06Hashmap(s, 14)
 	}
 }
