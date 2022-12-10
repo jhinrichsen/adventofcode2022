@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func Day05(r io.Reader) (string, error) {
+func Day05(r io.Reader, part1 bool) (string, error) {
 	const width = len("[A] ")
 
 	sc := bufio.NewScanner(r)
@@ -49,18 +49,26 @@ func Day05(r io.Reader) (string, error) {
 		Reverse(st[i])
 	}
 
-	move := func(n, from, into int) {
+	move1 := func(n, from, into int) {
 		for i := 0; i < n; i++ {
 			// this section creates no garbage
 			// pop from
 			last := len(st[from]) - 1
-			n := st[from][last]
+			pick := st[from][last]
 			st[from] = st[from][:last]
 
 			// push into
-			st[into] = append(st[into], n)
+			st[into] = append(st[into], pick)
 		}
 	}
+
+	moveN := func(n, from, into int) {
+		last := len(st[from])
+		pick := st[from][last-n:]
+		st[from] = st[from][:last-n]
+		st[into] = append(st[into], pick...)
+	}
+
 	for sc.Scan() {
 		cmds := strings.Fields(sc.Text())
 		n, err := strconv.Atoi(cmds[1])
@@ -78,7 +86,12 @@ func Day05(r io.Reader) (string, error) {
 			return "", fmt.Errorf("error parsing to %q",
 				cmds[5])
 		}
-		move(n, from-1, into-1) // stacks are 1-based
+
+		if part1 {
+			move1(n, from-1, into-1) // stacks are 1-based
+		} else {
+			moveN(n, from-1, into-1) // stacks are 1-based
+		}
 	}
 
 	// gather last of each stack
