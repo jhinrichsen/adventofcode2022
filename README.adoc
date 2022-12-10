@@ -184,3 +184,43 @@ Day       Time    Rank  Score       Time    Rank  Score
   1       >24h  197787      0       >24h  190653      0
 ----
 
+== Day 10
+
+Upgraded to Fedora 37, which brings Go 1.19.3.
+
+Took me a while (40 min) to figure out that the register changes _after_ the
+second cycle.
+Interestingly, no off-by-one error this time.
+
+----
+BenchmarkDay10-8   	  692694	      2291 ns/op	    2304 B/op	       1 allocs/op
+----
+
+2300 ns/op for 138 instructions is 17 ns per instruction, i.e. 60 MHz.
+
+When checking which instruction to execute, comparing the command like `op ==
+"noop"` is the same speed as `op[0] == 'n'`.
+
+Rolling our own strconv.Atoi() parser:
+----
+BenchmarkDay10-8   	  964717	      1665 ns/op	    2304 B/op	       1 allocs/op
+----
+
+Nice, shaved 30% off.
+1665 ns/op for 138 instructions is 17 ns per instruction, i.e. 83 MHz.
+
+----
+$ benchstat day10_atoi.txt day10_custom.txt
+name     old time/op    new time/op    delta
+Day10-8    2.92µs ± 3%    2.05µs ± 6%  -29.72%  (p=0.000 n=19+17)
+
+name     old alloc/op   new alloc/op   delta
+Day10-8    2.30kB ± 0%    2.30kB ± 0%     ~     (all equal)
+
+name     old allocs/op  new allocs/op  delta
+Day10-8      1.00 ± 0%      1.00 ± 0%     ~     (all equal)
+----
+
+Our virtual CPU at 83 MHz is at least half as fast as the clock on an Espressif
+32-Bit-RISC-V-MCU at 160 MHz.
+
