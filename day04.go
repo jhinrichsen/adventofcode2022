@@ -6,7 +6,15 @@ import (
 	"strings"
 )
 
-func Day04(lines []string) (int, error) {
+func Day04(lines []string, part1 bool) (int, error) {
+	f := Overlaps
+	if part1 {
+		f = Contains
+	}
+	return day04(lines, f)
+}
+
+func day04(lines []string, f func(int, int, int, int) bool) (int, error) {
 	parse := func(line string) (int, int, int, int, error) {
 		var err error
 		l0 := strings.Split(line, ",")
@@ -32,7 +40,7 @@ func Day04(lines []string) (int, error) {
 			return 0, fmt.Errorf("error parsing line %d: %w",
 				i+1, err)
 		}
-		if Contains(x1, x2, x3, x4) {
+		if f(x1, x2, x3, x4) {
 			count++
 		}
 	}
@@ -44,4 +52,12 @@ func Day04(lines []string) (int, error) {
 func Contains(a1, a2, b1, b2 int) bool {
 	return a1 >= b1 && a2 <= b2 || // a within b
 		a1 <= b1 && a2 >= b2 // b within a
+}
+
+// Overlaps returns true if the range a [a1..a2] overlaps b [b1..b2] or vice
+// versa.
+func Overlaps(a1, a2, b1, b2 int) bool {
+	return Contains(a1, a2, b1, b2) ||
+		a1 >= b1 && a1 <= b2 || // a1 in b
+		a2 >= b1 && a2 <= b2 // a2 in b
 }
