@@ -23,7 +23,7 @@ func TestDay05Part1Example(t *testing.T) {
 }
 
 func TestDay05Part1(t *testing.T) {
-	const want = "RTGWZTHLD"
+	const want = "CFFHVVHNC"
 	r, err := os.Open(filename(5))
 	die(err, t)
 	defer r.Close()
@@ -53,7 +53,7 @@ func TestDay05Part2Example(t *testing.T) {
 }
 
 func TestDay05Part2(t *testing.T) {
-	const want = "STHGRZZFR"
+	const want = "FSZWBPTBG"
 	r, err := os.Open(filename(5))
 	die(err, t)
 	defer r.Close()

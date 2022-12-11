@@ -15,7 +15,7 @@ func TestDay02Part1Example(t *testing.T) {
 }
 
 func TestDay02Part1(t *testing.T) {
-	const want = 12794
+	const want = 13052
 	lines, err := linesFromFilename(filename(2))
 	if err != nil {
 		t.Fatal(err)
@@ -51,7 +51,7 @@ func TestDay02Part2Example(t *testing.T) {
 }
 
 func TestDay02Part2(t *testing.T) {
-	const want = 14979
+	const want = 13693
 	lines, err := linesFromFilename(filename(2))
 	if err != nil {
 		t.Fatal(err)

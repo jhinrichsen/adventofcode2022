@@ -55,7 +55,7 @@ func TestDay04Part1Example(t *testing.T) {
 }
 
 func TestDay04Part1(t *testing.T) {
-	const want = 500
+	const want = 580
 	lines, err := linesFromFilename(filename(4))
 	die(err, t)
 	got, err := Day04(lines, true)
@@ -77,7 +77,7 @@ func TestDay04Part2Example(t *testing.T) {
 }
 
 func TestDay04Part2(t *testing.T) {
-	const want = 815
+	const want = 895
 	lines, err := linesFromFilename(filename(4))
 	die(err, t)
 	got, err := Day04(lines, false)

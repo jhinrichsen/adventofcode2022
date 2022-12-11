@@ -15,7 +15,7 @@ func TestDay08Example(t *testing.T) {
 }
 
 func TestDay08(t *testing.T) {
-	const want = 1779
+	const want = 1835
 	lines, err := linesFromFilename(filename(8))
 	if err != nil {
 		t.Fatal(err)

@@ -34,7 +34,7 @@ func TestDay06ExamplesPart1(t *testing.T) {
 }
 
 func TestDay06Part1(t *testing.T) {
-	const want = 1625
+	const want = 1876
 	buf, err := os.ReadFile(filename(6))
 	if err != nil {
 		t.Fatal(err)
@@ -71,7 +71,7 @@ func TestDay06ExamplesPart2(t *testing.T) {
 }
 
 func TestDay06Part2(t *testing.T) {
-	const want = 2250
+	const want = 2202
 	buf, err := os.ReadFile(filename(6))
 	if err != nil {
 		t.Fatal(err)

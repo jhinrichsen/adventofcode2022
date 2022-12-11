@@ -305,3 +305,35 @@ Day10-8      1.00 ± 0%      1.00 ± 0%     ~     (all equal)
 Our virtual CPU at 83 MHz is at least half as fast as the clock on an Espressif
 32-Bit-RISC-V-MCU at 160 MHz.
 
+I just realized everything i contributed so far has been on my reddit account,
+not my google account as in previous years. I just lost 7000 places, but i am at
+91% do that should not matter.
+
+----
+      --------Part 1---------   --------Part 2---------
+Day       Time    Rank  Score       Time    Rank  Score
+ 10   19:12:40   50125      0          -       -      -
+  9       >24h   61568      0          -       -      -
+  8       >24h   80585      0          -       -      -
+  7       >24h   84244      0       >24h   82424      0
+  6       >24h  118055      0       >24h  117019      0
+  5       >24h  121567      0       >24h  119444      0
+  4       >24h  143620      0       >24h  141247      0
+  3       >24h  161404      0       >24h  153837      0
+  2       >24h  187765      0       >24h  179743      0
+  1       >24h  224250      0       >24h  215380      0
+----
+
+Well worth switching, my google account looks so much nicer.
+
+[2022] 17*
+[2021] 18*
+[2020] 45*
+[2019] 26*
+[2018] 14*
+[2017] 13*
+[2016] 32*
+[2015] 50*
+
+Total stars: 215*
+
