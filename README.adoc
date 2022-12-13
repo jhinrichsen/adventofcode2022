@@ -381,8 +381,8 @@ I remember years 201x when CPU and fan went ballistic for 15 minutes to
 calculate a solution, but nowadays typical runtimes are usually subsecond.
 In addition, all four divisors in the example are primes, and you don't fight
 primes with CPU.
-So, obviously, switching to [arbitrary-precision
-arithmetic]https://pkg.go.dev/math/big
+So, obviously, switching to arbitrary-precision
+arithmetic[https://pkg.go.dev/math/big]
 (big numbers) seems a dead end.
 
 I took a peek at the reddit hint channel, where people talked about abstract
