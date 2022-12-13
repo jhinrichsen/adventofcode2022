@@ -428,7 +428,7 @@ well.
 This time, none of the standard examples worked out, so i had to dive deeper
 into the library.
 
-=== beefsack's go-aster library
+=== beefsack's go-astar library
 
 The function signature to calculate a path is
 
