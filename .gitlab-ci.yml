@@ -16,6 +16,8 @@ include:
 
 test-job:
   stage: test
+  except:
+    - README.adoc
   before_script:
     - make setup
   script:
