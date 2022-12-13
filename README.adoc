@@ -504,7 +504,20 @@ Seems as if we made it past the initial stage, but when applying the heuristic
 part of A*, the priority queue reads
 
 ----
+func (pq *priorityQueue) Push(x interface{}) {
 ----
+
+Well, one of my personal don'ts.
+https://www.youtube.com/watch?v=PAAkCSZUG1c&t=456s[interface{} says nothing]
+Even in C, the void * carries more information than interface{}.
+You know it is a pointer, at least.
+interface{} in Go has about the same information as void in C.
+Nothing.
+Anything.
+Both.
+One or the other.
+I never use it, because i am stupid and i NEED the compiler, its type checker,
+and go vet.
 
 === Workaround #3
 
