@@ -340,15 +340,16 @@ Total stars: 215*
 == Day 11
 
 `Monkey` parsing was a bit of an typing effort, but a no-brainer.
-Looking at Monkey #0 and #1, and their Operations (`*19` and `+6`) make me start
-a simple handrolled parser.
-Monkey #3 (`new = old * old`) i switched from this basic parser to the Go
-internal eval() equivalent.
+Looking at Monkey #0 and #1, and their Operations (`\* 19` and `+ 6`) make me
+start a simple handrolled parser.
+For Monkey #3 (`new = old * old`) i switched from this basic parser to the Go
+internal `eval()` equivalent.
 While every Python programmer is familiar with `eval()`, the Go equivalent is
 rather unknown.
+
 But yes, Go is self hosted, which means its compiler is written in Go.
 So you can use Go to parse *and evaluate* an expressions.
-Remember that `new = old * old` is a statement, and `old * old` an expression.
+Remember that `new = old \* old` is a statement, and `old \* old` an expression.
 
 ----
 // Eval uses Go's internal compiler to evaluate an expression.
@@ -383,6 +384,7 @@ I started using an `int` based implementation, but it resulted in integer
 overflow.
 Switching from `int` to `float64` did not improve the situation, somewhere up
 and above `1e376` even float64 reaches its end of precision.
+
 In earlier years, i would have switched to arbitrary precision library.
 But all in all the number crunching part of AOC has vanished.
 I remember years 201x when CPU and fan went ballistic for 15 minutes to
@@ -391,6 +393,7 @@ In addition, all four divisors in the example are primes, and you don't fight
 primes with CPU.
 So, obviously, switching to arbitrary-precision
 arithmetic[https://pkg.go.dev/math/big] (big numbers) seems a dead end.
+
 I took a peek at the reddit hint channel, where people talked about abstract
 number theory, and x^2^ divided by n can be reduced to mumble mumble mumble.
 
