@@ -31,7 +31,7 @@ for a solution avoid looking at those.
 | 9   | 1 |
 | 10  | 1 |
 | 11  | 1 |
-| 12  |  |
+| 12  | 1 | 1
 | 13  |  |
 | 14  |  |
 | 15  |  |
@@ -538,4 +538,6 @@ NullHeuristic].
 
 Plus, i still have an open position for a good DAG lib, so i'll try gonum.
 
+gonum lacks some example documentation, but other than that it works like a
+charm.
 
