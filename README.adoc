@@ -1,14 +1,12 @@
-image:https://godoc.org/gitlab.com/jhinrichsen/adventofcode2022?status.svg["godoc",
-link="https://godoc.org/gitlab.com/jhinrichsen/adventofcode2022"]
-image:https://goreportcard.com/badge/gitlab.com/jhinrichsen/adventofcode2022["Go report
-card", link="https://goreportcard.com/report/gitlab.com/jhinrichsen/adventofcode2022"]
+= Advent of Code 2022
+:doctype: book
+:toc:
+
+image:https://godoc.org/gitlab.com/jhinrichsen/adventofcode2022?status.svg["godoc", link="https://godoc.org/gitlab.com/jhinrichsen/adventofcode2022"]
+image:https://goreportcard.com/badge/gitlab.com/jhinrichsen/adventofcode2022["Go report card", link="https://goreportcard.com/report/gitlab.com/jhinrichsen/adventofcode2022"]
 image:https://gitlab.com/jhinrichsen/adventofcode2022/badges/main/pipeline.svg[link="https://gitlab.com/jhinrichsen/adventofcode2022/-/commits/main",title="pipeline status"]
 image:https://gitlab.com/jhinrichsen/adventofcode2022/badges/main/coverage.svg[link="https://gitlab.com/jhinrichsen/adventofcode2022/-/commits/main",title="coverage report"]
 
-= Advent of Code 2022
-
-[index]
-== Index
 
 My take on https://adventofcode.com/2022/ in Go. As usual, i don't particularly
 care if i provide my solutions _fast_, i try to be _correct_ on the first
@@ -18,6 +16,7 @@ benchmarks.
 
 Expected results are hard coded into the unit tests, so unless you are peeking
 for a solution avoid looking at those.
+
 
 |===
 | Day | Number of tries for part 1 | Number of tries for part 2
@@ -423,7 +422,7 @@ Time to apply the `¯\_(ツ)_/¯` pattern.
 Looks like a path finding problem, Dijkstra to the rescue.
 I grep'ed my old AOCs, and 2016's day 13 was the same category.
 Back then i used an https://github.com/beefsack/go-astar[external A* library].
-Although only2 contributors, i picked it because of its nice examples that fit
+Although only 2 contributors, i picked it because of its nice examples that fit
 well.
 This time, none of the standard examples worked out, so i had to dive deeper
 into the library.
@@ -447,8 +446,8 @@ type Pather interface {
 ----
 
 Of course, Pather need to find their neighbors somehow.
-But this interface-only pattern leads to a problem.
-In path finding problems, you usually have an area, often a grid, and cells.
+But this single interface signature leads to a problem.
+In path finding, you usually have an area, often a grid, and cells.
 In our Day 13 puzzle, the puzzle input is the area, and S (the starting point),
 and E (the end point) are two cells in this area.
 Now, should area or cell implement the Pather interface?
@@ -483,22 +482,15 @@ So, instead of an undefined number of []neighbors, we know that we can move only
 left, right, top, or down, so [4]neighbors, returning the array as a slice as
 dicated by the Pather interface: neighbors[:].
 
-CAUTION: panic() somewhere deep inside the guts of the external library.
+CAUTION: runtime error: invalid memory address or nil pointer dereference
 
 === Workaround #2
 
-----
-runtime error: invalid memory address or nil pointer dereference
-----
-
+The panic() is again buried deeply inside the guts of the external library.
 Ok, seems as if  2 passengers in a car built for 4 is not going to happen.
 Hand peeling off unused neighbors, and returning the slice neighbors[0:n].
 
-CAUTION: panic() somewhere deep inside the guts of the external library.
-
-----
-panic: runtime error: hash of unhashable type
-----
+CAUTION: panic: runtime error: hash of unhashable type
 
 Seems as if we made it past the initial stage, but when applying the heuristic
 part of A*, the priority queue reads

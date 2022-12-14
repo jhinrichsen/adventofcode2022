@@ -25,3 +25,17 @@ test:
 prof:
 	$(GO) -bench=. -benchmem -memprofile mprofile.out -cpuprofile cprofile.out
 	$(GO) pprof cpu.profile
+
+# some asciidoc targets
+.PHONY: doc
+doc: README.html README.pdf
+
+README.html: README.adoc
+	asciidoctor $<
+
+README.pdf: README.adoc
+	asciidoctor-pdf -a allow-uri-read $<
+
+.PHONY: clean
+clean:
+	rm README.pdf README.html
