@@ -35,32 +35,31 @@ func Day12(lines []string, part1 bool) int {
 			world.SetEdge(simple.Edge{f, t})
 		}
 
-		off = func(x, y int) bool { // off the grid?
+		nirvana = func(x, y int) bool {
 			return x < 0 || x >= dimX || y < 0 || y >= dimY
 		}
 
-		check = func(x0, y0, dx, dy int) {
+		height2D = func(x, y int) int { // 2d -> h
+			return int(lines[y][x])
+		}
+
+		height1D = func(idx int64) int { // 1d -> h
+			return height2D(xy(idx))
+		}
+
+		prospect = func(x0, y0, dx, dy int) {
 			x1 := x0 + dx
 			y1 := y0 + dy
-			if off(x1, y1) {
+			if nirvana(x1, y1) {
 				return
 			}
-			h0 := int(lines[y0][x0])
-			h1 := int(lines[y1][x1])
+			h0 := height2D(x0, y0)
+			h1 := height2D(x1, y1)
 
 			// step down unlimited, step up one max
 			if h1-h0 <= 1 {
 				connect(x0, y0, x1, y1)
 			}
-		}
-
-		h = func(x, y int) int {
-			return int(lines[y][x])
-		}
-
-		height = func(idx int64) int {
-			x, y := xy(idx)
-			return h(x, y)
 		}
 	)
 
@@ -90,10 +89,10 @@ short_circuit:
 	// phase 2: build edges
 	for y0 := range lines {
 		for x0 := range lines[y0] {
-			check(x0, y0, 0, -1) // north
-			check(x0, y0, 0, 1)  // south
-			check(x0, y0, 1, 0)  // east
-			check(x0, y0, -1, 0) // west
+			prospect(x0, y0, 0, -1) // north
+			prospect(x0, y0, 0, 1)  // south
+			prospect(x0, y0, 1, 0)  // east
+			prospect(x0, y0, -1, 0) // west
 		}
 	}
 
@@ -106,8 +105,8 @@ short_circuit:
 	// count up to the last step that has the same height as the first step
 	i := 1
 	for ; i < len(pth); i++ {
-		h0 := height(pth[i-1].ID())
-		h1 := height(pth[i].ID())
+		h0 := height1D(pth[i-1].ID())
+		h1 := height1D(pth[i].ID())
 		if h1 != h0 {
 			break
 		}
