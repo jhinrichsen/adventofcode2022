@@ -417,7 +417,7 @@ Total stars: 216*
 
 Time to apply the `¯\_(ツ)_/¯` pattern.
 
-== Day13
+== Day12
 
 Looks like a path finding problem, Dijkstra to the rescue.
 I grep'ed my old AOCs, and 2016's day 13 was the same category.
@@ -515,6 +515,8 @@ and go vet.
 
 Throw the beefstack library out of the window and migrate to a library that has
 a better user interface.
+
+=== gonum to the rescue
 
 https://pkg.go.dev/gonum.org/v1/gonum/graph/path[gonum] seems like a reasonable
 choice.
