@@ -18,28 +18,30 @@ Expected results are hard coded into the unit tests, so unless you are peeking
 for a solution avoid looking at those.
 
 
+Number of tries for a correct answer:
+
 |===
-| Day | Number of tries for part 1 | Number of tries for part 2
-| 1   | 1 | 1
-| 2   | 1 | 1
-| 3   | 1 | 1
-| 4   | 2 | 1
-| 5   | 1 | 1
-| 6   | 1 | 1
-| 7   | 2 | 1
-| 8   | 1 |
-| 9   | 1 |
-| 10  | 1 |
-| 11  | 1 |
-| 12  | 1 | 1
-| 13  |  |
-| 14  |  |
-| 15  |  |
-| 16  |  |
-| 17  | 1 | - (+1)
-| 18  | 1 | - (+1)
-| 19  |  |
-| 20  |  |
+| Day | part 1 | part 2
+| 1   | 1      | 1
+| 2   | 1      | 1
+| 3   | 1      | 1
+| 4   | 2      | 1
+| 5   | 1      | 1
+| 6   | 1      | 1
+| 7   | 2      | 1
+| 8   | 1      |
+| 9   | 1      |
+| 10  | 1      |
+| 11  | 1      |
+| 12  | 1      | 1
+| 13  |        |
+| 14  |        |
+| 15  |        |
+| 16  |        |
+| 17  | 1      | - (+1)
+| 18  | 1      | - (+1)
+| 19  |        |
+| 20  | - (+2) |
 | 21  |  |
 | 22  |  |
 | 23  |  |
@@ -563,3 +565,31 @@ reached.
 Then, keeping left hand on the object, flood-fill along the border to count
 surface elements.
 
+== Day 19
+
+TODO: need to maxmize the throughput. Keep a list of quotients for each factory,
+and build new stuff to minimize current quotients against optimal quotient.
+
+== Day 20
+
+So easy the problem, so nasty the implementation.
+I started copy()ing slices around, using an working buffer in analogy to a
+offscreen image, and filling like
+
+----
+count int
+
+add = func(is []int) {
+    count += copy(dst[count:], is)
+}
+----
+
+Unfortunately, i never got the indexes and the wrapping and the left/right
+correct.
+
+For a second strategy, i projected the mix to a bubble sort, i.e. the number is
+swapped with it immediate neighbour to the left or to the right N times.
+
+When wrapping would occur, it is replaced with swapping to the other direction.
+
+TODO: Got the example right, but part 1 fails for the second time.

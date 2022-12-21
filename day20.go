@@ -1,67 +1,63 @@
 package adventofcode2022
 
-import "fmt"
-
 func Day20(srcs []int, mix int, part1 bool) int {
 	var (
-		l    = len(srcs)
-		dsts = make([]int, l)
+		dim  = len(srcs)
+		dsts = make([]int, dim)
 
 		ring = func(i int) int {
-			return i % l
-		}
-
-		dst = func(i int) int {
-			return dsts[ring(i)]
+			// i % dim returns negative remainder for negative i
+			return (i%dim + dim) % dim
 		}
 
 		findIndex = func(n int) int {
-			for i := 0; i < l; i++ {
+			for i := 0; i < dim; i++ {
 				if dsts[i] == n {
 					return i
 				}
 			}
 			return -1
 		}
+
+		dst = func(i int) int {
+			return dsts[ring(i)]
+		}
 	)
 
 	copy(dsts, srcs)
-	fmt.Printf("initial arrangement:\n")
-	fmt.Printf("%v\n", dsts)
 	for j := 0; j < mix; j++ {
-		for k := 0; k < l; k++ {
+		for k := 0; k < dim; k++ {
 			var (
-				rel       = srcs[k]
-				fromIndex = findIndex(rel)
-				intoIndex int
-				count     int
-				interim   = make([]int, l)
-				add       = func(is []int) {
-					count += copy(interim[count:], is)
-				}
+				val       = srcs[k]
+				rel       = val
+				fromIndex = findIndex(val)
+				step      = 1
 			)
-			if rel > 0 {
-				intoIndex = ring(fromIndex + rel)
-			} else {
-				intoIndex = ring(l + rel)
+
+			if rel < 0 {
+				rel = -rel
+				step = -1
 			}
-
-			add(dsts[0:fromIndex])               // copy up to the remove position
-			add(dsts[fromIndex+1 : intoIndex+1]) // skip remove position
-			add(srcs[k : k+1])                   // add original value
-			add(dsts[intoIndex+2:])              // add the rest
-			copy(dsts, interim)
-
-			fmt.Printf("%d moves between %d and %d:\n", rel,
-				dsts[findIndex(dsts[intoIndex])-1],
-				dsts[findIndex(dsts[intoIndex])-1])
-			fmt.Printf("%v\n", dsts)
+			if step < 0 && fromIndex-rel <= 0 {
+				rel = dim - (rel % dim) - 1
+				step = 1
+			} else if step > 0 && fromIndex+rel >= dim {
+				rel = dim - (rel % dim) - 1
+				step = -1
+			}
+			from := ring(fromIndex)
+			into := ring(from + step)
+			for l := 0; l < rel; l++ {
+				dsts[from], dsts[into] = dsts[into], dsts[from]
+				from = ring(from + step)
+				into = ring(into + step)
+			}
 		}
 	}
 
 	j := findIndex(0)
-	d1 := dst(j + 1000 + 1)
-	d2 := dst(j + 2000 + 1)
-	d3 := dst(j + 3000 + 1)
+	d1 := dst(j + 1000)
+	d2 := dst(j + 2000)
+	d3 := dst(j + 3000)
 	return d1 + d2 + d3
 }
