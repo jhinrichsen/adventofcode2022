@@ -36,7 +36,7 @@ for a solution avoid looking at those.
 | 14  |  |
 | 15  |  |
 | 16  |  |
-| 17  | 1 |
+| 17  | 1 | - (+1)
 | 18  | 1 | - (+1)
 | 19  |  |
 | 20  |  |
@@ -552,4 +552,14 @@ TODO: There must be some sort of cycle.
 I'd keep the surface of the tower as a 7 numbers wide pattern, plus the shape
 ID, plus the resulting surface, plus the increase in height.
 
+
+== Day 18
+
+Got part 2 wrong, i think i need to cater for interior air holes that stick
+together.
+
+TODO: move from 0,0,0 to maxX, maxY, maxZ until the first non-empty cube is
+reached.
+Then, keeping left hand on the object, flood-fill along the border to count
+surface elements.
 

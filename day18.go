@@ -1,7 +1,6 @@
 package adventofcode2022
 
 import (
-	"fmt"
 	"math"
 	"strconv"
 	"strings"
@@ -11,12 +10,12 @@ func Day18(lines []string, part1 bool) int {
 	m := make(map[D3]bool)
 	neighbors := func(k D3) int {
 		prospects := []D3{
-			D3{k.x - 1, k.y, k.z},
-			D3{k.x + 1, k.y, k.z},
-			D3{k.x, k.y - 1, k.z},
-			D3{k.x, k.y + 1, k.z},
-			D3{k.x, k.y, k.z - 1},
-			D3{k.x, k.y, k.z + 1},
+			{k.x - 1, k.y, k.z},
+			{k.x + 1, k.y, k.z},
+			{k.x, k.y - 1, k.z},
+			{k.x, k.y + 1, k.z},
+			{k.x, k.y, k.z - 1},
+			{k.x, k.y, k.z + 1},
 		}
 		var filled int
 		for i := range prospects {
@@ -73,16 +72,16 @@ func Day18(lines []string, part1 bool) int {
 			z1 = k.z
 		}
 	}
-	fmt.Printf("found area from %d,%d,%d to %d,%d,%d\n", x0, y0, z0, x1, y1, z1)
+	// fmt.Printf("found area from %d,%d,%d to %d,%d,%d\n", x0, y0, z0, x1, y1, z1)
 	var airTraps int
 	for x := x0; x < x1; x++ {
 		for y := y0; y < y1; y++ {
 			for z := z0; z < z1; z++ {
 				k := D3{x, y, z}
 				if isHole(k) {
-					fmt.Printf("found air trap at %d,%d,%d with %d neighbors\n", x, y, z, neighbors(k))
+					// fmt.Printf("found air trap at %d,%d,%d with %d neighbors\n", x, y, z, neighbors(k))
 					if isSurrounded(k) {
-						fmt.Printf("found surrounded trap at %d,%d,%d with %d neighbors\n", x, y, z, neighbors(k))
+						// fmt.Printf("found surrounded trap at %d,%d,%d with %d neighbors\n", x, y, z, neighbors(k))
 						airTraps++
 					}
 				}

@@ -39,7 +39,7 @@ func TestDay18Part2Example(t *testing.T) {
 }
 
 func TestDay18Part2(t *testing.T) {
-	const want = 3304 // too high
+	const want = 3304 // TODO too high
 	lines, err := linesFromFilename(filename(18))
 	if err != nil {
 		t.Fatal(err)
