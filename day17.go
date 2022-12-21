@@ -128,7 +128,7 @@ func Day17(line string, rocks int) int {
 			}
 		}
 
-		cycle := len(shapes) * len(line)
+		// cycle := len(shapes) * len(line)
 	}
 	return int(tower.Height())
 }
