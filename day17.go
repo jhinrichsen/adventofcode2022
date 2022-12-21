@@ -1,7 +1,5 @@
 package adventofcode2022
 
-import "fmt"
-
 func Day17(line string, rocks int) int {
 	const (
 		offset = 2 + 3i
@@ -123,7 +121,6 @@ func Day17(line string, rocks int) int {
 			// vertical move
 
 			position, ok = test(position, south)
-			// fmt.Printf("position: %v\n", position)
 			if !ok { // freeze
 				sprite := shape.Translate(position)
 				tower.AddSprite(sprite)
@@ -132,9 +129,6 @@ func Day17(line string, rocks int) int {
 		}
 
 		cycle := len(shapes) * len(line)
-		if i%cycle == 0 {
-			fmt.Printf("%d rocks, height %f\n", i, tower.Height())
-		}
 	}
 	return int(tower.Height())
 }
