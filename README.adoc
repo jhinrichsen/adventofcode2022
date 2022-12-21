@@ -37,7 +37,7 @@ for a solution avoid looking at those.
 | 15  |  |
 | 16  |  |
 | 17  | 1 |
-| 18  | 1 | (+1)
+| 18  | 1 | - (+1)
 | 19  |  |
 | 20  |  |
 | 21  |  |
@@ -542,4 +542,14 @@ Plus, i still have an open position for a good DAG lib, so i'll try gonum.
 
 gonum lacks some example documentation, but other than that it works like a
 charm.
+
+== Day 17
+
+Got part 1 right on first try.
+For part 2, 1_000_000_000_000 cycles does not sound reasonable, even in Go.
+
+TODO: There must be some sort of cycle.
+I'd keep the surface of the tower as a 7 numbers wide pattern, plus the shape
+ID, plus the resulting surface, plus the increase in height.
+
 
