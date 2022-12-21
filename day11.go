@@ -118,69 +118,25 @@ func Day11(lines []string, part1 bool) (int, error) {
 	inspections := make([]int, len(monkeys))
 	for round := 0; round < rounds; round++ {
 		for j := range monkeys {
-			fmt.Printf("Monkey %d:\n", monkeys[j].ID)
 			for len(monkeys[j].Items) > 0 {
 				inspections[j]++
-				// item := monkeys[j].Items[0]
-				fmt.Printf("  Monkey inspects an item with "+
-					"a worry level of %f\n",
-					monkeys[j].Items[0])
 				// apply operation
 				m := map[string]float64{"old": monkeys[j].Items[0]}
 				monkeys[j].Items[0] = Eval(monkeys[j].Operation, m)
-				fmt.Printf("    Worry level is %q to %f\n",
-					monkeys[j].Operation,
-					monkeys[j].Items[0])
 
 				if part1 {
 					monkeys[j].Items[0] = math.Floor(monkeys[j].Items[0] / 3)
-					fmt.Printf("    Monkey gets bored with item. "+
-						"Worry level is divided by 3 to %f\n",
-						monkeys[j].Items[0])
 				}
 
 				b := divisible(monkeys[j].Items[0],
 					monkeys[j].DivisibleBy)
-				if b {
-					fmt.Printf("    Current worry level "+
-						"%f is divisible by %f\n",
-						monkeys[j].Items[0],
-						monkeys[j].DivisibleBy)
-				} else {
-					fmt.Printf("    Current worry level "+
-						"%f is not divisible by %f "+
-						"(%f)\n",
-						monkeys[j].Items[0],
-						monkeys[j].DivisibleBy,
-						monkeys[j].Items[0]/monkeys[j].DivisibleBy)
-				}
 				nextMonkey := monkeys[j].IfTrue
 				if !b {
 					nextMonkey = monkeys[j].IfFalse
 				}
-				fmt.Printf("    Item with worry level %f is "+
-					"thrown to monkey %d\n",
-					monkeys[j].Items[0],
-					nextMonkey)
 				move(j, nextMonkey)
 			}
 		}
-
-		fmt.Printf("After round %d, the monkeys are holding items "+
-			"these worry levels:\n", round)
-		for i := range monkeys {
-			fmt.Printf("Monkey %d: %v\n", i, monkeys[i].Items)
-		}
-
-		fmt.Printf("== After round %d ==\n", round)
-		for i := 0; i < len(inspections); i++ {
-			fmt.Printf("Monkey %d inspected items %d times.\n",
-				i, inspections[i])
-		}
-	}
-
-	for i := range monkeys {
-		fmt.Printf("Monkey %d: %v\n", i, monkeys[i].Items)
 	}
 
 	sort.Sort(sort.Reverse(sort.IntSlice(inspections)))
