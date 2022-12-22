@@ -43,7 +43,7 @@ Number of tries for a correct answer:
 | 19  |        |
 | 20  | - (+2) |
 | 21  | 1      |
-| 22  |  |
+| 22  | 2 |
 | 23  |  |
 | 24  |  |
 | 25  |  |
@@ -618,3 +618,7 @@ BenchmarkDay21Part1-16    	     718	   1601254 ns/op	  929563 B/op	    9243 allo
 ----
 
 Around 1.6 ms for 2.265 monkeys.
+
+== Day 22
+
+Got caught in triple logic (wall, walk, wrap) in a map[complex128]bool.

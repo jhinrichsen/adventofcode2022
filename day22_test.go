@@ -1,8 +1,30 @@
 package adventofcode2022
 
 import (
+	"reflect"
 	"testing"
 )
+
+func TestCommands(t *testing.T) {
+	const (
+		input = "10R5L4R3"
+		left  = 0 + 1i
+		right = 0 - 1i
+	)
+	var (
+		noturn complex128
+		want   = []Command{
+			{10, right},
+			{5, left},
+			{4, right},
+			{3, noturn},
+		}
+	)
+	got := NewCommands(input)
+	if !reflect.DeepEqual(want, got) {
+		t.Fatalf("want %v but got %v", want, got)
+	}
+}
 
 func TestDay22Part1Example(t *testing.T) {
 	const want = 6032
@@ -16,9 +38,9 @@ func TestDay22Part1Example(t *testing.T) {
 	}
 }
 
-/*
 func TestDay22Part1(t *testing.T) {
-	const want = 194501589693264
+	// const want = 80224 // TODO too high
+	const want = 65368
 	lines, err := linesFromFilename(filename(22))
 	if err != nil {
 		t.Fatal(err)
@@ -29,6 +51,7 @@ func TestDay22Part1(t *testing.T) {
 	}
 }
 
+/*
 func BenchmarkDay22Part1(b *testing.B) {
 	lines, err := linesFromFilename(filename(22))
 	if err != nil {
