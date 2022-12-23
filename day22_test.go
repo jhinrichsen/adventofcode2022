@@ -1,30 +1,8 @@
 package adventofcode2022
 
 import (
-	"reflect"
 	"testing"
 )
-
-func TestCommands(t *testing.T) {
-	const (
-		input = "10R5L4R3"
-		left  = 0 + 1i
-		right = 0 - 1i
-	)
-	var (
-		noturn complex128
-		want   = []Command{
-			{10, right},
-			{5, left},
-			{4, right},
-			{3, noturn},
-		}
-	)
-	got := NewCommands(input)
-	if !reflect.DeepEqual(want, got) {
-		t.Fatalf("want %v but got %v", want, got)
-	}
-}
 
 func TestDay22Part1Example(t *testing.T) {
 	const want = 6032
