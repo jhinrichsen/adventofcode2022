@@ -32,7 +32,7 @@ func Day12(lines []string, part1 bool) int {
 		connect = func(x0, y0, x1, y1 int) {
 			f := mk(x0, y0)
 			t := mk(x1, y1)
-			world.SetEdge(simple.Edge{f, t})
+			world.SetEdge(simple.Edge{F: f, T: t})
 		}
 
 		nirvana = func(x, y int) bool {
