@@ -46,7 +46,7 @@ Number of tries for a correct answer:
 | 22  | 2 |
 | 23  |  |
 | 24  |  |
-| 25  |  |
+| 25  | 1      |
 |===
 
 Benchmark summary
@@ -622,3 +622,10 @@ Around 1.6 ms for 2.265 monkeys.
 == Day 22
 
 Got caught in triple logic (wall, walk, wrap) in a map[complex128]bool.
+
+== Day 25
+
+Trying a + operator in the Snafu domain, i.e. without conversion to decimal.
+Got it right on the first try.
+The algorithm is pretty slow, about 15 times slower as a conversion to dec and
+then using the CPU's ADD operation.
