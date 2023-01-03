@@ -1,48 +1,75 @@
 package adventofcode2022
 
-func Day10(lines []string) int {
-	dim := 2 * len(lines) // 2 states/ op max
-	states := make([]int, dim)
+import (
+	"strings"
+)
 
-	cycle := 1 // 1-based
-	x := 1
-	for _, line := range lines {
-		if line == "noop" {
-			states[cycle] = x
-			cycle++
-		} else {
-			// cycle 1
-			states[cycle] = x
-			cycle++
-
-			// cycle 2
-			states[cycle] = x
-			// value changes _after_ cycle
-			cycle++
-
-			// roll our own parser, because why not?
-			/*
-				n, _ := strconv.Atoi(line[5:])
-				x += n
-			*/
-
+func Day10(lines []string, part1 bool) (int, []string) {
+	var (
+		// like strconv.Atoi() but... custom. Why not.
+		parse = func(s string) int {
 			n := 0
 			sign := 1
 			i := 5
-			if line[i] == '-' {
+			if s[i] == '-' {
 				sign = -1
 				i++
 			}
-			for ; i < len(line); i++ {
-				n = 10*n + int(line[i]-'0')
+			for ; i < len(s); i++ {
+				n = 10*n + int(s[i]-'0')
 			}
-			x += sign * n
+			return sign * n
 		}
+		dim    = 2 * len(lines) // 2 states/ op max
+		states = make([]int, dim)
+
+		cycle = 1 // 1-based
+		x     = 1
+	)
+
+	for _, line := range lines {
+		// cycle 1
+
+		states[cycle] = x
+		cycle++
+		if line == "noop" {
+			continue
+		}
+
+		// cycle 2
+
+		states[cycle] = x
+		// value changes _after_ cycle
+		cycle++
+		x += parse(line)
 	}
 
-	sum := 0
-	for cycle := 20; cycle <= 220; cycle += 40 {
-		sum += cycle * states[cycle]
+	if part1 {
+		sum := 0
+		for cycle := 20; cycle <= 220; cycle += 40 {
+			sum += cycle * states[cycle]
+		}
+		return sum, []string{}
 	}
-	return sum
+
+	var crt strings.Builder
+	const (
+		width  = 40
+		height = 6
+	)
+	for cycle := 1; cycle <= width*height; cycle++ {
+		position := (cycle - 1) % width
+		lit := states[cycle]-1 == position ||
+			states[cycle] == position ||
+			states[cycle]+1 == position
+		if lit {
+			crt.WriteRune('#')
+		} else {
+			crt.WriteRune('.')
+		}
+		if cycle%width == 0 {
+			crt.WriteRune(' ')
+		}
+	}
+	return 0, strings.Fields(crt.String())
 }
