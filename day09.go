@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func Day09(lines []string) int {
+func Day09(lines []string, knots []complex128) int {
 	var directions = map[byte]complex128{
 		'U': 0 + 1i,
 		'R': 1 + 0i,
@@ -16,47 +16,45 @@ func Day09(lines []string) int {
 	}
 
 	reach := cmplx.Abs(1 + 1i)
-	var h, t complex128
 
-	// next step
-	step := func() complex128 {
-		dx := real(h) - real(t)
-		dy := imag(h) - imag(t)
-
-		// limit to one step
-		if dx != 0 {
-			dx /= math.Abs(dx)
-		}
-		if dy != 0 {
-			dy /= math.Abs(dy)
-		}
-		return complex(dx, dy)
-	}
-
-	ts := make(map[complex128]bool)
+	ts := make(map[complex128]bool) // tail positions
 
 	// record current tail position
-	ts[t] = true
+	ts[knots[len(knots)-1]] = true
 
 	for _, line := range lines {
 		fields := strings.Fields(line)
 		c := directions[fields[0][0]]
-		steps, _ := strconv.Atoi(fields[1])
 
-		for steps > 0 {
+		for steps, _ := strconv.Atoi(fields[1]); steps > 0; steps-- {
 			// head step
-			h += c
+			knots[0] += c
 
-			// tail step if too far away
-			d := cmplx.Abs(h - t)
-			if d > reach {
-				inc := step()
-				t += inc
-				ts[t] = true
+			for i := 1; i < len(knots); i++ {
+				// tail step if too far away
+				d := cmplx.Abs(knots[i] - knots[i-1])
+				if d > reach {
+					inc := step(knots[i-1], knots[i])
+					knots[i] += inc
+				}
 			}
-
-			steps--
+			ts[knots[len(knots)-1]] = true
 		}
 	}
 	return len(ts)
+}
+
+// step tail towards head
+func step(h, t complex128) complex128 {
+	dx := real(h) - real(t)
+	dy := imag(h) - imag(t)
+
+	// limit to one step
+	if dx != 0 {
+		dx /= math.Abs(dx)
+	}
+	if dy != 0 {
+		dy /= math.Abs(dy)
+	}
+	return complex(dx, dy)
 }
