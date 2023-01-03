@@ -2,6 +2,7 @@ package adventofcode2022
 
 import (
 	"fmt"
+	"runtime/debug"
 	"testing"
 )
 
@@ -26,6 +27,7 @@ var containsTests = []struct {
 
 func die(err error, t *testing.T) {
 	if err != nil {
+		t.Log(string(debug.Stack()))
 		t.Fatal(err)
 	}
 }
