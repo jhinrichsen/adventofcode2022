@@ -327,6 +327,39 @@ Day       Time    Rank  Score       Time    Rank  Score
 
 Well worth switching, my google account looks so much nicer.
 
+=== Part 2
+
+Part 2 requires human intervention to parse the generated CRT like output.
+We already had some of these puzzles, if i remember correctly in 2017.
+My eyeballs always have trouble deciphering these ASCII art images.
+It is a little bit better when using the unicode block character `█` instead of
+the original `#`.
+Or, when using an editor that interactively shows search patterns, such as
+`vim`.
+Just highlight the CRT image (vim visual block) and search for `# ` using `:%s/#
+/`.
+As an example, here's the output of a sample Plain PBM (portable Bit Map).
+Can you spot the text? I can't.
+
+----
+P1
+# feep.pbm
+24 7
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 0
+0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 1 0
+0 1 1 1 0 0 0 1 1 1 0 0 0 1 1 1 0 0 0 1 1 1 1 0
+0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0
+0 1 0 0 0 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+----
+
+However, selecting the block in vim, and applying `:%s/1 /` reveals the text.
+
+image::feep.png[]
+
+Once we get this, we can run it through an OCR, e.g. tesseract, to automatically
+test for the correct results (day10_test.go, TestDay10Part2Tesseract()).
 
 == Day 11
 
