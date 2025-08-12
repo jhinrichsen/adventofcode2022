@@ -1,9 +1,9 @@
 module gitlab.com/jhinrichsen/adventofcode2022
 
-go 1.18
+go 1.24
 
 require (
-	github.com/otiai10/gosseract/v2 v2.4.0
+	gitlab.com/jhinrichsen/aococr v0.1.0
 	gonum.org/v1/gonum v0.12.0
 )
 
