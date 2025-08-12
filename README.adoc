@@ -587,6 +587,22 @@ TODO: There must be some sort of cycle.
 I'd keep the surface of the tower as a 7 numbers wide pattern, plus the shape
 ID, plus the resulting surface, plus the increase in height.
 
+----
+goos: linux
+goarch: amd64
+pkg: gitlab.com/jhinrichsen/adventofcode2022
+cpu: AMD Ryzen 5 3400G with Radeon Vega Graphics    
+BenchmarkDay17-8   	       4	 260115105 ns/op	 6856332 B/op	   98400 allocs/op
+BenchmarkDay17-8   	       5	 264100830 ns/op	 6853804 B/op	   98396 allocs/op
+BenchmarkDay17-8   	       4	 251712320 ns/op	 6855952 B/op	   98398 allocs/op
+BenchmarkDay17-8   	       4	 278862097 ns/op	 6856078 B/op	   98399 allocs/op
+BenchmarkDay17-8   	       5	 254284389 ns/op	 6853601 B/op	   98395 allocs/op
+BenchmarkDay17-8   	       4	 258276054 ns/op	 6857392 B/op	   98406 allocs/op
+BenchmarkDay17-8   	       5	 268423537 ns/op	 6852992 B/op	   98392 allocs/op
+BenchmarkDay17-8   	       4	 250643994 ns/op	 6855890 B/op	   98398 allocs/op
+BenchmarkDay17-8   	       4	 271031566 ns/op	 6854496 B/op	   98386 allocs/op
+BenchmarkDay17-8   	       4	 267536665 ns/op	 6856402 B/op	   98399 allocs/op
+----
 
 == Day 18
 
