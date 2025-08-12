@@ -21,7 +21,7 @@ test-job:
   before_script:
     - make setup
   script:
-    - make lint test
+    - make setup lint test
   coverage: '/coverage: \d+\.\d+%/'
   artifacts:
     reports:
