@@ -43,7 +43,7 @@ func NewDay24(lines []string) day24 {
 }
 
 type day24 struct {
-	m             map[complex128]int
+	// m             map[complex128]int
 	Dim           complex128
 	Start, Finish complex128
 	blizzards     []Blizzard
@@ -51,7 +51,7 @@ type day24 struct {
 
 type Blizzard struct {
 	Dim, Facing, Position complex128
-	x, y                  float64
+	// x, y                  float64
 }
 
 func (a *Blizzard) Step() {
