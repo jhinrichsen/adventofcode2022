@@ -1,2 +1,6 @@
 coverage.txt
 coverage.xml
+17
+template_test.go
+template.go
+testdata/day00_example.txt
