@@ -2,14 +2,6 @@ package adventofcode2022
 
 import "fmt"
 
-func Day24(lines []string) int {
-	// TODO
-	for minute := 1; ; minute++ {
-	}
-
-	return 0
-}
-
 func NewDay24(lines []string) day24 {
 	var (
 		world day24
