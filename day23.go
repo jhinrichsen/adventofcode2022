@@ -1,7 +1,5 @@
 package adventofcode2022
 
-import "fmt"
-
 func Day23(lines []string, rounds int) int {
 	var (
 		m        = make(map[complex128]bool)
@@ -56,29 +54,31 @@ func Day23(lines []string, rounds int) int {
 			return int((1+real(max)-real(min))*(1+imag(max)-imag(min))) - len(m)
 		}
 
-		dump = func(round int) {
-			min, max := rect()
-			if round == 0 {
-				fmt.Printf("== Initial State (%v) ==\n", max-min)
-			} else {
-				fmt.Printf("== End of Round %d (%vx%v -> %v) ==\n", round, min, max, max-min)
-			}
-			for y := imag(max); y >= imag(min); y-- {
-				for x := real(min); x <= real(max); x++ {
-					if m[complex(x, y)] {
-						fmt.Printf("%c", '#')
-					} else {
-						if x == 0 && y == 0 {
-							fmt.Printf("%c", '+')
+		/*
+			dump = func(round int) {
+				min, max := rect()
+				if round == 0 {
+					fmt.Printf("== Initial State (%v) ==\n", max-min)
+				} else {
+					fmt.Printf("== End of Round %d (%vx%v -> %v) ==\n", round, min, max, max-min)
+				}
+				for y := imag(max); y >= imag(min); y-- {
+					for x := real(min); x <= real(max); x++ {
+						if m[complex(x, y)] {
+							fmt.Printf("%c", '#')
 						} else {
-							fmt.Printf("%c", '.')
+							if x == 0 && y == 0 {
+								fmt.Printf("%c", '+')
+							} else {
+								fmt.Printf("%c", '.')
+							}
 						}
 					}
+					fmt.Println()
 				}
 				fmt.Println()
 			}
-			fmt.Println()
-		}
+		*/
 
 		proposals = []struct {
 			preds []complex128
@@ -100,7 +100,7 @@ func Day23(lines []string, rounds int) int {
 
 	parseMap()
 
-	dump(0)
+	// dump(0)
 	for round := 1; round <= 10; round++ {
 
 		// first half
@@ -146,7 +146,7 @@ func Day23(lines []string, rounds int) int {
 			}
 		}
 		shiftProposals()
-		dump(round)
+		// dump(round)
 	}
 
 	return countEmpty(rect())
