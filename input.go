@@ -70,3 +70,39 @@ func ParseCommaSeparatedNumbers(s string) ([]int, error) {
 	}
 	return is, nil
 }
+
+type CompareError struct {
+	// the first line is 1, not 0. At least in vi. Can't go wrong following
+	// vi.
+	line int
+	want string
+	got  string
+}
+
+func (a CompareError) Error() string {
+	return fmt.Sprintf("error comparing line %d: want %q but got %q",
+		a.line, a.want, a.got)
+}
+
+// compare returns true if two reader deliver the same (line based) content.
+func compare(want, got io.Reader) error {
+	wsc := bufio.NewScanner(want)
+	gsc := bufio.NewScanner(got)
+
+	for line := 1; ; line++ {
+		wb := wsc.Scan()
+		gb := gsc.Scan()
+		if wb != gb {
+			return &CompareError{line, "", ""}
+		}
+		if !(wb || gb) {
+			break
+		}
+		wt := wsc.Text()
+		gt := gsc.Text()
+		if wt != gt {
+			return &CompareError{line, wt, gt}
+		}
+	}
+	return nil
+}
