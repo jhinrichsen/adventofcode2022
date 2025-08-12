@@ -99,7 +99,8 @@ func BenchmarkDay04Part2(b *testing.B) {
 
 func bench04(b *testing.B, part1 bool) {
 	lines, _ := linesFromFilename(filename(4))
-	for i := 0; i < b.N; i++ {
-		Day04(lines, false)
+	b.ResetTimer()
+	for range b.N {
+		Day04(lines, part1)
 	}
 }
