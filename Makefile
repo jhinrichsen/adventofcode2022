@@ -3,6 +3,10 @@ GO = CGO_ENABLED=0 go
 .PHONY: all
 all: lint test
 
+.PHONY: clean
+clean:
+	rm README.pdf README.html
+
 .PHONY: bench
 bench:
 	$(GO) test -bench=. -run="" -benchmem
@@ -31,6 +35,3 @@ README.html: README.adoc
 README.pdf: README.adoc
 	asciidoctor-pdf -a allow-uri-read $<
 
-.PHONY: clean
-clean:
-	rm README.pdf README.html

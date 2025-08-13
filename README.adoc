@@ -7,7 +7,6 @@ image:https://goreportcard.com/badge/gitlab.com/jhinrichsen/adventofcode2022["Go
 image:https://gitlab.com/jhinrichsen/adventofcode2022/badges/main/pipeline.svg[link="https://gitlab.com/jhinrichsen/adventofcode2022/-/commits/main",title="pipeline status"]
 image:https://gitlab.com/jhinrichsen/adventofcode2022/badges/main/coverage.svg[link="https://gitlab.com/jhinrichsen/adventofcode2022/-/commits/main",title="coverage report"]
 
-
 My take on https://adventofcode.com/2022/ in Go. As usual, i don't particularly
 care if i provide my solutions _fast_, i try to be _correct_ on the first
 answer, and care for being runtime efficient.
@@ -329,15 +328,7 @@ Well worth switching, my google account looks so much nicer.
 
 === Part 2
 
-Part 2 requires human intervention to parse the generated CRT like output.
-We already had some of these puzzles, if i remember correctly in 2017.
-My eyeballs always have trouble deciphering these ASCII art images.
-It is a little bit better when using the unicode block character `█` instead of
-the original `#`.
-Or, when using an editor that interactively shows search patterns, such as
-`vim`.
-Just highlight the CRT image (vim visual block) and search for `# ` using `:%s/#
-/`.
+Part 2 returns characters as ASCII art, so this would require human interaction.
 As an example, here's the output of a sample Plain PBM (portable Bit Map).
 Can you spot the text? I can't.
 
@@ -356,10 +347,12 @@ P1
 
 However, selecting the block in vim, and applying `:%s/1 /` reveals the text.
 
-image::feep.png[]
+image::assets/feep.png[]
 
-Once we get this, we can run it through an OCR, e.g. tesseract, to automatically
-test for the correct results (day10_test.go, TestDay10Part2Tesseract()).
+Instead, let's use OCR to automate this step.
+Tesseract will succeed, but requires host OS support.
+Gosseract will fail for whatever reason https://github.com/otiai10/gosseract/issues/266[Issue 266].
+https://gitlab.com/jhinrichsen/aococr[AOC OCR] to the rescue.
 
 == Day 11
 
@@ -591,7 +584,7 @@ ID, plus the resulting surface, plus the increase in height.
 goos: linux
 goarch: amd64
 pkg: gitlab.com/jhinrichsen/adventofcode2022
-cpu: AMD Ryzen 5 3400G with Radeon Vega Graphics    
+cpu: AMD Ryzen 5 3400G with Radeon Vega Graphics
 BenchmarkDay17-8   	       4	 260115105 ns/op	 6856332 B/op	   98400 allocs/op
 BenchmarkDay17-8   	       5	 264100830 ns/op	 6853804 B/op	   98396 allocs/op
 BenchmarkDay17-8   	       4	 251712320 ns/op	 6855952 B/op	   98398 allocs/op
