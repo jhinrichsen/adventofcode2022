@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func Day18(lines []string, part1 bool) int {
+func Day18(lines []string, part1 bool) uint {
 	m := make(map[D3]bool)
 	neighbors := func(k D3) int {
 		prospects := []D3{
@@ -35,9 +35,21 @@ func Day18(lines []string, part1 bool) int {
 
 	for _, line := range lines {
 		ss := strings.Split(line, ",")
-		x, _ := strconv.Atoi(ss[0])
-		y, _ := strconv.Atoi(ss[1])
-		z, _ := strconv.Atoi(ss[2])
+		if len(ss) != 3 {
+			continue
+		}
+		x, err := strconv.Atoi(ss[0])
+		if err != nil {
+			continue
+		}
+		y, err := strconv.Atoi(ss[1])
+		if err != nil {
+			continue
+		}
+		z, err := strconv.Atoi(ss[2])
+		if err != nil {
+			continue
+		}
 		m[D3{x, y, z}] = true
 	}
 
@@ -46,7 +58,7 @@ func Day18(lines []string, part1 bool) int {
 		surface += 6 - neighbors(k)
 	}
 	if part1 {
-		return surface
+		return uint(surface)
 	}
 
 	// calculate dimensions
@@ -88,7 +100,7 @@ func Day18(lines []string, part1 bool) int {
 			}
 		}
 	}
-	return surface - 6*airTraps
+	return uint(surface - 6*airTraps)
 }
 
 type D3 struct {
