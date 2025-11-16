@@ -8,7 +8,7 @@ import (
 )
 
 func TestDay10Part1Example(t *testing.T) {
-	const want = 13140
+	const want uint = 13140
 	lines, err := linesFromFilename(exampleFilename(10))
 	if err != nil {
 		t.Fatal(err)
@@ -20,7 +20,7 @@ func TestDay10Part1Example(t *testing.T) {
 }
 
 func TestDay10Part1(t *testing.T) {
-	const want = 15140
+	const want uint = 15140
 	lines, err := linesFromFilename(filename(10))
 	if err != nil {
 		t.Fatal(err)

@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-func Day10(lines []string, part1 bool) (int, []string) {
+func Day10(lines []string, part1 bool) (uint, []string) {
 	var (
 		// like strconv.Atoi() but... custom. Why not.
 		parse = func(s string) int {
@@ -49,7 +49,7 @@ func Day10(lines []string, part1 bool) (int, []string) {
 		for cycle := 20; cycle <= 220; cycle += 40 {
 			sum += cycle * states[cycle]
 		}
-		return sum, []string{}
+		return uint(sum), []string{}
 	}
 
 	var crt strings.Builder
@@ -63,12 +63,12 @@ func Day10(lines []string, part1 bool) (int, []string) {
 			states[cycle] == position ||
 			states[cycle]+1 == position
 		if lit {
-			crt.WriteRune('#')
+			crt.WriteByte('#')
 		} else {
-			crt.WriteRune('.')
+			crt.WriteByte('.')
 		}
 		if cycle%width == 0 {
-			crt.WriteRune(' ')
+			crt.WriteByte(' ')
 		}
 	}
 	return 0, strings.Fields(crt.String())
