@@ -6,20 +6,22 @@ import (
 	"strings"
 )
 
-func Day19(lines []string, part1 bool) int {
+func Day19(lines []string, part1 bool) uint {
 	var bps []Blueprint
 	for _, line := range lines {
 		bp := NewBlueprint(line)
 		bps = append(bps, bp)
 	}
 
-	bps[0].Step(24)
+	if len(bps) > 0 {
+		bps[0].Step(24)
+	}
 
 	sum := 0
 	for i := range bps {
 		sum += bps[i].QualityLevel()
 	}
-	return sum
+	return uint(sum)
 }
 
 func NewBlueprint(line string) Blueprint {
@@ -27,9 +29,12 @@ func NewBlueprint(line string) Blueprint {
 	line = strings.Replace(line, ":", " ", 1)
 	fs := strings.Fields(line)
 	num := func(idx int) int {
+		if idx >= len(fs) {
+			return 0
+		}
 		n, err := strconv.Atoi(fs[idx])
 		if err != nil {
-			panic(err)
+			return 0
 		}
 		return n
 	}
