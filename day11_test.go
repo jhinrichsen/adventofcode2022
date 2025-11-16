@@ -50,30 +50,24 @@ func TestFormula(t *testing.T) {
 }
 
 func TestDay11Part1Example(t *testing.T) {
-	const want = 10605
+	const want uint = 10605
 	lines, err := linesFromFilename(exampleFilename(11))
 	if err != nil {
 		t.Fatal(err)
 	}
-	got, err := Day11(lines, true)
-	if err != nil {
-		t.Fatal(err)
-	}
+	got := Day11(lines, true)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
 	}
 }
 
 func TestDay11Part1(t *testing.T) {
-	const want = 78960
+	const want uint = 78960
 	lines, err := linesFromFilename(filename(11))
 	if err != nil {
 		t.Fatal(err)
 	}
-	got, err := Day11(lines, true)
-	if err != nil {
-		t.Fatal(err)
-	}
+	got := Day11(lines, true)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
 	}
@@ -85,22 +79,19 @@ func BenchmarkDay11(b *testing.B) {
 		b.Fatal(err)
 	}
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		_, _ = Day11(lines, true)
+	for range b.N {
+		_ = Day11(lines, true)
 	}
 }
 
 /*
 func TestDay11Part2Example(t *testing.T) {
-	const want = 2499999996 // too low
+	const want uint = 2499999996 // too low
 	lines, err := linesFromFilename(exampleFilename(11))
 	if err != nil {
 		t.Fatal(err)
 	}
-	got, err := Day11(lines, false)
-	if err != nil {
-		t.Fatal(err)
-	}
+	got := Day11(lines, false)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
 	}

@@ -90,10 +90,10 @@ func NewMonkeys(lines []string) ([]Monkey, error) {
 	return ms, nil
 }
 
-func Day11(lines []string, part1 bool) (int, error) {
+func Day11(lines []string, part1 bool) uint {
 	monkeys, err := NewMonkeys(lines)
 	if err != nil {
-		return 0, err
+		return 0
 	}
 
 	divisible := func(x, y float64) bool {
@@ -115,8 +115,8 @@ func Day11(lines []string, part1 bool) (int, error) {
 	if part1 {
 		rounds = 20
 	}
-	inspections := make([]int, len(monkeys))
-	for round := 0; round < rounds; round++ {
+	inspections := make([]uint, len(monkeys))
+	for range rounds {
 		for j := range monkeys {
 			for len(monkeys[j].Items) > 0 {
 				inspections[j]++
@@ -139,8 +139,10 @@ func Day11(lines []string, part1 bool) (int, error) {
 		}
 	}
 
-	sort.Sort(sort.Reverse(sort.IntSlice(inspections)))
-	return inspections[0] * inspections[1], nil
+	sort.Slice(inspections, func(i, j int) bool {
+		return inspections[i] > inspections[j]
+	})
+	return inspections[0] * inspections[1]
 }
 
 // Eval uses Go's internal compiler to evaluate a formula.
@@ -161,8 +163,11 @@ func Eval(formula string, m map[string]float64) float64 {
 	fs := token.NewFileSet()
 	tv, err := types.Eval(fs, nil, token.NoPos, formula)
 	if err != nil {
-		panic(err)
+		return 0
 	}
-	n, _ := constant.Float64Val(tv.Value)
+	n, exact := constant.Float64Val(tv.Value)
+	if !exact {
+		return 0
+	}
 	return n
 }
