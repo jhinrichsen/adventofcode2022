@@ -79,7 +79,7 @@ func (p *Day24Puzzle) blizzardsAt(time uint) map[complex128]bool {
 	return positions
 }
 
-func (p *Day24Puzzle) RenderGrid(time uint) []string {
+func (p *Day24Puzzle) renderGrid(time uint) []string {
 	grid := make([][]byte, p.height)
 	for y := 0; y < p.height; y++ {
 		grid[y] = make([]byte, p.width)

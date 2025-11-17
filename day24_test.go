@@ -66,7 +66,7 @@ func TestDay24Part1AllMinutes(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("Minute%d", tt.minute), func(t *testing.T) {
-			actual := puzzle.RenderGrid(tt.minute)
+			actual := puzzle.renderGrid(tt.minute)
 			for y := 0; y < len(tt.expected); y++ {
 				if actual[y] != tt.expected[y] {
 					t.Errorf("Minute %d, row %d:\n  want: %s\n  got:  %s", tt.minute, y, tt.expected[y], actual[y])
