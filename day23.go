@@ -17,7 +17,7 @@ func Day23(lines []string, rounds int) int {
 			for k := range m {
 				return k
 			}
-			panic("want at least one map entry but map is empty")
+			return 0 // Empty map, return origin
 		}
 		rect = func() (complex128, complex128) {
 			// initialize on arbitrary position
@@ -101,7 +101,11 @@ func Day23(lines []string, rounds int) int {
 	parseMap()
 
 	// dump(0)
-	for round := 1; round <= 10; round++ {
+	maxRounds := rounds
+	if maxRounds < 0 {
+		maxRounds = 1000000 // Large number for "run until stable"
+	}
+	for round := 1; round <= maxRounds; round++ {
 
 		// first half
 

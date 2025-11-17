@@ -1,7 +1,5 @@
 package adventofcode2022
 
-import "fmt"
-
 func Day22(lines []string, part1 bool) int {
 	const (
 		north = 0 + 1i
@@ -151,7 +149,7 @@ func NewCommands(s string) (cs []Command) {
 			case 'R':
 				turn = 0 + 1i
 			default:
-				panic(fmt.Sprintf("Illegal turn %c", c))
+				turn = noturn // Unknown turn, use no turn
 			}
 			cs = append(cs, Command{n, turn})
 			n = 0

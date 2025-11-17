@@ -1,7 +1,5 @@
 package adventofcode2022
 
-import "fmt"
-
 func NewDay24(lines []string) day24 {
 	var (
 		world day24
@@ -33,7 +31,7 @@ func NewDay24(lines []string) day24 {
 			case '<':
 				facing = West
 			default:
-				panic(fmt.Sprintf("unknown element %c", lines[y][x]))
+				facing = 0 // Unknown element, no facing
 			}
 			world.blizzards = append(world.blizzards,
 				Blizzard{Dim: R2c(X, Y), Facing: facing})
@@ -67,6 +65,6 @@ func (a *Blizzard) Step() {
 	case South:
 	case West:
 	default:
-		panic("Cowardly refusing to step into nirvana")
+		// Unknown direction, no step
 	}
 }
