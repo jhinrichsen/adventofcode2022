@@ -15,7 +15,7 @@ func TestDay13Part1Example(t *testing.T) {
 }
 
 func TestDay13Part1(t *testing.T) {
-	const want uint = 5588
+	const want uint = 5808
 	lines, err := linesFromFilename(filename(13))
 	if err != nil {
 		t.Fatal(err)
