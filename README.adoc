@@ -661,7 +661,7 @@ BFS pathfinding through valley with moving blizzards.
 Fixed critical bug in blizzard wrapping logic. Original modulo arithmetic was
 incorrect for negative coordinates, causing blizzards to appear in wall rows.
 Rewrote to properly convert to 0-based coordinates, apply modulo, then convert
-back. All 19 intermediate states (minutes 0-18) verified against walkthrough.
+back.
 
 == Day 21
 
