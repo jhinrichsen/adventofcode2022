@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestDay17Example(t *testing.T) {
+func TestDay17Part1Example(t *testing.T) {
 	const (
 		rocks    = 2022
 		want uint = 3068
