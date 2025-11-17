@@ -13,21 +13,21 @@ type Blueprint struct {
 	ObsidianRobotClay  int
 	GeodeRobotOre      int
 	GeodeRobotObsidian int
-	MaxOre             int // Max ore needed per turn
-	MaxClay            int // Max clay needed per turn
-	MaxObsidian        int // Max obsidian needed per turn
+	MaxOre             int
+	MaxClay            int
+	MaxObsidian        int
 }
 
 type State struct {
-	Minute             int
-	Ore                int
-	Clay               int
-	Obsidian           int
-	Geodes             int
-	OreRobots          int
-	ClayRobots         int
-	ObsidianRobots     int
-	GeodeRobots        int
+	Minute         uint8
+	Ore            uint8
+	Clay           uint8
+	Obsidian       uint8
+	Geodes         uint8
+	OreRobots      uint8
+	ClayRobots     uint8
+	ObsidianRobots uint8
+	GeodeRobots    uint8
 }
 
 func NewBlueprint(line string) Blueprint {
@@ -70,85 +70,111 @@ func (bp Blueprint) maxGeodes(minutes int) int {
 	}
 
 	maxGeodes := 0
-	var dfs func(s State)
+	stack := []State{initialState}
 
-	dfs = func(s State) {
-		if s.Minute == minutes {
-			if s.Geodes > maxGeodes {
-				maxGeodes = s.Geodes
+	// Use smaller map with more aggressive pruning
+	seen := make(map[State]struct{}, 100000)
+
+	for len(stack) > 0 {
+		s := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+
+		if int(s.Minute) == minutes {
+			if int(s.Geodes) > maxGeodes {
+				maxGeodes = int(s.Geodes)
 			}
-			return
+			continue
 		}
 
 		// Pruning: if we built a geode robot every remaining minute, could we beat max?
-		remaining := minutes - s.Minute
-		maxPossible := s.Geodes + s.GeodeRobots*remaining + remaining*(remaining-1)/2
+		remaining := minutes - int(s.Minute)
+		maxPossible := int(s.Geodes) + int(s.GeodeRobots)*remaining + remaining*(remaining-1)/2
 		if maxPossible <= maxGeodes {
-			return
+			continue
 		}
 
-		// Try building each robot type (or do nothing)
-		canBuildGeodeRobot := s.Ore >= bp.GeodeRobotOre && s.Obsidian >= bp.GeodeRobotObsidian
-		canBuildObsidianRobot := s.Ore >= bp.ObsidianRobotOre && s.Clay >= bp.ObsidianRobotClay
-		canBuildClayRobot := s.Ore >= bp.ClayRobotOre
-		canBuildOreRobot := s.Ore >= bp.OreRobotOre
+		// Aggressive resource capping
+		maxOreNeeded := uint8(min(255, bp.MaxOre*remaining))
+		maxClayNeeded := uint8(min(255, bp.MaxClay*remaining))
+		maxObsidianNeeded := uint8(min(255, bp.MaxObsidian*remaining))
 
-		// Always build geode robot if possible
+		if s.Ore > maxOreNeeded {
+			s.Ore = maxOreNeeded
+		}
+		if s.Clay > maxClayNeeded {
+			s.Clay = maxClayNeeded
+		}
+		if s.Obsidian > maxObsidianNeeded {
+			s.Obsidian = maxObsidianNeeded
+		}
+
+		// Check if we've seen this state
+		if _, exists := seen[s]; exists {
+			continue
+		}
+		seen[s] = struct{}{}
+
+		canBuildGeodeRobot := int(s.Ore) >= bp.GeodeRobotOre && int(s.Obsidian) >= bp.GeodeRobotObsidian
+		canBuildObsidianRobot := int(s.Ore) >= bp.ObsidianRobotOre && int(s.Clay) >= bp.ObsidianRobotClay
+		canBuildClayRobot := int(s.Ore) >= bp.ClayRobotOre
+		canBuildOreRobot := int(s.Ore) >= bp.OreRobotOre
+
+		// Always build geode robot if possible (greedy)
 		if canBuildGeodeRobot {
 			next := s
-			next.Ore -= bp.GeodeRobotOre
-			next.Obsidian -= bp.GeodeRobotObsidian
+			next.Ore -= uint8(bp.GeodeRobotOre)
+			next.Obsidian -= uint8(bp.GeodeRobotObsidian)
 			next.Ore += s.OreRobots
 			next.Clay += s.ClayRobots
 			next.Obsidian += s.ObsidianRobots
 			next.Geodes += s.GeodeRobots
 			next.GeodeRobots++
 			next.Minute++
-			dfs(next)
-			return
+			stack = append(stack, next)
+			continue // Don't explore other options if we can build geode robot
 		}
 
 		// Try building obsidian robot (if we need more obsidian production)
-		if canBuildObsidianRobot && s.ObsidianRobots < bp.MaxObsidian {
+		if canBuildObsidianRobot && s.ObsidianRobots < uint8(bp.MaxObsidian) {
 			next := s
-			next.Ore -= bp.ObsidianRobotOre
-			next.Clay -= bp.ObsidianRobotClay
+			next.Ore -= uint8(bp.ObsidianRobotOre)
+			next.Clay -= uint8(bp.ObsidianRobotClay)
 			next.Ore += s.OreRobots
 			next.Clay += s.ClayRobots
 			next.Obsidian += s.ObsidianRobots
 			next.Geodes += s.GeodeRobots
 			next.ObsidianRobots++
 			next.Minute++
-			dfs(next)
+			stack = append(stack, next)
 		}
 
 		// Try building clay robot (if we need more clay production)
-		if canBuildClayRobot && s.ClayRobots < bp.MaxClay {
+		if canBuildClayRobot && s.ClayRobots < uint8(bp.MaxClay) {
 			next := s
-			next.Ore -= bp.ClayRobotOre
+			next.Ore -= uint8(bp.ClayRobotOre)
 			next.Ore += s.OreRobots
 			next.Clay += s.ClayRobots
 			next.Obsidian += s.ObsidianRobots
 			next.Geodes += s.GeodeRobots
 			next.ClayRobots++
 			next.Minute++
-			dfs(next)
+			stack = append(stack, next)
 		}
 
 		// Try building ore robot (if we need more ore production)
-		if canBuildOreRobot && s.OreRobots < bp.MaxOre {
+		if canBuildOreRobot && s.OreRobots < uint8(bp.MaxOre) {
 			next := s
-			next.Ore -= bp.OreRobotOre
+			next.Ore -= uint8(bp.OreRobotOre)
 			next.Ore += s.OreRobots
 			next.Clay += s.ClayRobots
 			next.Obsidian += s.ObsidianRobots
 			next.Geodes += s.GeodeRobots
 			next.OreRobots++
 			next.Minute++
-			dfs(next)
+			stack = append(stack, next)
 		}
 
-		// Try doing nothing (just collect resources)
+		// Try doing nothing (wait)
 		{
 			next := s
 			next.Ore += s.OreRobots
@@ -156,11 +182,10 @@ func (bp Blueprint) maxGeodes(minutes int) int {
 			next.Obsidian += s.ObsidianRobots
 			next.Geodes += s.GeodeRobots
 			next.Minute++
-			dfs(next)
+			stack = append(stack, next)
 		}
 	}
 
-	dfs(initialState)
 	return maxGeodes
 }
 
