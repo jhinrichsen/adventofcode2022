@@ -40,11 +40,11 @@ Number of tries for a correct answer:
 | 17  | 1      | - (+1)
 | 18  | 1      | - (+1)
 | 19  |        |
-| 20  | - (+2) | (wrong: -6459, -6750)
+| 20  | 3      |
 | 21  | 1      |
 | 22  | 2 |
 | 23  |  |
-| 24  | - (+1) | (wrong: 300)
+| 24  | 2      |
 | 25  | 1      |
 |===
 
@@ -640,10 +640,12 @@ When wrapping would occur, it is replaced with swapping to the other direction.
 | Attempt | Value  | Status
 | 1       | -6459  | Wrong (too high)
 | 2       | -6750  | Wrong
+| 3       | 11616  | Correct
 |===
 
-Example passes (expected: 3), indicating core algorithm works.
-Issue likely with wrapping/modulo arithmetic for large puzzle input.
+Bug was in the mixing algorithm: movement calculations must use modulo (len-1)
+since the element is removed before calculating the new position. Rewrote to
+use Node struct tracking original indices for proper order processing.
 
 == Day 24
 
@@ -653,11 +655,13 @@ BFS pathfinding through valley with moving blizzards.
 
 |===
 | Attempt | Value  | Status
-| 1       | 300    | Wrong
+| 1       | 299    | Wrong (off by 1)
+| 2       | 300    | Correct
 |===
 
-Example passes (expected: 18), indicating pathfinding algorithm works.
-Issue likely with starting position or timing logic for full puzzle input.
+Bug was an off-by-one error: the pathfinding algorithm returned the time at
+arrival, but needed to add 1 to account for the initial minute before entering
+the valley.
 
 == Day 21
 

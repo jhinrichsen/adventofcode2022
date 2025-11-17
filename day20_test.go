@@ -17,8 +17,7 @@ func TestDay20Part1Example(t *testing.T) {
 }
 
 func TestDay20Part1(t *testing.T) {
-	// const want = -6459 // wrong
-	const want = -6750
+	const want = 11616
 	ns, err := numbersFromFilename(filename(20))
 	if err != nil {
 		t.Fatal(err)

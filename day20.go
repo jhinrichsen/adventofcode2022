@@ -1,63 +1,58 @@
 package adventofcode2022
 
+type Node struct {
+	Value         int
+	OriginalIndex int
+}
+
 func Day20(srcs []int, mix int, part1 bool) int {
-	var (
-		dim  = len(srcs)
-		dsts = make([]int, dim)
+	// Create list with original indices
+	list := make([]Node, len(srcs))
+	for i := range srcs {
+		list[i] = Node{Value: srcs[i], OriginalIndex: i}
+	}
 
-		ring = func(i int) int {
-			// i % dim returns negative remainder for negative i
-			return (i%dim + dim) % dim
-		}
-
-		findIndex = func(n int) int {
-			for i := 0; i < dim; i++ {
-				if dsts[i] == n {
-					return i
+	// Mix the specified number of times
+	for range mix {
+		// Process each number in original order
+		for origIdx := range srcs {
+			// Find current position of this number
+			currIdx := -1
+			for i := range list {
+				if list[i].OriginalIndex == origIdx {
+					currIdx = i
+					break
 				}
 			}
-			return -1
-		}
 
-		dst = func(i int) int {
-			return dsts[ring(i)]
-		}
-	)
+			// Remove the node
+			node := list[currIdx]
+			list = append(list[:currIdx], list[currIdx+1:]...)
 
-	copy(dsts, srcs)
-	for j := 0; j < mix; j++ {
-		for k := 0; k < dim; k++ {
-			var (
-				val       = srcs[k]
-				rel       = val
-				fromIndex = findIndex(val)
-				step      = 1
-			)
+			// Calculate new position (modulo list length after removal)
+			newIdx := currIdx + node.Value
+			if len(list) > 0 {
+				newIdx = ((newIdx % len(list)) + len(list)) % len(list)
+			}
 
-			if rel < 0 {
-				rel = -rel
-				step = -1
-			}
-			if step < 0 && fromIndex-rel <= 0 {
-				rel = dim - (rel % dim) - 1
-				step = 1
-			} else if step > 0 && fromIndex+rel >= dim {
-				rel = dim - (rel % dim) - 1
-				step = -1
-			}
-			from := ring(fromIndex)
-			into := ring(from + step)
-			for l := 0; l < rel; l++ {
-				dsts[from], dsts[into] = dsts[into], dsts[from]
-				from = ring(from + step)
-				into = ring(into + step)
-			}
+			// Insert at new position
+			list = append(list[:newIdx], append([]Node{node}, list[newIdx:]...)...)
 		}
 	}
 
-	j := findIndex(0)
-	d1 := dst(j + 1000)
-	d2 := dst(j + 2000)
-	d3 := dst(j + 3000)
-	return d1 + d2 + d3
+	// Find index of 0
+	zeroIdx := -1
+	for i := range list {
+		if list[i].Value == 0 {
+			zeroIdx = i
+			break
+		}
+	}
+
+	// Get values at 1000, 2000, 3000 after zero
+	v1 := list[(zeroIdx+1000)%len(list)].Value
+	v2 := list[(zeroIdx+2000)%len(list)].Value
+	v3 := list[(zeroIdx+3000)%len(list)].Value
+
+	return v1 + v2 + v3
 }

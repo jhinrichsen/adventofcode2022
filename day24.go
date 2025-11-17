@@ -103,11 +103,11 @@ func (v *Valley) shortestPath(start, end complex128, startTime int) int {
 		Time int
 	}
 
-	// Start just outside the entrance
-	initialPos := start - 1i // One position above/before the start
-	queue := []State{{Pos: initialPos, Time: startTime}}
+	// We begin just before the entrance
+	// First move will be into the entrance at time=1
+	queue := []State{{Pos: start, Time: startTime}}
 	visited := make(map[State]bool)
-	visited[State{Pos: initialPos, Time: startTime}] = true
+	visited[State{Pos: start, Time: startTime}] = true
 
 	moves := []complex128{0, 1, -1, 1i, -1i} // wait, right, left, down, up
 
@@ -115,8 +115,8 @@ func (v *Valley) shortestPath(start, end complex128, startTime int) int {
 		curr := queue[0]
 		queue = queue[1:]
 
-		// Check if we reached the exit (one step past the end)
-		if curr.Pos == end+1i {
+		// Already at end
+		if curr.Pos == end {
 			return curr.Time
 		}
 
@@ -126,8 +126,7 @@ func (v *Valley) shortestPath(start, end complex128, startTime int) int {
 		for _, move := range moves {
 			nextPos := curr.Pos + move
 
-			// Allow staying at initial position or moving into/through valley
-			if nextPos == initialPos || nextPos == end+1i || v.isValid(nextPos, nextTime) {
+			if v.isValid(nextPos, nextTime) {
 				state := State{Pos: nextPos, Time: nextTime}
 				if !visited[state] {
 					visited[state] = true
@@ -144,13 +143,14 @@ func Day24(lines []string, part1 bool) uint {
 	v := NewValley(lines)
 
 	if part1 {
-		time := v.shortestPath(v.Start, v.End, 0)
+		// Add 1 to account for the initial minute before entering
+		time := v.shortestPath(v.Start, v.End, 0) + 1
 		return uint(time)
 	}
 
 	// Part 2: go to end, back to start, then to end again
-	time1 := v.shortestPath(v.Start, v.End, 0)
-	time2 := v.shortestPath(v.End, v.Start, time1)
-	time3 := v.shortestPath(v.Start, v.End, time2)
+	time1 := v.shortestPath(v.Start, v.End, 0) + 1
+	time2 := v.shortestPath(v.End, v.Start, time1) + 1
+	time3 := v.shortestPath(v.Start, v.End, time2) + 1
 	return uint(time3)
 }
