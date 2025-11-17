@@ -12,7 +12,7 @@ func Day16(lines []string, part1 bool) uint {
 	if part1 {
 		return day16Part1(valves)
 	}
-	return 0 // Part 2 placeholder
+	return day16Part2(valves)
 }
 
 type Valve struct {
@@ -156,4 +156,78 @@ func day16Part1(valves map[string]*Valve) uint {
 	}
 
 	return dfs("AA", 0, 0)
+}
+
+func day16Part2(valves map[string]*Valve) uint {
+	// Build list of valves with non-zero flow
+	var important []string
+	valveIdx := make(map[string]int)
+	idx := 0
+
+	for name, valve := range valves {
+		if valve.flowRate > 0 {
+			important = append(important, name)
+			valveIdx[name] = idx
+			idx++
+		}
+	}
+
+	// Precompute distances between all important valves and from AA
+	dist := make(map[string]map[string]int)
+	allNodes := append([]string{"AA"}, important...)
+
+	for _, from := range allNodes {
+		dist[from] = make(map[string]int)
+		for _, to := range important {
+			if from != to {
+				dist[from][to] = bfs(valves, from, to)
+			}
+		}
+	}
+
+	// Compute max pressure for each possible set of opened valves
+	maxPressure := make(map[uint64]uint)
+
+	var dfs func(pos string, time int, opened uint64, pressure uint)
+	dfs = func(pos string, time int, opened uint64, pressure uint) {
+		// Update max pressure for this set of opened valves
+		if pressure > maxPressure[opened] {
+			maxPressure[opened] = pressure
+		}
+
+		// Try opening each unopened valve
+		for _, next := range important {
+			bit := uint64(1) << valveIdx[next]
+			if opened&bit == 0 { // Not opened yet
+				travelTime := dist[pos][next]
+				newTime := time + travelTime + 1 // Travel + open valve
+
+				if newTime < 26 {
+					remaining := 26 - newTime
+					newPressure := pressure + uint(valves[next].flowRate*remaining)
+					newOpened := opened | bit
+
+					dfs(next, newTime, newOpened, newPressure)
+				}
+			}
+		}
+	}
+
+	dfs("AA", 0, 0, 0)
+
+	// Find best partition: you open set S, elephant opens disjoint set
+	best := uint(0)
+	for yourSet, yourPressure := range maxPressure {
+		for elephantSet, elephantPressure := range maxPressure {
+			// Check if sets are disjoint
+			if yourSet&elephantSet == 0 {
+				total := yourPressure + elephantPressure
+				if total > best {
+					best = total
+				}
+			}
+		}
+	}
+
+	return best
 }
