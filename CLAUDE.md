@@ -1,4 +1,26 @@
-# Claude Code Guidelines for Advent of Code 2019
+# Claude Code Guidelines for Advent of Code 2022
+
+## 🚨 CRITICAL: Solution Confidentiality
+
+**Solutions MUST NEVER appear anywhere except in unit test `want` values.**
+
+Prohibited locations:
+- ❌ Git commit messages
+- ❌ Pull request titles/descriptions
+- ❌ Code comments
+- ❌ Documentation files (README.adoc, CLAUDE.md)
+- ❌ Console output or logs
+
+**ONLY** permitted location:
+- ✅ Unit test files: `TestDayXXPart1` and `TestDayXXPart2` (the `want` parameter)
+
+**Example commit messages:**
+```
+✅ Good: perf(day17): optimize water retention logic by 30%
+❌ Bad:  feat(day17): solve part 2 - answer is 30410
+```
+
+---
 
 ## Critical Rules
 
@@ -87,6 +109,7 @@ Use conventional commits with day number as scope:
 **Types:**
 - `feat`: New feature/solution
 - `fix`: Bug fix
+- `perf`: Performance optimization
 - `refactor`: Code refactoring
 - `test`: Test additions/changes
 - `docs`: Documentation
@@ -100,7 +123,20 @@ Use conventional commits with day number as scope:
 
 When optimizing puzzle solutions, follow this workflow to measure and document performance improvements:
 
+### Performance Targets
+
+**Goal:** Solutions should run in **under 1 second** with **minimal memory usage**
+
+Focus on:
+- Low `B/op` (bytes per operation)
+- Low `allocs/op` (allocations per operation)
+- Minimize allocations in hot loops
+- Prefer arrays/slices over maps for bounded data ranges
+- Reuse buffers and reset slice lengths rather than reallocating
+
 ### Process
+
+**IMPORTANT:** Make ONE change at a time to ensure clear attribution of improvements.
 
 1. **Create baseline benchmark (b0)**
    ```bash
@@ -109,7 +145,7 @@ When optimizing puzzle solutions, follow this workflow to measure and document p
    Remove the last two lines (PASS and ok lines) from b0
 
 2. **Optimize the code**
-   Apply performance improvements following the guidelines above
+   Apply ONE targeted performance improvement following the guidelines above
 
 3. **Run benchmark again (b1)**
    ```bash
@@ -127,8 +163,15 @@ When optimizing puzzle solutions, follow this workflow to measure and document p
    - Include the benchstat output
    - Add a short, concise explanation of the optimization
    - NEVER use bold (**) in README.adoc - use proper AsciiDoc formatting
+   - NEVER include solution values in documentation
 
-6. **Repeat** until no further significant improvements
+6. **Commit changes**
+   ```bash
+   git add .
+   git commit -m "perf(dayXX): [optimization description]"
+   ```
+
+7. **Repeat** until performance targets are met or no further significant improvements
 
 ### Example README.adoc Entry
 
