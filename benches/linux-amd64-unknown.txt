@@ -1,0 +1,33 @@
+goos: linux
+goarch: amd64
+pkg: gitlab.com/jhinrichsen/adventofcode2022
+cpu: Intel(R) Xeon(R) CPU @ 2.60GHz
+BenchmarkDay01Part2-16    	   44067	     26294 ns/op	    4144 B/op	      11 allocs/op
+BenchmarkDay03Part1-16    	   33854	     34870 ns/op	    2400 B/op	     300 allocs/op
+BenchmarkDay03Part2-16    	   10000	    108021 ns/op	    6192 B/op	     370 allocs/op
+BenchmarkDay04Part1-16    	    7150	    178618 ns/op	   96001 B/op	    3000 allocs/op
+BenchmarkDay04Part2-16    	    6748	    181333 ns/op	   96000 B/op	    3000 allocs/op
+BenchmarkDay05Part1-16    	  147319	      7539 ns/op	    4147 B/op	       3 allocs/op
+BenchmarkDay05Part2-16    	  157418	      7435 ns/op	    4147 B/op	       3 allocs/op
+BenchmarkDay06Part1-16    	  114972	     10625 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay06Part2-16    	   29965	     39873 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay09Part1-16    	    1076	   1092231 ns/op	  558751 B/op	    2051 allocs/op
+BenchmarkDay09Part2-16    	     709	   1705031 ns/op	  281720 B/op	    2029 allocs/op
+BenchmarkDay10Part1-16    	 1000000	      1026 ns/op	    2304 B/op	       1 allocs/op
+BenchmarkDay10Part2-16    	  451891	      2789 ns/op	    2904 B/op	       8 allocs/op
+BenchmarkDay11Part1-16    	   34698	     32146 ns/op	   27736 B/op	     405 allocs/op
+BenchmarkDay11Part2-16    	      93	  11999135 ns/op	10511086 B/op	  173232 allocs/op
+BenchmarkDay13Part1-16    	     841	   1444374 ns/op	  567866 B/op	   20048 allocs/op
+BenchmarkDay13Part2-16    	     751	   1627545 ns/op	  577776 B/op	   20077 allocs/op
+BenchmarkDay14Part1-16    	     362	   3295835 ns/op	  253496 B/op	    2421 allocs/op
+BenchmarkDay14Part2-16    	       6	 176233469 ns/op	 2347181 B/op	    2579 allocs/op
+BenchmarkDay15Part1-16    	  130435	      9536 ns/op	    5632 B/op	      93 allocs/op
+BenchmarkDay15Part2-16    	       1	1023257042 ns/op	1051317568 B/op	15173134 allocs/op
+BenchmarkDay16Part1-16    	      12	  91407474 ns/op	11270540 B/op	  307237 allocs/op
+BenchmarkDay16Part2-16    	       4	 317080784 ns/op	 2167200 B/op	    5719 allocs/op
+BenchmarkDay17Part1-16    	      12	 100143024 ns/op	  876486 B/op	      80 allocs/op
+BenchmarkDay17Part2-16    	       2	 696380320 ns/op	 2316368 B/op	    2930 allocs/op
+BenchmarkDay21Part1-16    	     590	   2363776 ns/op	  956502 B/op	   10451 allocs/op
+BenchmarkDay21Part2-16    	    1077	   1079909 ns/op	  527152 B/op	    5671 allocs/op
+PASS
+ok  	gitlab.com/jhinrichsen/adventofcode2022	37.530s
