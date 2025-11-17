@@ -6,16 +6,27 @@ type Node struct {
 }
 
 func Day20(srcs []int, mix int, part1 bool) int {
-	// Create list with original indices
-	list := make([]Node, len(srcs))
+	// Apply decryption key for part 2
+	const decryptionKey = 811589153
+	values := make([]int, len(srcs))
 	for i := range srcs {
-		list[i] = Node{Value: srcs[i], OriginalIndex: i}
+		if part1 {
+			values[i] = srcs[i]
+		} else {
+			values[i] = srcs[i] * decryptionKey
+		}
+	}
+
+	// Create list with original indices
+	list := make([]Node, len(values))
+	for i := range values {
+		list[i] = Node{Value: values[i], OriginalIndex: i}
 	}
 
 	// Mix the specified number of times
 	for range mix {
 		// Process each number in original order
-		for origIdx := range srcs {
+		for origIdx := range values {
 			// Find current position of this number
 			currIdx := -1
 			for i := range list {
