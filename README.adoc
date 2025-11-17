@@ -40,11 +40,11 @@ Number of tries for a correct answer:
 | 17  | 1      | - (+1)
 | 18  | 1      | - (+1)
 | 19  |        |
-| 20  | - (+2) |
+| 20  | - (+2) | (wrong: -6459, -6750)
 | 21  | 1      |
 | 22  | 2 |
 | 23  |  |
-| 24  |  |
+| 24  | - (+1) | (wrong: 300)
 | 25  | 1      |
 |===
 
@@ -634,7 +634,30 @@ swapped with it immediate neighbour to the left or to the right N times.
 
 When wrapping would occur, it is replaced with swapping to the other direction.
 
-TODO: Got the example right, but part 1 fails for the second time.
+=== Tries
+
+|===
+| Attempt | Value  | Status
+| 1       | -6459  | Wrong (too high)
+| 2       | -6750  | Wrong
+|===
+
+Example passes (expected: 3), indicating core algorithm works.
+Issue likely with wrapping/modulo arithmetic for large puzzle input.
+
+== Day 24
+
+BFS pathfinding through valley with moving blizzards.
+
+=== Tries
+
+|===
+| Attempt | Value  | Status
+| 1       | 300    | Wrong
+|===
+
+Example passes (expected: 18), indicating pathfinding algorithm works.
+Issue likely with starting position or timing logic for full puzzle input.
 
 == Day 21
 
