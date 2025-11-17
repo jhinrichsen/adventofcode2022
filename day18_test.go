@@ -46,3 +46,25 @@ func TestDay18Part2(t *testing.T) {
 	got := Day18(lines, false)
 	t.Logf("Day 18 Part 2: %d", got)
 }
+
+func BenchmarkDay18Part1(b *testing.B) {
+	lines, err := linesFromFilename(filename(18))
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Day18(lines, true)
+	}
+}
+
+func BenchmarkDay18Part2(b *testing.B) {
+	lines, err := linesFromFilename(filename(18))
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Day18(lines, false)
+	}
+}

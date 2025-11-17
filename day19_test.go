@@ -74,3 +74,25 @@ func TestDay19Part2(t *testing.T) {
 	}
 	t.Logf("Part 2 result: %d", got)
 }
+
+func BenchmarkDay19Part1(b *testing.B) {
+	lines, err := linesFromFilename(filename(19))
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Day19(lines, true)
+	}
+}
+
+func BenchmarkDay19Part2(b *testing.B) {
+	lines, err := linesFromFilename(filename(19))
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Day19(lines, false)
+	}
+}

@@ -101,3 +101,27 @@ func TestDay24Part1AllMinutes(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkDay24Part1(b *testing.B) {
+	lines, err := linesFromFilename(filename(24))
+	if err != nil {
+		b.Fatal(err)
+	}
+	puzzle := NewDay24(lines)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Day24(puzzle, true)
+	}
+}
+
+func BenchmarkDay24Part2(b *testing.B) {
+	lines, err := linesFromFilename(filename(24))
+	if err != nil {
+		b.Fatal(err)
+	}
+	puzzle := NewDay24(lines)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Day24(puzzle, false)
+	}
+}
