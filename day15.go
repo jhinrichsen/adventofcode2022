@@ -7,13 +7,13 @@ import (
 )
 
 // Day15 solves day 15: Beacon Exclusion Zone
-func Day15(lines []string, targetY int, part1 bool) uint {
+func Day15(lines []string, targetY, maxCoord int, part1 bool) uint {
 	sensors := parseSensors(lines)
 
 	if part1 {
 		return day15Part1(sensors, targetY)
 	}
-	return 0 // Part 2 placeholder
+	return day15Part2(sensors, maxCoord)
 }
 
 type Sensor struct {
@@ -129,6 +129,72 @@ func day15Part1(sensors []Sensor, targetY int) uint {
 	}
 
 	return count
+}
+
+func day15Part2(sensors []Sensor, maxCoord int) uint {
+	// Search for the one uncovered position in [0, maxCoord] x [0, maxCoord]
+	for y := 0; y <= maxCoord; y++ {
+		// Find all intervals covered at this Y
+		var intervals [][2]int
+
+		for _, s := range sensors {
+			// Check if sensor's exclusion zone reaches y
+			dy := s.pos.Y - y
+			if dy < 0 {
+				dy = -dy
+			}
+			if dy > s.radius {
+				continue
+			}
+
+			// Calculate the X range covered at y
+			remaining := s.radius - dy
+			x1 := s.pos.X - remaining
+			x2 := s.pos.X + remaining
+
+			// Clamp to search bounds
+			if x1 < 0 {
+				x1 = 0
+			}
+			if x2 > maxCoord {
+				x2 = maxCoord
+			}
+
+			intervals = append(intervals, [2]int{x1, x2})
+		}
+
+		// Merge intervals
+		merged := mergeIntervals(intervals)
+
+		// Check for gap in coverage
+		if len(merged) == 0 {
+			// Entire row is uncovered (shouldn't happen)
+			return uint(y)
+		}
+
+		// Check if there's a gap in [0, maxCoord]
+		if merged[0][0] > 0 {
+			// Gap at the start
+			return uint(y)
+		}
+
+		// Check for gap between merged intervals
+		for i := 0; i < len(merged)-1; i++ {
+			if merged[i][1]+1 < merged[i+1][0] {
+				// Found a gap
+				x := merged[i][1] + 1
+				return uint(x)*4000000 + uint(y)
+			}
+		}
+
+		// Check if coverage ends before maxCoord
+		if merged[len(merged)-1][1] < maxCoord {
+			x := merged[len(merged)-1][1] + 1
+			return uint(x)*4000000 + uint(y)
+		}
+	}
+
+	return 0
 }
 
 func mergeIntervals(intervals [][2]int) [][2]int {
