@@ -218,6 +218,10 @@ func Day17(line string, rocks int) uint {
 						remPosition, _ = remTest(remPosition, step)
 
 						// vertical move
+						// IMPORTANT: Must use separate variable for assignment!
+						// Using `remPosition, ok := remTest(remPosition, south)` creates
+						// a NEW local variable that shadows remPosition, causing an
+						// infinite loop. Always use: newPos, ok := ... then remPosition = newPos
 						newPos, ok := remTest(remPosition, south)
 						remPosition = newPos
 						if !ok {
