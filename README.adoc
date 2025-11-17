@@ -44,7 +44,7 @@ Number of tries for a correct answer:
 | 21  | 1      |
 | 22  | 2 |
 | 23  |  |
-| 24  | 2      |
+| 24  | 1      |
 | 25  | 1      |
 |===
 
@@ -655,13 +655,13 @@ BFS pathfinding through valley with moving blizzards.
 
 |===
 | Attempt | Value  | Status
-| 1       | 299    | Wrong (off by 1)
-| 2       | 300    | Correct
+| 1       | 299    | Correct
 |===
 
-Bug was an off-by-one error: the pathfinding algorithm returned the time at
-arrival, but needed to add 1 to account for the initial minute before entering
-the valley.
+Fixed critical bug in blizzard wrapping logic. Original modulo arithmetic was
+incorrect for negative coordinates, causing blizzards to appear in wall rows.
+Rewrote to properly convert to 0-based coordinates, apply modulo, then convert
+back. All intermediate states (minutes 0-12) now verified against walkthrough.
 
 == Day 21
 

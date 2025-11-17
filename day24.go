@@ -54,29 +54,100 @@ func (v *Valley) blizzardsAt(time int) map[complex128]bool {
 		// Calculate blizzard position at this time
 		pos := b.Pos + complex(float64(time)*real(b.Dir), float64(time)*imag(b.Dir))
 
-		// Wrap around walls (walls are at y=0, y=Height-1, x=0, x=Width-1)
 		x := int(real(pos))
 		y := int(imag(pos))
 
-		// Wrap X coordinate (left/right wrapping)
-		if x < 1 {
-			x = ((x-1)%(v.Width-2) + (v.Width - 2)) + 1
-		} else if x >= v.Width-1 {
-			x = ((x-1)%(v.Width-2))+1
-		}
+		// Wrap to inner valley coordinates (1-based to 0-based, apply modulo, back to 1-based)
+		innerX := x - 1
+		innerY := y - 1
+		innerWidth := v.Width - 2
+		innerHeight := v.Height - 2
 
-		// Wrap Y coordinate (up/down wrapping)
-		if y < 1 {
-			y = ((y-1)%(v.Height-2) + (v.Height - 2)) + 1
-		} else if y >= v.Height-1 {
-			y = ((y-1)%(v.Height-2))+1
-		}
+		// Proper modulo that handles negatives correctly
+		innerX = ((innerX % innerWidth) + innerWidth) % innerWidth
+		innerY = ((innerY % innerHeight) + innerHeight) % innerHeight
+
+		x = innerX + 1
+		y = innerY + 1
 
 		positions[R2c(x, y)] = true
 	}
 
 	v.BlizzardCache[time] = positions
 	return positions
+}
+
+func (v *Valley) RenderGrid(time int) []string {
+	grid := make([][]byte, v.Height)
+	for y := 0; y < v.Height; y++ {
+		grid[y] = make([]byte, v.Width)
+		for x := 0; x < v.Width; x++ {
+			grid[y][x] = '.'
+		}
+	}
+
+	// Add walls
+	for y := 0; y < v.Height; y++ {
+		grid[y][0] = '#'
+		grid[y][v.Width-1] = '#'
+	}
+	for x := 0; x < v.Width; x++ {
+		grid[0][x] = '#'
+		grid[v.Height-1][x] = '#'
+	}
+	// Start and end openings
+	grid[int(imag(v.Start))][int(real(v.Start))] = '.'
+	grid[int(imag(v.End))][int(real(v.End))] = '.'
+
+	// Count blizzards at each position
+	blizzardCount := make(map[complex128][]complex128)
+	for _, b := range v.Blizzards {
+		pos := b.Pos + complex(float64(time)*real(b.Dir), float64(time)*imag(b.Dir))
+		x := int(real(pos))
+		y := int(imag(pos))
+
+		// Wrap to inner valley coordinates (1-based to 0-based, apply modulo, back to 1-based)
+		innerX := x - 1
+		innerY := y - 1
+		innerWidth := v.Width - 2
+		innerHeight := v.Height - 2
+
+		// Proper modulo that handles negatives correctly
+		innerX = ((innerX % innerWidth) + innerWidth) % innerWidth
+		innerY = ((innerY % innerHeight) + innerHeight) % innerHeight
+
+		x = innerX + 1
+		y = innerY + 1
+
+		finalPos := R2c(x, y)
+		blizzardCount[finalPos] = append(blizzardCount[finalPos], b.Dir)
+	}
+
+	// Add blizzards to grid
+	for pos, dirs := range blizzardCount {
+		x := int(real(pos))
+		y := int(imag(pos))
+		if len(dirs) > 1 {
+			grid[y][x] = byte('0' + len(dirs))
+		} else {
+			dir := dirs[0]
+			if real(dir) == 1 {
+				grid[y][x] = '>'
+			} else if real(dir) == -1 {
+				grid[y][x] = '<'
+			} else if imag(dir) == 1 {
+				grid[y][x] = 'v'
+			} else if imag(dir) == -1 {
+				grid[y][x] = '^'
+			}
+		}
+	}
+
+	result := make([]string, v.Height)
+	for y := 0; y < v.Height; y++ {
+		result[y] = string(grid[y])
+	}
+	return result
 }
 
 func (v *Valley) isValid(pos complex128, time int) bool {
@@ -143,14 +214,13 @@ func Day24(lines []string, part1 bool) uint {
 	v := NewValley(lines)
 
 	if part1 {
-		// Add 1 to account for the initial minute before entering
-		time := v.shortestPath(v.Start, v.End, 0) + 1
+		time := v.shortestPath(v.Start, v.End, 0)
 		return uint(time)
 	}
 
 	// Part 2: go to end, back to start, then to end again
-	time1 := v.shortestPath(v.Start, v.End, 0) + 1
-	time2 := v.shortestPath(v.End, v.Start, time1) + 1
-	time3 := v.shortestPath(v.Start, v.End, time2) + 1
+	time1 := v.shortestPath(v.Start, v.End, 0)
+	time2 := v.shortestPath(v.End, v.Start, time1)
+	time3 := v.shortestPath(v.Start, v.End, time2)
 	return uint(time3)
 }

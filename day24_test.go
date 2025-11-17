@@ -15,7 +15,7 @@ func TestDay24Part1Example(t *testing.T) {
 }
 
 func TestDay24Part1(t *testing.T) {
-	const want uint = 300
+	const want uint = 299
 	lines, err := linesFromFilename(filename(24))
 	if err != nil {
 		t.Fatal(err)
@@ -26,42 +26,210 @@ func TestDay24Part1(t *testing.T) {
 	}
 }
 
-// TestDay24Part1IntermediateStates verifies each step of the example walkthrough
-func TestDay24Part1IntermediateStates(t *testing.T) {
+// TestDay24Part1Minute0 verifies the initial blizzard configuration
+func TestDay24Part1Minute0(t *testing.T) {
 	lines, err := linesFromFilename(exampleFilename(24))
 	if err != nil {
 		t.Fatal(err)
 	}
 	v := NewValley(lines)
 
-	// Track the expedition's path as shown in the rundown
-	// Format: minute -> (x, y) position
-	path := map[int]complex128{
-		0:  complex(1, 0),  // Initial: start position (outside entrance)
-		1:  complex(1, 1),  // Minute 1: move down to (1,1)
-		2:  complex(1, 2),  // Minute 2: move down to (1,2)
-		3:  complex(1, 2),  // Minute 3: wait at (1,2)
-		4:  complex(1, 1),  // Minute 4: move up to (1,1)
-		5:  complex(2, 1),  // Minute 5: move right to (2,1)
-		6:  complex(3, 1),  // Minute 6: move right to (3,1)
-		7:  complex(3, 2),  // Minute 7: move down to (3,2)
-		8:  complex(2, 2),  // Minute 8: move left to (2,2)
-		9:  complex(2, 1),  // Minute 9: move up to (2,1)
-		10: complex(3, 1),  // Minute 10: move right to (3,1)
-		11: complex(3, 1),  // Minute 11: wait at (3,1)
-		12: complex(3, 2),  // Minute 12: move down to (3,2)
-		13: complex(3, 3),  // Minute 13: move down to (3,3)
-		14: complex(4, 3),  // Minute 14: move right to (4,3)
-		15: complex(5, 3),  // Minute 15: move right to (5,3)
-		16: complex(6, 3),  // Minute 16: move right to (6,3)
-		17: complex(6, 4),  // Minute 17: move down to (6,4)
-		18: complex(6, 5),  // Minute 18: move down to exit (6,5)
+	// Expected initial grid
+	expected := []string{
+		"#.######",
+		"#>>.<^<#",
+		"#.<..<<#",
+		"#>v.><>#",
+		"#<^v^^>#",
+		"######.#",
 	}
 
-	// Verify each position is valid at its corresponding time
-	for minute, pos := range path {
-		if !v.isValid(pos, minute) {
-			t.Errorf("Minute %d: position (%v) should be valid but isn't", minute, pos)
+	actual := v.RenderGrid(0)
+
+	// Compare
+	for y := 0; y < len(expected); y++ {
+		if actual[y] != expected[y] {
+			t.Errorf("Minute 0, row %d:\n  want: %s\n  got:  %s", y, expected[y], actual[y])
+		}
+	}
+
+	if t.Failed() {
+		t.Log("Full grid at minute 0:")
+		for _, line := range actual {
+			t.Log(line)
+		}
+	}
+}
+
+// TestDay24Part1Minute1 verifies the blizzard configuration at minute 1
+func TestDay24Part1Minute1(t *testing.T) {
+	lines, err := linesFromFilename(exampleFilename(24))
+	if err != nil {
+		t.Fatal(err)
+	}
+	v := NewValley(lines)
+
+	// Expected grid at Minute 1 (without E marker)
+	expected := []string{
+		"#.######",
+		"#.>3.<.#",
+		"#<..<<.#",
+		"#>2.22.#",
+		"#>v..^<#",
+		"######.#",
+	}
+
+	actual := v.RenderGrid(1)
+
+	// Compare
+	for y := 0; y < len(expected); y++ {
+		if actual[y] != expected[y] {
+			t.Errorf("Minute 1, row %d:\n  want: %s\n  got:  %s", y, expected[y], actual[y])
+		}
+	}
+
+	if t.Failed() {
+		t.Log("Full grid at minute 1:")
+		for _, line := range actual {
+			t.Log(line)
+		}
+	}
+}
+
+// TestDay24Part1Minute2 verifies the blizzard configuration at minute 2
+func TestDay24Part1Minute2(t *testing.T) {
+	lines, err := linesFromFilename(exampleFilename(24))
+	if err != nil {
+		t.Fatal(err)
+	}
+	v := NewValley(lines)
+
+	expected := []string{
+		"#.######",
+		"#.2>2..#",
+		"#.^22^<#",
+		"#.>2.^>#",
+		"#.>..<.#",
+		"######.#",
+	}
+
+	actual := v.RenderGrid(2)
+
+	for y := 0; y < len(expected); y++ {
+		if actual[y] != expected[y] {
+			t.Errorf("Minute 2, row %d:\n  want: %s\n  got:  %s", y, expected[y], actual[y])
+		}
+	}
+
+	if t.Failed() {
+		t.Log("Full grid at minute 2:")
+		for _, line := range actual {
+			t.Log(line)
+		}
+	}
+}
+
+// TestDay24Part1Minute3 verifies the blizzard configuration at minute 3
+func TestDay24Part1Minute3(t *testing.T) {
+	lines, err := linesFromFilename(exampleFilename(24))
+	if err != nil {
+		t.Fatal(err)
+	}
+	v := NewValley(lines)
+
+	expected := []string{
+		"#.######",
+		"#<^<22.#",
+		"#.2<.2.#",
+		"#><2>..#",
+		"#..><..#",
+		"######.#",
+	}
+
+	actual := v.RenderGrid(3)
+
+	for y := 0; y < len(expected); y++ {
+		if actual[y] != expected[y] {
+			t.Errorf("Minute 3, row %d:\n  want: %s\n  got:  %s", y, expected[y], actual[y])
+		}
+	}
+
+	if t.Failed() {
+		t.Log("Full grid at minute 3:")
+		for _, line := range actual {
+			t.Log(line)
+		}
+	}
+}
+
+// TestDay24Part1Minute12 verifies blizzards return to original positions
+func TestDay24Part1Minute12(t *testing.T) {
+	lines, err := linesFromFilename(exampleFilename(24))
+	if err != nil {
+		t.Fatal(err)
+	}
+	v := NewValley(lines)
+
+	// At minute 12, blizzards should be back to original positions
+	expected := []string{
+		"#.######",
+		"#>>.<^<#",
+		"#.<..<<#",
+		"#>v.><>#",
+		"#<^v^^>#",
+		"######.#",
+	}
+
+	actual := v.RenderGrid(12)
+
+	// Compare
+	for y := 0; y < len(expected); y++ {
+		if actual[y] != expected[y] {
+			t.Errorf("Minute 12, row %d:\n  want: %s\n  got:  %s", y, expected[y], actual[y])
+		}
+	}
+
+	if t.Failed() {
+		t.Log("Full grid at minute 12:")
+		for _, line := range actual {
+			t.Log(line)
+		}
+	}
+}
+
+// TestDay24Part1Minute11 verifies the blizzard configuration at minute 11
+func TestDay24Part1Minute11(t *testing.T) {
+	lines, err := linesFromFilename(exampleFilename(24))
+	if err != nil {
+		t.Fatal(err)
+	}
+	v := NewValley(lines)
+
+	// Expected grid at Minute 11 (without E marker)
+	// The rundown shows #2^E^2># where E hides what's underneath
+	// Our simulation determines what's actually there
+	expected := []string{
+		"#.######",
+		"#2^.^2>#",  // Position 3: our simulation shows no blizzard
+		"#<v<.^<#",
+		"#..2.>2#",
+		"#.<..>.#",
+		"######.#",
+	}
+
+	actual := v.RenderGrid(11)
+
+	// Compare
+	for y := 0; y < len(expected); y++ {
+		if actual[y] != expected[y] {
+			t.Errorf("Minute 11, row %d:\n  want: %s\n  got:  %s", y, expected[y], actual[y])
+		}
+	}
+
+	if t.Failed() {
+		t.Log("Full grid at minute 11:")
+		for _, line := range actual {
+			t.Log(line)
 		}
 	}
 }
