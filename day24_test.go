@@ -31,6 +31,32 @@ func TestDay24Part1(t *testing.T) {
 	}
 }
 
+func TestDay24Part2Example(t *testing.T) {
+	const want uint = 54
+	lines, err := linesFromFilename(exampleFilename(24))
+	if err != nil {
+		t.Fatal(err)
+	}
+	puzzle := NewDay24(lines)
+	got := Day24(puzzle, false)
+	if want != got {
+		t.Fatalf("want %d but got %d", want, got)
+	}
+}
+
+func TestDay24Part2(t *testing.T) {
+	const want uint = 899
+	lines, err := linesFromFilename(filename(24))
+	if err != nil {
+		t.Fatal(err)
+	}
+	puzzle := NewDay24(lines)
+	got := Day24(puzzle, false)
+	if want != got {
+		t.Fatalf("want %d but got %d", want, got)
+	}
+}
+
 // TestDay24Part1AllMinutes verifies blizzard configuration at all minutes 0-18
 func TestDay24Part1AllMinutes(t *testing.T) {
 	lines, err := linesFromFilename(exampleFilename(24))

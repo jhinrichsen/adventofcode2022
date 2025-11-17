@@ -1,6 +1,6 @@
 package adventofcode2022
 
-func Day23(lines []string, rounds int) int {
+func Day23(lines []string, part1 bool) uint {
 	var (
 		m        = make(map[complex128]bool)
 		parseMap = func() {
@@ -50,36 +50,9 @@ func Day23(lines []string, rounds int) int {
 			}
 			return count
 		}
-		countEmpty = func(min, max complex128) int {
-			return int((1+real(max)-real(min))*(1+imag(max)-imag(min))) - len(m)
+		countEmpty = func(min, max complex128) uint {
+			return uint((1+real(max)-real(min))*(1+imag(max)-imag(min))) - uint(len(m))
 		}
-
-		/*
-			dump = func(round int) {
-				min, max := rect()
-				if round == 0 {
-					fmt.Printf("== Initial State (%v) ==\n", max-min)
-				} else {
-					fmt.Printf("== End of Round %d (%vx%v -> %v) ==\n", round, min, max, max-min)
-				}
-				for y := imag(max); y >= imag(min); y-- {
-					for x := real(min); x <= real(max); x++ {
-						if m[complex(x, y)] {
-							fmt.Printf("%c", '#')
-						} else {
-							if x == 0 && y == 0 {
-								fmt.Printf("%c", '+')
-							} else {
-								fmt.Printf("%c", '.')
-							}
-						}
-					}
-					fmt.Println()
-				}
-				fmt.Printf("Empty tiles: %d\n", countEmpty(min, max))
-				fmt.Println()
-			}
-		*/
 
 		proposals = []struct {
 			preds []complex128
@@ -101,15 +74,13 @@ func Day23(lines []string, rounds int) int {
 
 	parseMap()
 
-	// dump(0)
-	maxRounds := rounds
-	if rounds < 0 {
+	maxRounds := 10
+	if !part1 {
 		maxRounds = 1000000 // Large number for "run until stable"
 	}
+
 	for round := 1; round <= maxRounds; round++ {
-
 		// first half
-
 		dsts := make(map[complex128]complex128, len(m))
 		counts := make(map[complex128]int, len(m))
 		for c := range m {
@@ -134,10 +105,9 @@ func Day23(lines []string, rounds int) int {
 		}
 
 		// second half
-
 		stable := len(dsts) == 0
-		if stable && rounds < 0 {
-			break
+		if stable && !part1 {
+			return uint(round)
 		}
 
 		// Only execute moves if not stable
@@ -154,7 +124,6 @@ func Day23(lines []string, rounds int) int {
 			}
 		}
 		shiftProposals()
-		// dump(round)
 	}
 
 	return countEmpty(rect())

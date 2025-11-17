@@ -95,25 +95,25 @@ func Day17(line string, rocks int) uint {
 		height    uint
 	})
 
-	// Helper to get surface profile (top 30 rows for better cycle detection)
+	// Helper to get surface profile (top 50 rows for better cycle detection)
 	getProfile := func() string {
 		h := int(tower.Height())
 		if h == 0 {
 			return ""
 		}
-		profile := ""
-		depth := min(30, h)
+		var profile []byte
+		depth := min(50, h)
 		for y := h - 1; y >= h-depth && y >= 0; y-- {
 			for x := 0; x < width; x++ {
 				if tower.rocks[complex(float64(x), float64(y))] {
-					profile += "#"
+					profile = append(profile, '#')
 				} else {
-					profile += "."
+					profile = append(profile, '.')
 				}
 			}
-			profile += "|"
+			profile = append(profile, '|')
 		}
-		return profile
+		return string(profile)
 	}
 
 	// Track cycle detection state
