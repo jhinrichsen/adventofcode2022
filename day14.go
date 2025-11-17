@@ -34,12 +34,13 @@ func Day14(lines []string, part1 bool) uint {
 			if !dropSand(rocks, source, maxY) {
 				break
 			}
+			count++
 		} else {
+			count++
 			if !dropSandPart2(rocks, source, maxY+2) {
 				break
 			}
 		}
-		count++
 	}
 
 	return count
