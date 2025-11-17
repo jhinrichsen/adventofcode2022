@@ -15,12 +15,15 @@ func TestDay16Part1Example(t *testing.T) {
 }
 
 func TestDay16Part1(t *testing.T) {
+	const want uint = 2080
 	lines, err := linesFromFilename(filename(16))
 	if err != nil {
-		t.Skip("puzzle input file not provided")
+		t.Fatal(err)
 	}
 	got := Day16(lines, true)
-	_ = got // Result depends on puzzle input
+	if want != got {
+		t.Fatalf("want %d but got %d", want, got)
+	}
 }
 
 func BenchmarkDay16Part1(b *testing.B) {
