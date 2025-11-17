@@ -8,7 +8,7 @@ type blizzard struct {
 }
 
 type Day24Puzzle struct {
-	width, height int
+	width, height uint
 	start, end    image.Point
 	blizzards     []blizzard
 	blizzardCache map[uint]map[image.Point]bool
@@ -16,8 +16,8 @@ type Day24Puzzle struct {
 
 func NewDay24(lines []string) Day24Puzzle {
 	p := Day24Puzzle{
-		height:        len(lines),
-		width:         len(lines[0]),
+		height:        uint(len(lines)),
+		width:         uint(len(lines[0])),
 		blizzardCache: make(map[uint]map[image.Point]bool),
 	}
 
@@ -54,8 +54,8 @@ func (p *Day24Puzzle) blizzardPosition(b blizzard, time uint) image.Point {
 	// Wrap to inner valley coordinates (1-based to 0-based, apply modulo, back to 1-based)
 	innerX := x - 1
 	innerY := y - 1
-	innerWidth := p.width - 2
-	innerHeight := p.height - 2
+	innerWidth := int(p.width) - 2
+	innerHeight := int(p.height) - 2
 
 	// Proper modulo that handles negatives correctly
 	innerX = ((innerX % innerWidth) + innerWidth) % innerWidth
@@ -80,19 +80,19 @@ func (p *Day24Puzzle) blizzardsAt(time uint) map[image.Point]bool {
 
 func (p *Day24Puzzle) renderGrid(time uint) []string {
 	grid := make([][]byte, p.height)
-	for y := 0; y < p.height; y++ {
+	for y := uint(0); y < p.height; y++ {
 		grid[y] = make([]byte, p.width)
-		for x := 0; x < p.width; x++ {
+		for x := uint(0); x < p.width; x++ {
 			grid[y][x] = '.'
 		}
 	}
 
 	// Add walls
-	for y := 0; y < p.height; y++ {
+	for y := uint(0); y < p.height; y++ {
 		grid[y][0] = '#'
 		grid[y][p.width-1] = '#'
 	}
-	for x := 0; x < p.width; x++ {
+	for x := uint(0); x < p.width; x++ {
 		grid[0][x] = '#'
 		grid[p.height-1][x] = '#'
 	}
@@ -126,7 +126,7 @@ func (p *Day24Puzzle) renderGrid(time uint) []string {
 	}
 
 	result := make([]string, p.height)
-	for y := 0; y < p.height; y++ {
+	for y := uint(0); y < p.height; y++ {
 		result[y] = string(grid[y])
 	}
 	return result
@@ -139,7 +139,7 @@ func (p *Day24Puzzle) isValid(pos image.Point, time uint) bool {
 	}
 
 	// Check if within valley bounds (not on walls)
-	if pos.X <= 0 || pos.X >= p.width-1 || pos.Y <= 0 || pos.Y >= p.height-1 {
+	if pos.X <= 0 || pos.X >= int(p.width)-1 || pos.Y <= 0 || pos.Y >= int(p.height)-1 {
 		return false
 	}
 
