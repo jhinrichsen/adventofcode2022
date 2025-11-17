@@ -1,22 +1,22 @@
 package adventofcode2022
 
-type Blizzard struct {
-	Pos complex128
-	Dir complex128
+type blizzard struct {
+	pos complex128
+	dir complex128
 }
 
-type Valley struct {
-	Width, Height int
-	Start, End    complex128
-	Blizzards     []Blizzard
-	BlizzardCache map[int]map[complex128]bool
+type Day24Puzzle struct {
+	width, height int
+	start, end    complex128
+	blizzards     []blizzard
+	blizzardCache map[uint]map[complex128]bool
 }
 
-func NewValley(lines []string) Valley {
-	v := Valley{
-		Height:        len(lines),
-		Width:         len(lines[0]),
-		BlizzardCache: make(map[int]map[complex128]bool),
+func NewDay24(lines []string) Day24Puzzle {
+	p := Day24Puzzle{
+		height:        len(lines),
+		width:         len(lines[0]),
+		blizzardCache: make(map[uint]map[complex128]bool),
 	}
 
 	for y := range lines {
@@ -25,36 +25,35 @@ func NewValley(lines []string) Valley {
 			switch lines[y][x] {
 			case '.':
 				if y == 0 {
-					v.Start = pos
+					p.start = pos
 				} else if y == len(lines)-1 {
-					v.End = pos
+					p.end = pos
 				}
 			case '^':
-				v.Blizzards = append(v.Blizzards, Blizzard{Pos: pos, Dir: -1i})
+				p.blizzards = append(p.blizzards, blizzard{pos: pos, dir: -1i})
 			case 'v':
-				v.Blizzards = append(v.Blizzards, Blizzard{Pos: pos, Dir: 1i})
+				p.blizzards = append(p.blizzards, blizzard{pos: pos, dir: 1i})
 			case '<':
-				v.Blizzards = append(v.Blizzards, Blizzard{Pos: pos, Dir: -1})
+				p.blizzards = append(p.blizzards, blizzard{pos: pos, dir: -1})
 			case '>':
-				v.Blizzards = append(v.Blizzards, Blizzard{Pos: pos, Dir: 1})
+				p.blizzards = append(p.blizzards, blizzard{pos: pos, dir: 1})
 			}
 		}
 	}
 
-	return v
+	return p
 }
 
-// blizzardPosition calculates where a blizzard is at a given time
-func (v *Valley) blizzardPosition(b Blizzard, time int) complex128 {
-	pos := b.Pos + complex(float64(time)*real(b.Dir), float64(time)*imag(b.Dir))
+func (p *Day24Puzzle) blizzardPosition(b blizzard, time uint) complex128 {
+	pos := b.pos + complex(float64(time)*real(b.dir), float64(time)*imag(b.dir))
 	x := int(real(pos))
 	y := int(imag(pos))
 
 	// Wrap to inner valley coordinates (1-based to 0-based, apply modulo, back to 1-based)
 	innerX := x - 1
 	innerY := y - 1
-	innerWidth := v.Width - 2
-	innerHeight := v.Height - 2
+	innerWidth := p.width - 2
+	innerHeight := p.height - 2
 
 	// Proper modulo that handles negatives correctly
 	innerX = ((innerX % innerWidth) + innerWidth) % innerWidth
@@ -66,47 +65,47 @@ func (v *Valley) blizzardPosition(b Blizzard, time int) complex128 {
 	return R2c(x, y)
 }
 
-func (v *Valley) blizzardsAt(time int) map[complex128]bool {
-	if cached, ok := v.BlizzardCache[time]; ok {
+func (p *Day24Puzzle) blizzardsAt(time uint) map[complex128]bool {
+	if cached, ok := p.blizzardCache[time]; ok {
 		return cached
 	}
 
 	positions := make(map[complex128]bool)
-	for _, b := range v.Blizzards {
-		positions[v.blizzardPosition(b, time)] = true
+	for _, b := range p.blizzards {
+		positions[p.blizzardPosition(b, time)] = true
 	}
 
-	v.BlizzardCache[time] = positions
+	p.blizzardCache[time] = positions
 	return positions
 }
 
-func (v *Valley) RenderGrid(time int) []string {
-	grid := make([][]byte, v.Height)
-	for y := 0; y < v.Height; y++ {
-		grid[y] = make([]byte, v.Width)
-		for x := 0; x < v.Width; x++ {
+func (p *Day24Puzzle) RenderGrid(time uint) []string {
+	grid := make([][]byte, p.height)
+	for y := 0; y < p.height; y++ {
+		grid[y] = make([]byte, p.width)
+		for x := 0; x < p.width; x++ {
 			grid[y][x] = '.'
 		}
 	}
 
 	// Add walls
-	for y := 0; y < v.Height; y++ {
+	for y := 0; y < p.height; y++ {
 		grid[y][0] = '#'
-		grid[y][v.Width-1] = '#'
+		grid[y][p.width-1] = '#'
 	}
-	for x := 0; x < v.Width; x++ {
+	for x := 0; x < p.width; x++ {
 		grid[0][x] = '#'
-		grid[v.Height-1][x] = '#'
+		grid[p.height-1][x] = '#'
 	}
 	// Start and end openings
-	grid[int(imag(v.Start))][int(real(v.Start))] = '.'
-	grid[int(imag(v.End))][int(real(v.End))] = '.'
+	grid[int(imag(p.start))][int(real(p.start))] = '.'
+	grid[int(imag(p.end))][int(real(p.end))] = '.'
 
 	// Count blizzards at each position using the SAME code as the solver
 	blizzardCount := make(map[complex128][]complex128)
-	for _, b := range v.Blizzards {
-		pos := v.blizzardPosition(b, time)
-		blizzardCount[pos] = append(blizzardCount[pos], b.Dir)
+	for _, b := range p.blizzards {
+		pos := p.blizzardPosition(b, time)
+		blizzardCount[pos] = append(blizzardCount[pos], b.dir)
 	}
 
 	// Add blizzards to grid
@@ -129,42 +128,40 @@ func (v *Valley) RenderGrid(time int) []string {
 		}
 	}
 
-	result := make([]string, v.Height)
-	for y := 0; y < v.Height; y++ {
+	result := make([]string, p.height)
+	for y := 0; y < p.height; y++ {
 		result[y] = string(grid[y])
 	}
 	return result
 }
 
-func (v *Valley) isValid(pos complex128, time int) bool {
+func (p *Day24Puzzle) isValid(pos complex128, time uint) bool {
 	x := int(real(pos))
 	y := int(imag(pos))
 
 	// Check if at start or end position
-	if pos == v.Start || pos == v.End {
-		return !v.blizzardsAt(time)[pos]
+	if pos == p.start || pos == p.end {
+		return !p.blizzardsAt(time)[pos]
 	}
 
 	// Check if within valley bounds (not on walls)
-	if x <= 0 || x >= v.Width-1 || y <= 0 || y >= v.Height-1 {
+	if x <= 0 || x >= p.width-1 || y <= 0 || y >= p.height-1 {
 		return false
 	}
 
 	// Check if there's a blizzard at this position
-	return !v.blizzardsAt(time)[pos]
+	return !p.blizzardsAt(time)[pos]
 }
 
-func (v *Valley) shortestPath(start, end complex128, startTime int) int {
-	type State struct {
-		Pos  complex128
-		Time int
+func (p *Day24Puzzle) shortestPath(start, end complex128, startTime uint) uint {
+	type state struct {
+		pos  complex128
+		time uint
 	}
 
-	// We begin just before the entrance
-	// First move will be into the entrance at time=1
-	queue := []State{{Pos: start, Time: startTime}}
-	visited := make(map[State]bool)
-	visited[State{Pos: start, Time: startTime}] = true
+	queue := []state{{pos: start, time: startTime}}
+	visited := make(map[state]bool)
+	visited[state{pos: start, time: startTime}] = true
 
 	moves := []complex128{0, 1, -1, 1i, -1i} // wait, right, left, down, up
 
@@ -173,40 +170,37 @@ func (v *Valley) shortestPath(start, end complex128, startTime int) int {
 		queue = queue[1:]
 
 		// Already at end
-		if curr.Pos == end {
-			return curr.Time
+		if curr.pos == end {
+			return curr.time
 		}
 
-		nextTime := curr.Time + 1
+		nextTime := curr.time + 1
 
 		// Try all possible moves
 		for _, move := range moves {
-			nextPos := curr.Pos + move
+			nextPos := curr.pos + move
 
-			if v.isValid(nextPos, nextTime) {
-				state := State{Pos: nextPos, Time: nextTime}
-				if !visited[state] {
-					visited[state] = true
-					queue = append(queue, state)
+			if p.isValid(nextPos, nextTime) {
+				s := state{pos: nextPos, time: nextTime}
+				if !visited[s] {
+					visited[s] = true
+					queue = append(queue, s)
 				}
 			}
 		}
 	}
 
-	return -1 // No path found
+	return 0 // No path found
 }
 
-func Day24(lines []string, part1 bool) uint {
-	v := NewValley(lines)
-
+func Day24(puzzle Day24Puzzle, part1 bool) uint {
 	if part1 {
-		time := v.shortestPath(v.Start, v.End, 0)
-		return uint(time)
+		return puzzle.shortestPath(puzzle.start, puzzle.end, 0)
 	}
 
 	// Part 2: go to end, back to start, then to end again
-	time1 := v.shortestPath(v.Start, v.End, 0)
-	time2 := v.shortestPath(v.End, v.Start, time1)
-	time3 := v.shortestPath(v.Start, v.End, time2)
-	return uint(time3)
+	time1 := puzzle.shortestPath(puzzle.start, puzzle.end, 0)
+	time2 := puzzle.shortestPath(puzzle.end, puzzle.start, time1)
+	time3 := puzzle.shortestPath(puzzle.start, puzzle.end, time2)
+	return time3
 }

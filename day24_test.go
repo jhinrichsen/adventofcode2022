@@ -11,7 +11,8 @@ func TestDay24Part1Example(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	got := Day24(lines, true)
+	puzzle := NewDay24(lines)
+	got := Day24(puzzle, true)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
 	}
@@ -23,7 +24,8 @@ func TestDay24Part1(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	got := Day24(lines, true)
+	puzzle := NewDay24(lines)
+	got := Day24(puzzle, true)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
 	}
@@ -35,10 +37,10 @@ func TestDay24Part1AllMinutes(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	v := NewValley(lines)
+	puzzle := NewDay24(lines)
 
 	tests := []struct {
-		minute   int
+		minute   uint
 		expected []string
 	}{
 		{0, []string{"#.######", "#>>.<^<#", "#.<..<<#", "#>v.><>#", "#<^v^^>#", "######.#"}},
@@ -64,7 +66,7 @@ func TestDay24Part1AllMinutes(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("Minute%d", tt.minute), func(t *testing.T) {
-			actual := v.RenderGrid(tt.minute)
+			actual := puzzle.RenderGrid(tt.minute)
 			for y := 0; y < len(tt.expected); y++ {
 				if actual[y] != tt.expected[y] {
 					t.Errorf("Minute %d, row %d:\n  want: %s\n  got:  %s", tt.minute, y, tt.expected[y], actual[y])
