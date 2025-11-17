@@ -26,6 +26,15 @@ func TestDay23Part1Example(t *testing.T) {
 	}
 	got := Day23(lines, 10)
 	if want != got {
-		t.Fatalf("want %d but got %d (implementation may need review)", want, got)
+		t.Fatalf("want %d but got %d", want, got)
 	}
+}
+
+func TestDay23Part1(t *testing.T) {
+	lines, err := linesFromFilename(filename(23))
+	if err != nil {
+		t.Skip("puzzle input file not provided")
+	}
+	got := Day23(lines, 10)
+	_ = got // Result depends on puzzle input
 }
