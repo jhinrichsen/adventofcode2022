@@ -44,6 +44,28 @@ func NewValley(lines []string) Valley {
 	return v
 }
 
+// blizzardPosition calculates where a blizzard is at a given time
+func (v *Valley) blizzardPosition(b Blizzard, time int) complex128 {
+	pos := b.Pos + complex(float64(time)*real(b.Dir), float64(time)*imag(b.Dir))
+	x := int(real(pos))
+	y := int(imag(pos))
+
+	// Wrap to inner valley coordinates (1-based to 0-based, apply modulo, back to 1-based)
+	innerX := x - 1
+	innerY := y - 1
+	innerWidth := v.Width - 2
+	innerHeight := v.Height - 2
+
+	// Proper modulo that handles negatives correctly
+	innerX = ((innerX % innerWidth) + innerWidth) % innerWidth
+	innerY = ((innerY % innerHeight) + innerHeight) % innerHeight
+
+	x = innerX + 1
+	y = innerY + 1
+
+	return R2c(x, y)
+}
+
 func (v *Valley) blizzardsAt(time int) map[complex128]bool {
 	if cached, ok := v.BlizzardCache[time]; ok {
 		return cached
@@ -51,26 +73,7 @@ func (v *Valley) blizzardsAt(time int) map[complex128]bool {
 
 	positions := make(map[complex128]bool)
 	for _, b := range v.Blizzards {
-		// Calculate blizzard position at this time
-		pos := b.Pos + complex(float64(time)*real(b.Dir), float64(time)*imag(b.Dir))
-
-		x := int(real(pos))
-		y := int(imag(pos))
-
-		// Wrap to inner valley coordinates (1-based to 0-based, apply modulo, back to 1-based)
-		innerX := x - 1
-		innerY := y - 1
-		innerWidth := v.Width - 2
-		innerHeight := v.Height - 2
-
-		// Proper modulo that handles negatives correctly
-		innerX = ((innerX % innerWidth) + innerWidth) % innerWidth
-		innerY = ((innerY % innerHeight) + innerHeight) % innerHeight
-
-		x = innerX + 1
-		y = innerY + 1
-
-		positions[R2c(x, y)] = true
+		positions[v.blizzardPosition(b, time)] = true
 	}
 
 	v.BlizzardCache[time] = positions
@@ -99,28 +102,11 @@ func (v *Valley) RenderGrid(time int) []string {
 	grid[int(imag(v.Start))][int(real(v.Start))] = '.'
 	grid[int(imag(v.End))][int(real(v.End))] = '.'
 
-	// Count blizzards at each position
+	// Count blizzards at each position using the SAME code as the solver
 	blizzardCount := make(map[complex128][]complex128)
 	for _, b := range v.Blizzards {
-		pos := b.Pos + complex(float64(time)*real(b.Dir), float64(time)*imag(b.Dir))
-		x := int(real(pos))
-		y := int(imag(pos))
-
-		// Wrap to inner valley coordinates (1-based to 0-based, apply modulo, back to 1-based)
-		innerX := x - 1
-		innerY := y - 1
-		innerWidth := v.Width - 2
-		innerHeight := v.Height - 2
-
-		// Proper modulo that handles negatives correctly
-		innerX = ((innerX % innerWidth) + innerWidth) % innerWidth
-		innerY = ((innerY % innerHeight) + innerHeight) % innerHeight
-
-		x = innerX + 1
-		y = innerY + 1
-
-		finalPos := R2c(x, y)
-		blizzardCount[finalPos] = append(blizzardCount[finalPos], b.Dir)
+		pos := v.blizzardPosition(b, time)
+		blizzardCount[pos] = append(blizzardCount[pos], b.Dir)
 	}
 
 	// Add blizzards to grid
