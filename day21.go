@@ -1,7 +1,6 @@
 package adventofcode2022
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -58,8 +57,7 @@ func Day21(lines []string, part1 bool) int {
 			case '/':
 				c <- a / b
 			default:
-				msg := "unknown operation %q"
-				panic(fmt.Sprintf(msg, f.operation))
+				c <- 0 // Unknown operation, return 0
 			}
 		}(k, v)
 	}

@@ -3,7 +3,7 @@ package adventofcode2022
 import "testing"
 
 func TestDay12Part1Example(t *testing.T) {
-	const want = 31
+	const want uint = 31
 	lines, err := linesFromFilename(exampleFilename(12))
 	if err != nil {
 		t.Fatal(err)
@@ -15,7 +15,7 @@ func TestDay12Part1Example(t *testing.T) {
 }
 
 func TestDay12Part1(t *testing.T) {
-	const want = 528
+	const want uint = 528
 	lines, err := linesFromFilename(filename(12))
 	if err != nil {
 		t.Fatal(err)
@@ -27,7 +27,7 @@ func TestDay12Part1(t *testing.T) {
 }
 
 func TestDay12Part2Example(t *testing.T) {
-	const want = 29
+	const want uint = 29
 	lines, err := linesFromFilename(exampleFilename(12))
 	if err != nil {
 		t.Fatal(err)
@@ -39,7 +39,7 @@ func TestDay12Part2Example(t *testing.T) {
 }
 
 func TestDay12Part2(t *testing.T) {
-	const want = 522
+	const want uint = 522
 	lines, err := linesFromFilename(filename(12))
 	if err != nil {
 		t.Fatal(err)

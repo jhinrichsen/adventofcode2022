@@ -133,7 +133,7 @@ func TestDay25ExampleDec(t *testing.T) {
 	}
 }
 
-func TestDay25Example(t *testing.T) {
+func TestDay25Part1Example(t *testing.T) {
 	const want = "2=-1=0"
 	lines, err := linesFromFilename(exampleFilename(25))
 	if err != nil {
@@ -145,7 +145,7 @@ func TestDay25Example(t *testing.T) {
 	}
 }
 
-func TestDay25(t *testing.T) {
+func TestDay25Part1(t *testing.T) {
 	const want = "122-12==0-01=00-0=02"
 	lines, err := linesFromFilename(filename(25))
 	if err != nil {

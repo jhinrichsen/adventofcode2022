@@ -6,10 +6,10 @@ import (
 	"testing"
 )
 
-func TestDay17Example(t *testing.T) {
+func TestDay17Part1Example(t *testing.T) {
 	const (
-		rocks = 2022
-		want  = 3068
+		rocks    = 2022
+		want uint = 3068
 	)
 	buf, err := os.ReadFile(exampleFilename(17))
 	if err != nil {
@@ -23,8 +23,8 @@ func TestDay17Example(t *testing.T) {
 
 func TestDay17Part1(t *testing.T) {
 	const (
-		rocks = 2022
-		want  = 3200
+		rocks    = 2022
+		want uint = 3200
 	)
 	// example has only one line, puzzle input has multiple lines
 	lines, err := linesFromFilename(filename(17))

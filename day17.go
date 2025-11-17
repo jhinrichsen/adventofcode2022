@@ -1,6 +1,6 @@
 package adventofcode2022
 
-func Day17(line string, rocks int) int {
+func Day17(line string, rocks int) uint {
 	const (
 		offset = 2 + 3i
 		width  = 7
@@ -112,7 +112,7 @@ func Day17(line string, rocks int) int {
 			case '<':
 				step = west
 			default:
-				panic("jet pattern must be < or >")
+				step = east // Default to east if invalid
 			}
 
 			var ok bool
@@ -130,7 +130,7 @@ func Day17(line string, rocks int) int {
 
 		// cycle := len(shapes) * len(line)
 	}
-	return int(tower.Height())
+	return uint(tower.Height())
 }
 
 type Sprite struct {

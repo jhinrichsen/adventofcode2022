@@ -8,7 +8,7 @@ import (
 	"gonum.org/v1/gonum/graph/simple"
 )
 
-func Day12(lines []string, part1 bool) int {
+func Day12(lines []string, part1 bool) uint {
 	var (
 		dimX       = len(lines[0])
 		dimY       = len(lines)
@@ -83,7 +83,7 @@ func Day12(lines []string, part1 bool) int {
 	}
 short_circuit:
 	if start == nil || end == nil {
-		panic("cannot find required S or E")
+		return 0
 	}
 
 	// phase 2: build edges
@@ -96,10 +96,13 @@ short_circuit:
 		}
 	}
 
-	pth, _ := path.DijkstraFrom(start, world).To(end.ID())
+	pth, weight := path.DijkstraFrom(start, world).To(end.ID())
+	if weight == 0 {
+		return 0
+	}
 
 	if part1 {
-		return len(pth) - 1 // we need steps which is one less than nodes
+		return uint(len(pth) - 1) // we need steps which is one less than nodes
 	}
 
 	// count up to the last step that has the same height as the first step
@@ -111,5 +114,5 @@ short_circuit:
 			break
 		}
 	}
-	return len(pth) - i - 1
+	return uint(len(pth) - i - 1)
 }

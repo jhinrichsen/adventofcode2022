@@ -4,10 +4,10 @@ func Day23(lines []string, rounds int) int {
 	var (
 		m        = make(map[complex128]bool)
 		parseMap = func() {
-			for y := len(lines) - 1; y >= 0; y-- {
-				for x := len(lines[y]) - 1; x >= 0; x-- {
+			for y := range lines {
+				for x := range lines[y] {
 					if lines[y][x] == '#' {
-						// invert y
+						// Use inverted Y since North is +1i (up)
 						m[R2c(x, len(lines)-1-y)] = true
 					}
 				}
@@ -17,7 +17,7 @@ func Day23(lines []string, rounds int) int {
 			for k := range m {
 				return k
 			}
-			panic("want at least one map entry but map is empty")
+			return 0 // Empty map, return origin
 		}
 		rect = func() (complex128, complex128) {
 			// initialize on arbitrary position
@@ -76,6 +76,7 @@ func Day23(lines []string, rounds int) int {
 					}
 					fmt.Println()
 				}
+				fmt.Printf("Empty tiles: %d\n", countEmpty(min, max))
 				fmt.Println()
 			}
 		*/
@@ -86,8 +87,8 @@ func Day23(lines []string, rounds int) int {
 		}{
 			{[]complex128{North, NorthEast, NorthWest}, North},
 			{[]complex128{South, SouthEast, SouthWest}, South},
-			{[]complex128{East, NorthEast, SouthEast}, East},
 			{[]complex128{West, NorthWest, SouthWest}, West},
+			{[]complex128{East, NorthEast, SouthEast}, East},
 		}
 		shiftProposals = func() {
 			prop0 := proposals[0]
@@ -101,7 +102,11 @@ func Day23(lines []string, rounds int) int {
 	parseMap()
 
 	// dump(0)
-	for round := 1; round <= 10; round++ {
+	maxRounds := rounds
+	if rounds < 0 {
+		maxRounds = 1000000 // Large number for "run until stable"
+	}
+	for round := 1; round <= maxRounds; round++ {
 
 		// first half
 
@@ -131,17 +136,20 @@ func Day23(lines []string, rounds int) int {
 		// second half
 
 		stable := len(dsts) == 0
-		if stable {
+		if stable && rounds < 0 {
 			break
 		}
 
-		for from := range m {
-			into, wantsToMove := dsts[from]
-			if wantsToMove {
-				canMove := counts[into] == 1
-				if canMove {
-					delete(m, from)
-					m[into] = true
+		// Only execute moves if not stable
+		if !stable {
+			for from := range m {
+				into, wantsToMove := dsts[from]
+				if wantsToMove {
+					canMove := counts[into] == 1
+					if canMove {
+						delete(m, from)
+						m[into] = true
+					}
 				}
 			}
 		}

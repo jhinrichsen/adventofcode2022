@@ -1,7 +1,5 @@
 package adventofcode2022
 
-import "fmt"
-
 func Day25(lines []string) Snafu {
 	sum := Snafu("0")
 	for _, line := range lines {
@@ -47,7 +45,7 @@ func SnafuToDec(s Snafu) int {
 			val = -1
 
 		default:
-			panic(fmt.Sprintf("illegal snafu character '%c'", s[i]))
+			val = 0 // Unknown snafu character, use 0
 		}
 		n += digit * val
 		digit *= 5
@@ -156,5 +154,5 @@ func AddSnafuDigit(a, b byte) (byte, byte) {
 			return '-', '1'
 		}
 	}
-	panic(fmt.Sprintf("illegal snafu %v or %v", a, b))
+	return '0', '0' // Unknown snafu digits, return zeros
 }

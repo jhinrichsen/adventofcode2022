@@ -40,11 +40,11 @@ Number of tries for a correct answer:
 | 17  | 1      | - (+1)
 | 18  | 1      | - (+1)
 | 19  |        |
-| 20  | - (+2) |
+| 20  | 3      |
 | 21  | 1      |
 | 22  | 2 |
 | 23  |  |
-| 24  |  |
+| 24  | 1      |
 | 25  | 1      |
 |===
 
@@ -634,7 +634,41 @@ swapped with it immediate neighbour to the left or to the right N times.
 
 When wrapping would occur, it is replaced with swapping to the other direction.
 
-TODO: Got the example right, but part 1 fails for the second time.
+=== Tries
+
+|===
+| Attempt | Value  | Status
+| 1       | -6459  | Wrong (too high)
+| 2       | -6750  | Wrong
+| 3       | 11616  | Correct
+|===
+
+Bug was in the mixing algorithm: movement calculations must use modulo (len-1)
+since the element is removed before calculating the new position. Rewrote to
+use Node struct tracking original indices for proper order processing.
+
+== Day 24
+
+BFS pathfinding through valley with moving blizzards.
+
+=== Tries
+
+|===
+| Attempt | Value  | Status
+| 1       | 300    | Wrong (too high)
+| 2       | 299    | Correct
+|===
+
+First attempt failed due to incorrect blizzard wrapping logic. The modulo
+arithmetic didn't handle negative coordinates properly, causing blizzards to
+appear in incorrect positions (including wall rows). This created a wrong
+simulation of the blizzard field, causing BFS to find a suboptimal path and
+return 300 instead of the correct 299.
+
+Fixed by properly converting to 0-based coordinates, applying correct modulo
+`((x % mod) + mod) % mod`, then converting back to 1-based. Added comprehensive
+tests for all 19 intermediate blizzard states from the example walkthrough to
+prevent regression.
 
 == Day 21
 
