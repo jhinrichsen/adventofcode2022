@@ -37,32 +37,26 @@ func TestDay17Part1(t *testing.T) {
 	}
 }
 
-func BenchmarkDay17(b *testing.B) {
+func TestDay17Part2Example(t *testing.T) {
 	const (
-		rocks = 2022
+		rocks    = 1000000000000
+		want uint = 1514285714288
 	)
-	lines, err := linesFromFilename(filename(17))
+	buf, err := os.ReadFile(exampleFilename(17))
 	if err != nil {
-		b.Fatal(err)
+		t.Fatal(err)
 	}
-	input := strings.Join(lines, "")
-	for i := 0; i < b.N; i++ {
-		Day17(input, rocks)
+	got := Day17(strings.TrimSpace(string(buf)), rocks)
+	if want != got {
+		t.Fatalf("want %d but got %d", want, got)
 	}
 }
 
-/*
 func TestDay17Part2(t *testing.T) {
-	// looking for cycle
-	// len(shapes) * len(pattern):
-	// 50455, height 79972.000000  ->
-	// 100910, height 159945.000000
 	const (
-		rocks = 1000000000000
-		// want  = 1514285714288
-		want = 1585016351204 // too high
+		rocks    = 1000000000000
+		want uint = 1584927536247
 	)
-	// example has only one line, puzzle input has multiple lines
 	lines, err := linesFromFilename(filename(17))
 	if err != nil {
 		t.Fatal(err)
@@ -72,7 +66,34 @@ func TestDay17Part2(t *testing.T) {
 		t.Fatalf("want %d but got %d", want, got)
 	}
 }
-*/
+
+func BenchmarkDay17Part1(b *testing.B) {
+	const (
+		rocks = 2022
+	)
+	lines, err := linesFromFilename(filename(17))
+	if err != nil {
+		b.Fatal(err)
+	}
+	input := strings.Join(lines, "")
+	for range b.N {
+		Day17(input, rocks)
+	}
+}
+
+func BenchmarkDay17Part2(b *testing.B) {
+	const (
+		rocks = 1000000000000
+	)
+	lines, err := linesFromFilename(filename(17))
+	if err != nil {
+		b.Fatal(err)
+	}
+	input := strings.Join(lines, "")
+	for range b.N {
+		Day17(input, rocks)
+	}
+}
 
 /*
 1000 rocks, height 1577.000000

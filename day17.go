@@ -84,6 +84,38 @@ func Day17(line string, rocks int) uint {
 		}
 	)
 
+	// Cycle detection for part 2
+	type State struct {
+		rockIdx int
+		jetIdx  int
+		profile string
+	}
+	seen := make(map[State]struct {
+		rockCount int
+		height    uint
+	})
+
+	// Helper to get surface profile (top 30 rows for better cycle detection)
+	getProfile := func() string {
+		h := int(tower.Height())
+		if h == 0 {
+			return ""
+		}
+		profile := ""
+		depth := min(30, h)
+		for y := h - 1; y >= h-depth && y >= 0; y-- {
+			for x := 0; x < width; x++ {
+				if tower.rocks[complex(float64(x), float64(y))] {
+					profile += "#"
+				} else {
+					profile += "."
+				}
+			}
+			profile += "|"
+		}
+		return profile
+	}
+
 	for i := 0; i < rocks; i++ {
 		shape := shapes[i%len(shapes)] // forever next shape
 
@@ -128,7 +160,88 @@ func Day17(line string, rocks int) uint {
 			}
 		}
 
-		// cycle := len(shapes) * len(line)
+		// Cycle detection (only useful for large rock counts)
+		// Only check every 10 rocks to reduce overhead
+		if rocks > 5000 && i > 1000 && i%10 == 0 {
+			state := State{
+				rockIdx: i % len(shapes),
+				jetIdx:  jetPattern.idx,
+				profile: getProfile(),
+			}
+
+			if prev, found := seen[state]; found {
+				// Found a cycle!
+				cycleLength := i - prev.rockCount
+				cycleHeight := uint(tower.Height()) - prev.height
+
+				// Calculate how many complete cycles we can skip
+				remainingRocks := rocks - (i + 1)
+				fullCycles := remainingRocks / cycleLength
+				rocksPastCycle := remainingRocks % cycleLength
+
+				// Calculate final height
+				currentHeight := uint(tower.Height())
+				cycleContribution := uint(fullCycles) * cycleHeight
+
+				// For remainder, continue simulating from current position
+				for j := 0; j < rocksPastCycle; j++ {
+					idx := i + 1 + j
+					remShape := shapes[idx%len(shapes)]
+
+					position := complex(0, tower.Height())
+					position += offset
+
+					// Define local test function for remainder simulation
+					remTest := func(pos, step complex128) (complex128, bool) {
+						sprite := remShape.Translate(pos + step)
+						p1 := sprite.Collides(tower)
+						p2 := infield(sprite)
+						possible := !p1 && p2
+						if !possible {
+							return pos, false
+						}
+						return pos + step, true
+					}
+
+					for {
+						// horizontal move
+						var step complex128
+						switch jetPattern.Next() {
+						case '>':
+							step = east
+						case '<':
+							step = west
+						default:
+							step = east
+						}
+
+						position, _ = remTest(position, step)
+
+						// vertical move
+						position, ok := remTest(position, south)
+						if !ok {
+							sprite := remShape.Translate(position)
+							tower.AddSprite(sprite)
+							break
+						}
+					}
+					if j%10 == 0 {
+						println("Remainder progress:", j, "/", rocksPastCycle)
+					}
+				}
+
+				println("Remainder simulation complete")
+				remainderHeight := uint(tower.Height()) - currentHeight
+				result := currentHeight + cycleContribution + remainderHeight
+				println("Final height:", result)
+				return result
+			}
+
+			seen[state] = struct {
+				rockCount int
+				height    uint
+			}{i, uint(tower.Height())}
+		}
 	}
 	return uint(tower.Height())
 }
