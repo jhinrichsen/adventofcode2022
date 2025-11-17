@@ -655,13 +655,20 @@ BFS pathfinding through valley with moving blizzards.
 
 |===
 | Attempt | Value  | Status
-| 1       | 299    | Correct
+| 1       | 300    | Wrong (too high)
+| 2       | 299    | Correct
 |===
 
-Fixed critical bug in blizzard wrapping logic. Original modulo arithmetic was
-incorrect for negative coordinates, causing blizzards to appear in wall rows.
-Rewrote to properly convert to 0-based coordinates, apply modulo, then convert
-back.
+First attempt failed due to incorrect blizzard wrapping logic. The modulo
+arithmetic didn't handle negative coordinates properly, causing blizzards to
+appear in incorrect positions (including wall rows). This created a wrong
+simulation of the blizzard field, causing BFS to find a suboptimal path and
+return 300 instead of the correct 299.
+
+Fixed by properly converting to 0-based coordinates, applying correct modulo
+`((x % mod) + mod) % mod`, then converting back to 1-based. Added comprehensive
+tests for all 19 intermediate blizzard states from the example walkthrough to
+prevent regression.
 
 == Day 21
 
