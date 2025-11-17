@@ -59,58 +59,101 @@ func parseValves(lines []string) map[string]*Valve {
 	return valves
 }
 
-type State struct {
-	pos     string
-	time    int
-	opened  uint64 // Bitmask of opened valves
-	pressure uint
+// BFS to find shortest distance between two valves
+func bfs(valves map[string]*Valve, start, end string) int {
+	if start == end {
+		return 0
+	}
+
+	queue := []string{start}
+	visited := make(map[string]bool)
+	visited[start] = true
+	dist := make(map[string]int)
+	dist[start] = 0
+
+	for len(queue) > 0 {
+		current := queue[0]
+		queue = queue[1:]
+
+		if current == end {
+			return dist[end]
+		}
+
+		for _, next := range valves[current].tunnels {
+			if !visited[next] {
+				visited[next] = true
+				dist[next] = dist[current] + 1
+				queue = append(queue, next)
+			}
+		}
+	}
+
+	return 1000 // Unreachable
 }
 
 func day16Part1(valves map[string]*Valve) uint {
-	// Build valve index for bitmask
+	// Build list of valves with non-zero flow
+	var important []string
 	valveIdx := make(map[string]int)
 	idx := 0
-	for name := range valves {
-		if valves[name].flowRate > 0 {
+
+	for name, valve := range valves {
+		if valve.flowRate > 0 {
+			important = append(important, name)
 			valveIdx[name] = idx
 			idx++
 		}
 	}
 
-	maxPressure := uint(0)
+	// Precompute distances between all important valves and from AA
+	dist := make(map[string]map[string]int)
+	allNodes := append([]string{"AA"}, important...)
 
-	var dfs func(pos string, time int, opened uint64, totalPressure uint)
-	dfs = func(pos string, time int, opened uint64, totalPressure uint) {
-		if time > 30 {
-			return
-		}
-
-		// Update max pressure
-		if totalPressure > maxPressure {
-			maxPressure = totalPressure
-		}
-
-		// Try opening current valve if it has flow and isn't opened
-		if vIdx, exists := valveIdx[pos]; exists {
-			bit := uint64(1) << vIdx
-			if opened&bit == 0 && time < 30 { // Not yet opened and time left
-				newOpened := opened | bit
-				flowRate := uint(valves[pos].flowRate)
-				// Valve opens at time+1, releases pressure for remaining time
-				remainingTime := 30 - time
-				addedPressure := flowRate * uint(remainingTime)
-				dfs(pos, time+1, newOpened, totalPressure+addedPressure)
-			}
-		}
-
-		// Try moving to adjacent valves
-		if time < 30 {
-			for _, next := range valves[pos].tunnels {
-				dfs(next, time+1, opened, totalPressure)
+	for _, from := range allNodes {
+		dist[from] = make(map[string]int)
+		for _, to := range important {
+			if from != to {
+				dist[from][to] = bfs(valves, from, to)
 			}
 		}
 	}
 
-	dfs("AA", 0, 0, 0)
-	return maxPressure
+	// DFS with memoization
+	cache := make(map[string]uint)
+
+	var dfs func(pos string, time int, opened uint64) uint
+	dfs = func(pos string, time int, opened uint64) uint {
+		// Create state key
+		key := pos + "," + strconv.Itoa(time) + "," + strconv.FormatUint(opened, 10)
+		if cached, ok := cache[key]; ok {
+			return cached
+		}
+
+		best := uint(0)
+
+		// Try opening each unopened valve
+		for _, next := range important {
+			bit := uint64(1) << valveIdx[next]
+			if opened&bit == 0 { // Not opened yet
+				travelTime := dist[pos][next]
+				newTime := time + travelTime + 1 // Travel + open valve
+
+				if newTime < 30 {
+					remaining := 30 - newTime
+					pressure := uint(valves[next].flowRate * remaining)
+					newOpened := opened | bit
+
+					result := pressure + dfs(next, newTime, newOpened)
+					if result > best {
+						best = result
+					}
+				}
+			}
+		}
+
+		cache[key] = best
+		return best
+	}
+
+	return dfs("AA", 0, 0)
 }
