@@ -39,9 +39,8 @@ func BenchmarkDay21Part1(b *testing.B) {
 	}
 }
 
-/*
 func TestDay21Part2Example(t *testing.T) {
-	const want = 58
+	const want = 301
 	lines, err := linesFromFilename(exampleFilename(21))
 	if err != nil {
 		t.Fatal(err)
@@ -53,7 +52,7 @@ func TestDay21Part2Example(t *testing.T) {
 }
 
 func TestDay21Part2(t *testing.T) {
-	const want = 3304 // too high
+	const want = 3887609741189
 	lines, err := linesFromFilename(filename(21))
 	if err != nil {
 		t.Fatal(err)
@@ -63,4 +62,14 @@ func TestDay21Part2(t *testing.T) {
 		t.Fatalf("want %d but got %d", want, got)
 	}
 }
-*/
+
+func BenchmarkDay21Part2(b *testing.B) {
+	lines, err := linesFromFilename(filename(21))
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		Day21(lines, false)
+	}
+}
