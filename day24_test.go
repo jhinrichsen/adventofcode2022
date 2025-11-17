@@ -26,8 +26,8 @@ func TestDay24Part1(t *testing.T) {
 	}
 }
 
-// TestDay24IntermediateStates verifies each step of the example walkthrough
-func TestDay24IntermediateStates(t *testing.T) {
+// TestDay24Part1IntermediateStates verifies each step of the example walkthrough
+func TestDay24Part1IntermediateStates(t *testing.T) {
 	lines, err := linesFromFilename(exampleFilename(24))
 	if err != nil {
 		t.Fatal(err)
