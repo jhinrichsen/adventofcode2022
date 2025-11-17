@@ -95,25 +95,25 @@ func Day17(line string, rocks int) uint {
 		height    uint
 	})
 
-	// Helper to get surface profile (top 30 rows for better cycle detection)
+	// Helper to get surface profile (top 50 rows for better cycle detection)
 	getProfile := func() string {
 		h := int(tower.Height())
 		if h == 0 {
 			return ""
 		}
-		profile := ""
-		depth := min(30, h)
+		var profile []byte
+		depth := min(50, h)
 		for y := h - 1; y >= h-depth && y >= 0; y-- {
 			for x := 0; x < width; x++ {
 				if tower.rocks[complex(float64(x), float64(y))] {
-					profile += "#"
+					profile = append(profile, '#')
 				} else {
-					profile += "."
+					profile = append(profile, '.')
 				}
 			}
-			profile += "|"
+			profile = append(profile, '|')
 		}
-		return profile
+		return string(profile)
 	}
 
 	for i := 0; i < rocks; i++ {
@@ -161,8 +161,8 @@ func Day17(line string, rocks int) uint {
 		}
 
 		// Cycle detection (only useful for large rock counts)
-		// Only check every 10 rocks to reduce overhead
-		if rocks > 5000 && i > 1000 && i%10 == 0 {
+		// Check every 5 rocks to balance performance and detection accuracy
+		if rocks > 5000 && i > 1000 && i%5 == 0 {
 			state := State{
 				rockIdx: i % len(shapes),
 				jetIdx:  jetPattern.idx,
@@ -188,8 +188,8 @@ func Day17(line string, rocks int) uint {
 					idx := i + 1 + j
 					remShape := shapes[idx%len(shapes)]
 
-					position := complex(0, tower.Height())
-					position += offset
+					remPosition := complex(0, tower.Height())
+					remPosition += offset
 
 					// Define local test function for remainder simulation
 					remTest := func(pos, step complex128) (complex128, bool) {
@@ -215,26 +215,25 @@ func Day17(line string, rocks int) uint {
 							step = east
 						}
 
-						position, _ = remTest(position, step)
+						remPosition, _ = remTest(remPosition, step)
 
 						// vertical move
-						position, ok := remTest(position, south)
+						// IMPORTANT: Must use separate variable for assignment!
+						// Using `remPosition, ok := remTest(remPosition, south)` creates
+						// a NEW local variable that shadows remPosition, causing an
+						// infinite loop. Always use: newPos, ok := ... then remPosition = newPos
+						newPos, ok := remTest(remPosition, south)
+						remPosition = newPos
 						if !ok {
-							sprite := remShape.Translate(position)
+							sprite := remShape.Translate(remPosition)
 							tower.AddSprite(sprite)
 							break
 						}
 					}
-					if j%10 == 0 {
-						println("Remainder progress:", j, "/", rocksPastCycle)
-					}
 				}
 
-				println("Remainder simulation complete")
 				remainderHeight := uint(tower.Height()) - currentHeight
-				result := currentHeight + cycleContribution + remainderHeight
-				println("Final height:", result)
-				return result
+				return currentHeight + cycleContribution + remainderHeight
 			}
 
 			seen[state] = struct {
