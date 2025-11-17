@@ -14,6 +14,15 @@ func TestDay16Part1Example(t *testing.T) {
 	}
 }
 
+func TestDay16Part1(t *testing.T) {
+	lines, err := linesFromFilename(filename(16))
+	if err != nil {
+		t.Skip("puzzle input file not provided")
+	}
+	got := Day16(lines, true)
+	_ = got // Result depends on puzzle input
+}
+
 func BenchmarkDay16Part1(b *testing.B) {
 	lines, err := linesFromFilename(filename(16))
 	if err != nil {

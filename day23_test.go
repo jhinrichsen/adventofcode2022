@@ -18,9 +18,7 @@ func TestDay23Example0(t *testing.T) {
 	}
 }
 
-/*
-TODO
-func TestDay23Example(t *testing.T) {
+func TestDay23Part1Example(t *testing.T) {
 	const want = 110
 	lines, err := linesFromFilename(exampleFilename(23))
 	if err != nil {
@@ -28,7 +26,6 @@ func TestDay23Example(t *testing.T) {
 	}
 	got := Day23(lines, 10)
 	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
+		t.Fatalf("want %d but got %d (implementation may need review)", want, got)
 	}
 }
-*/
