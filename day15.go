@@ -2,6 +2,7 @@ package adventofcode2022
 
 import (
 	"image"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -132,12 +133,16 @@ func day15Part1(sensors []Sensor, targetY int) uint {
 }
 
 func day15Part2(sensors []Sensor, maxCoord int) uint {
+	// Pre-allocate intervals slice and reuse it
+	intervals := make([][2]int, 0, len(sensors))
+
 	// Search for the one uncovered position in [0, maxCoord] x [0, maxCoord]
 	for y := 0; y <= maxCoord; y++ {
-		// Find all intervals covered at this Y
-		var intervals [][2]int
+		// Reuse intervals slice
+		intervals = intervals[:0]
 
-		for _, s := range sensors {
+		for i := range sensors {
+			s := &sensors[i]
 			// Check if sensor's exclusion zone reaches y
 			dy := s.pos.Y - y
 			if dy < 0 {
@@ -164,7 +169,7 @@ func day15Part2(sensors []Sensor, maxCoord int) uint {
 		}
 
 		// Merge intervals
-		merged := mergeIntervals(intervals)
+		merged := mergeIntervalsFast(intervals)
 
 		// Check for gap in coverage
 		if len(merged) == 0 {
@@ -202,14 +207,10 @@ func mergeIntervals(intervals [][2]int) [][2]int {
 		return nil
 	}
 
-	// Sort intervals by start position
-	for i := 0; i < len(intervals); i++ {
-		for j := i + 1; j < len(intervals); j++ {
-			if intervals[j][0] < intervals[i][0] {
-				intervals[i], intervals[j] = intervals[j], intervals[i]
-			}
-		}
-	}
+	// Sort intervals by start position using slices.SortFunc
+	slices.SortFunc(intervals, func(a, b [2]int) int {
+		return a[0] - b[0]
+	})
 
 	var merged [][2]int
 	current := intervals[0]
@@ -229,4 +230,32 @@ func mergeIntervals(intervals [][2]int) [][2]int {
 	merged = append(merged, current)
 
 	return merged
+}
+
+func mergeIntervalsFast(intervals [][2]int) [][2]int {
+	if len(intervals) == 0 {
+		return nil
+	}
+
+	// Sort intervals by start position using slices.SortFunc
+	slices.SortFunc(intervals, func(a, b [2]int) int {
+		return a[0] - b[0]
+	})
+
+	// Merge in-place to avoid allocations
+	writeIdx := 0
+	for readIdx := 1; readIdx < len(intervals); readIdx++ {
+		if intervals[readIdx][0] <= intervals[writeIdx][1]+1 {
+			// Overlapping or adjacent, merge
+			if intervals[readIdx][1] > intervals[writeIdx][1] {
+				intervals[writeIdx][1] = intervals[readIdx][1]
+			}
+		} else {
+			// No overlap, move to next position
+			writeIdx++
+			intervals[writeIdx] = intervals[readIdx]
+		}
+	}
+
+	return intervals[:writeIdx+1]
 }
