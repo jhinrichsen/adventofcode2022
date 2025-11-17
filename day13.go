@@ -2,6 +2,7 @@ package adventofcode2022
 
 import (
 	"encoding/json"
+	"slices"
 )
 
 // Day13 solves day 13: Distress Signal
@@ -40,8 +41,48 @@ func day13Part1(lines []string) uint {
 }
 
 func day13Part2(lines []string) uint {
-	// Part 2 implementation placeholder
-	return 0
+	// Parse all packets (skip blank lines)
+	var packets []any
+
+	for _, line := range lines {
+		if line == "" {
+			continue
+		}
+		var packet any
+		err := json.Unmarshal([]byte(line), &packet)
+		if err != nil {
+			continue
+		}
+		packets = append(packets, packet)
+	}
+
+	// Add divider packets
+	var divider1, divider2 any
+	err := json.Unmarshal([]byte("[[2]]"), &divider1)
+	if err != nil {
+		return 0
+	}
+	err = json.Unmarshal([]byte("[[6]]"), &divider2)
+	if err != nil {
+		return 0
+	}
+	packets = append(packets, divider1, divider2)
+
+	// Sort packets using comparePackets
+	slices.SortFunc(packets, comparePackets)
+
+	// Find indices of divider packets (1-indexed)
+	var idx1, idx2 uint
+	for i, packet := range packets {
+		if comparePackets(packet, divider1) == 0 {
+			idx1 = uint(i + 1)
+		}
+		if comparePackets(packet, divider2) == 0 {
+			idx2 = uint(i + 1)
+		}
+	}
+
+	return idx1 * idx2
 }
 
 // comparePackets compares two packets according to the rules:
