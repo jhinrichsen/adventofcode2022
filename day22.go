@@ -1,13 +1,13 @@
 package adventofcode2022
 
-func Day22(lines []string, part1 bool) int {
+func Day22(lines []string, part1 bool) uint {
 	if part1 {
 		return day22Part1(lines)
 	}
 	return day22Part2(lines)
 }
 
-func day22Part1(lines []string) int {
+func day22Part1(lines []string) uint {
 	const (
 		north = 0 + 1i
 		south = 0 - 1i
@@ -102,8 +102,8 @@ func day22Part1(lines []string) int {
 		}
 		facing *= cmd.turn
 	}
-	result := 1000 * int(imag(position))
-	result += 4 * int(real(position))
+	result := 1000 * uint(imag(position))
+	result += 4 * uint(real(position))
 	switch facing {
 	case east:
 		// NOP
@@ -121,7 +121,7 @@ type face struct {
 	x, y int // top-left corner in face coordinates (0-indexed)
 }
 
-func day22Part2(lines []string) int {
+func day22Part2(lines []string) uint {
 	// Parse map
 	var mapLines []string
 	for _, line := range lines {
@@ -222,7 +222,7 @@ func day22Part2(lines []string) int {
 		}
 	}
 
-	return 1000*(y+1) + 4*(x+1) + facing
+	return uint(1000*(y+1) + 4*(x+1) + facing)
 }
 
 func wrapCubeExample(x, y, facing int) (int, int, int) {

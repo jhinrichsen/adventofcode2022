@@ -5,7 +5,7 @@ import (
 )
 
 func TestDay22Part1Example(t *testing.T) {
-	const want = 6032
+	const want uint = 6032
 	lines, err := linesFromFilename(exampleFilename(22))
 	if err != nil {
 		t.Fatal(err)
@@ -17,8 +17,7 @@ func TestDay22Part1Example(t *testing.T) {
 }
 
 func TestDay22Part1(t *testing.T) {
-	// const want = 80224 // TODO too high
-	const want = 65368
+	const want uint = 65368
 	lines, err := linesFromFilename(filename(22))
 	if err != nil {
 		t.Fatal(err)
