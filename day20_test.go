@@ -147,3 +147,25 @@ func mixAndGetArrangement(srcs []int, mixRounds int, part1 bool) []int {
 	}
 	return result
 }
+
+func BenchmarkDay20Part1(b *testing.B) {
+	ns, err := numbersFromFilename(filename(20))
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Day20(ns, 1, true)
+	}
+}
+
+func BenchmarkDay20Part2(b *testing.B) {
+	ns, err := numbersFromFilename(filename(20))
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Day20(ns, 10, false)
+	}
+}

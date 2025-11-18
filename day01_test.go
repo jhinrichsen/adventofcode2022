@@ -50,6 +50,17 @@ func TestDay01Part2(t *testing.T) {
 	}
 }
 
+func BenchmarkDay01Part1(b *testing.B) {
+	ns, err := linesFromFilename(filename(1))
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Day01(ns, 1)
+	}
+}
+
 func BenchmarkDay01Part2(b *testing.B) {
 	ns, err := linesFromFilename(filename(1))
 	if err != nil {

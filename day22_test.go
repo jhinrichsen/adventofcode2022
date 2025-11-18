@@ -53,3 +53,25 @@ func TestDay22Part2(t *testing.T) {
 	t.Logf("Part 2 result: %d", got)
 	// Result will need to be validated against AoC submission
 }
+
+func BenchmarkDay22Part1(b *testing.B) {
+	lines, err := linesFromFilename(filename(22))
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Day22(lines, true)
+	}
+}
+
+func BenchmarkDay22Part2(b *testing.B) {
+	lines, err := linesFromFilename(filename(22))
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Day22(lines, false)
+	}
+}

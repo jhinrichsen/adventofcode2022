@@ -1,4 +1,6 @@
-GO = CGO_ENABLED=0 go
+GO ?= CGO_ENABLED=0 go
+CPU_NAME := $(shell $(GO) run ./cmd/cpuname)
+BENCH_FILE := benches/$(shell $(GO) env GOOS)-$(shell $(GO) env GOARCH)-$(CPU_NAME).txt
 
 .PHONY: all
 all: lint test
@@ -34,4 +36,13 @@ README.html: README.adoc
 
 README.pdf: README.adoc
 	asciidoctor-pdf -a allow-uri-read $<
+
+$(BENCH_FILE): $(wildcard *.go)
+	@echo "Running benchmarks and saving to $@..."
+	@mkdir -p benches
+	$(GO) test -run=^$$ -bench=Day..Part.$$ -benchmem | tee $@
+
+.PHONY: total
+total: $(BENCH_FILE)
+	@awk -f total.awk < $(BENCH_FILE)
 

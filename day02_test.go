@@ -26,8 +26,7 @@ func TestDay02Part1(t *testing.T) {
 	}
 }
 
-// Benchmark is identical for part 1 and part 2 (same algorithm)
-func BenchmarkDay02(b *testing.B) {
+func BenchmarkDay02Part1(b *testing.B) {
 	lines, err := linesFromFilename(filename(2))
 	if err != nil {
 		b.Fatal(err)
@@ -35,6 +34,17 @@ func BenchmarkDay02(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = Day02(lines, true)
+	}
+}
+
+func BenchmarkDay02Part2(b *testing.B) {
+	lines, err := linesFromFilename(filename(2))
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Day02(lines, false)
 	}
 }
 
