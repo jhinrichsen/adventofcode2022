@@ -623,6 +623,17 @@ surface elements.
 TODO: need to maxmize the throughput. Keep a list of quotients for each factory,
 and build new stuff to minimize current quotients against optimal quotient.
 
+=== Optimization
+
+Parallelized blueprint processing using goroutines. Each blueprint is processed
+independently in its own goroutine, reducing wall-clock time.
+
+----
+name          old time/op    new time/op    delta
+Day19Part1-16    1.29s ± 0%     0.40s ± 0%  -69.01%
+Day19Part2-16    2.50s ± 0%     0.84s ± 0%  -66.40%
+----
+
 == Day 20
 
 So easy the problem, so nasty the implementation.
