@@ -12,71 +12,45 @@ func Day17(line string, rocks int) uint {
 	var (
 		jetPattern = JetPattern{line, 0}
 
-		// hungarian notation done right: shape is relative, sprite is
-		// absolute
-		shapes = []Sprite{
-			{
-				// ####
-				map[complex128]bool{
-					0 + 0i: true,
-					1 + 0i: true,
-					2 + 0i: true,
-					3 + 0i: true,
-				},
-				// 4 + 1i,
+		// Shapes as slices for faster iteration (no map allocations)
+		shapes = [][]complex128{
+			{ // ####
+				0 + 0i,
+				1 + 0i,
+				2 + 0i,
+				3 + 0i,
 			},
-			{
-				// .#.
-				// ###
-				// .#.
-				map[complex128]bool{
-					1 + 2i: true,
-					0 + 1i: true, 1 + 1i: true, 2 + 1i: true,
-					1 + 0i: true,
-				},
-				// 3 + 3i,
+			{ // .#. / ### / .#.
+				1 + 2i,
+				0 + 1i, 1 + 1i, 2 + 1i,
+				1 + 0i,
 			},
-			{
-				// ..#
-				// ..#
-				// ###
-				map[complex128]bool{
-					2 + 2i: true,
-					2 + 1i: true,
-					0 + 0i: true, 1 + 0i: true, 2 + 0i: true,
-				},
-				// 3 + 3i,
+			{ // ..# / ..# / ###
+				2 + 2i,
+				2 + 1i,
+				0 + 0i, 1 + 0i, 2 + 0i,
 			},
-			{
-				// #
-				// #
-				// #
-				// #
-				map[complex128]bool{
-					0 + 3i: true,
-					0 + 2i: true,
-					0 + 1i: true,
-					0 + 0i: true,
-				},
-				// 1 + 4i,
+			{ // # / # / # / #
+				0 + 3i,
+				0 + 2i,
+				0 + 1i,
+				0 + 0i,
 			},
-			{
-				// ##
-				// ##
-				map[complex128]bool{
-					0 + 1i: true, 1 + 1i: true,
-					0 + 0i: true, 1 + 0i: true,
-				},
-				// 2 + 2i,
+			{ // ## / ##
+				0 + 1i, 1 + 1i,
+				0 + 0i, 1 + 0i,
 			},
 		}
 		tower = NewSprite()
 
-		infield = func(a Sprite) bool {
-			for c := range a.rocks {
-				if real(c) < 0 || // off left
-					real(c) >= width || // off right
-					imag(c) < 0 { // off bottom, no off top
+		// Check if position is valid (in field and no collision)
+		isValid = func(shape []complex128, position complex128) bool {
+			for i := range shape {
+				c := shape[i] + position
+				if real(c) < 0 || real(c) >= width || imag(c) < 0 {
+					return false
+				}
+				if tower.rocks[c] {
 					return false
 				}
 			}
@@ -127,21 +101,8 @@ func Day17(line string, rocks int) uint {
 		position := complex(0, tower.Height())
 		position += offset
 
-		test := func(position, step complex128) (complex128, bool) {
-			sprite := shape.Translate(position + step)
-			// must check against both border and tower
-			p1 := sprite.Collides(tower)
-			p2 := infield(sprite)
-			possible := !p1 && p2
-			if !possible {
-				return position, false
-			}
-			return position + step, true
-		}
-
 		for {
 			// horizontal move
-
 			var step complex128
 			switch jetPattern.Next() {
 			case '>':
@@ -152,15 +113,18 @@ func Day17(line string, rocks int) uint {
 				step = east // Default to east if invalid
 			}
 
-			var ok bool
-			position, _ = test(position, step)
+			if isValid(shape, position+step) {
+				position += step
+			}
 
 			// vertical move
-
-			position, ok = test(position, south)
-			if !ok { // freeze
-				sprite := shape.Translate(position)
-				tower.AddSprite(sprite)
+			if isValid(shape, position+south) {
+				position += south
+			} else {
+				// freeze - add rock positions to tower
+				for j := range shape {
+					tower.rocks[shape[j]+position] = true
+				}
 				break
 			}
 		}

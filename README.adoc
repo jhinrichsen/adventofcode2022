@@ -597,6 +597,17 @@ BenchmarkDay17-8   	       4	 271031566 ns/op	 6854496 B/op	   98386 allocs/op
 BenchmarkDay17-8   	       4	 267536665 ns/op	 6856402 B/op	   98399 allocs/op
 ----
 
+=== Optimization
+
+Replaced shape maps with slices and eliminated temporary Sprite allocations in
+collision detection. Changed from creating intermediate Sprite objects via
+Translate() to direct position checking with slices.
+
+----
+name          old time/op    new time/op    delta
+Day17Part1-16    105ms ± 1%      96ms ± 2%   -8.31%
+----
+
 == Day 18
 
 Got part 2 wrong, i think i need to cater for interior air holes that stick
