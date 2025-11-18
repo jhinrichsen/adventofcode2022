@@ -5,6 +5,8 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"sync"
+	"sync/atomic"
 )
 
 // Day15 solves day 15: Beacon Exclusion Zone
@@ -133,73 +135,84 @@ func day15Part1(sensors []Sensor, targetY int) uint {
 }
 
 func day15Part2(sensors []Sensor, maxCoord int) uint {
-	// Pre-allocate intervals slice and reuse it
-	intervals := make([][2]int, 0, len(sensors))
+	// Parallelize row scanning
+	numWorkers := 16
+	rowsPerWorker := (maxCoord + 1) / numWorkers
 
-	// Search for the one uncovered position in [0, maxCoord] x [0, maxCoord]
-	for y := 0; y <= maxCoord; y++ {
-		// Reuse intervals slice
-		intervals = intervals[:0]
+	var result atomic.Uint64
+	var wg sync.WaitGroup
 
-		for i := range sensors {
-			s := &sensors[i]
-			// Check if sensor's exclusion zone reaches y
-			dy := s.pos.Y - y
-			if dy < 0 {
-				dy = -dy
-			}
-			if dy > s.radius {
-				continue
-			}
+	for w := 0; w < numWorkers; w++ {
+		wg.Add(1)
+		go func(workerID int) {
+			defer wg.Done()
 
-			// Calculate the X range covered at y
-			remaining := s.radius - dy
-			x1 := s.pos.X - remaining
-			x2 := s.pos.X + remaining
-
-			// Clamp to search bounds
-			if x1 < 0 {
-				x1 = 0
-			}
-			if x2 > maxCoord {
-				x2 = maxCoord
+			startY := workerID * rowsPerWorker
+			endY := startY + rowsPerWorker
+			if workerID == numWorkers-1 {
+				endY = maxCoord + 1
 			}
 
-			intervals = append(intervals, [2]int{x1, x2})
-		}
+			intervals := make([][2]int, 0, len(sensors))
 
-		// Merge intervals
-		merged := mergeIntervalsFast(intervals)
+			for y := startY; y < endY; y++ {
+				intervals = intervals[:0]
 
-		// Check for gap in coverage
-		if len(merged) == 0 {
-			// Entire row is uncovered (shouldn't happen)
-			return uint(y)
-		}
+				for i := range sensors {
+					s := &sensors[i]
+					dy := s.pos.Y - y
+					if dy < 0 {
+						dy = -dy
+					}
+					if dy > s.radius {
+						continue
+					}
 
-		// Check if there's a gap in [0, maxCoord]
-		if merged[0][0] > 0 {
-			// Gap at the start
-			return uint(y)
-		}
+					remaining := s.radius - dy
+					x1 := s.pos.X - remaining
+					x2 := s.pos.X + remaining
 
-		// Check for gap between merged intervals
-		for i := 0; i < len(merged)-1; i++ {
-			if merged[i][1]+1 < merged[i+1][0] {
-				// Found a gap
-				x := merged[i][1] + 1
-				return uint(x)*4000000 + uint(y)
+					if x1 < 0 {
+						x1 = 0
+					}
+					if x2 > maxCoord {
+						x2 = maxCoord
+					}
+
+					intervals = append(intervals, [2]int{x1, x2})
+				}
+
+				merged := mergeIntervalsFast(intervals)
+
+				if len(merged) == 0 {
+					result.Store(uint64(y))
+					return
+				}
+
+				if merged[0][0] > 0 {
+					result.Store(uint64(y))
+					return
+				}
+
+				for i := 0; i < len(merged)-1; i++ {
+					if merged[i][1]+1 < merged[i+1][0] {
+						x := merged[i][1] + 1
+						result.Store(uint64(x)*4000000 + uint64(y))
+						return
+					}
+				}
+
+				if merged[len(merged)-1][1] < maxCoord {
+					x := merged[len(merged)-1][1] + 1
+					result.Store(uint64(x)*4000000 + uint64(y))
+					return
+				}
 			}
-		}
-
-		// Check if coverage ends before maxCoord
-		if merged[len(merged)-1][1] < maxCoord {
-			x := merged[len(merged)-1][1] + 1
-			return uint(x)*4000000 + uint(y)
-		}
+		}(w)
 	}
 
-	return 0
+	wg.Wait()
+	return uint(result.Load())
 }
 
 func mergeIntervals(intervals [][2]int) [][2]int {
