@@ -647,6 +647,27 @@ Bug was in the mixing algorithm: movement calculations must use modulo (len-1)
 since the element is removed before calculating the new position. Rewrote to
 use Node struct tracking original indices for proper order processing.
 
+=== Optimization
+
+Replaced slice-based implementation with circular doubly-linked list.
+Original used linear search O(n) and slice splice operations O(n) for each
+move, resulting in O(n²) per mix. Linked list provides O(1) insert/remove
+and direct node access via array of pointers.
+
+----
+name          old time/op    new time/op    delta
+Day20Part1-16   95.9ms ± 7%    34.5ms ± 1%  -63.98%
+Day20Part2-16    1.02s ±14%     0.46s ± 1%  -55.20%
+
+name          old alloc/op   new alloc/op   delta
+Day20Part1-16    204MB ± 0%       0MB ± 0%  -99.89%
+Day20Part2-16   2.00GB ± 0%    0.00GB ± 0%  -99.99%
+
+name          old allocs/op  new allocs/op  delta
+Day20Part1-16    5.01k ± 0%     5.00k ± 0%   -0.12%
+Day20Part2-16    50.1k ± 0%      5.0k ± 0%  -90.01%
+----
+
 == Day 24
 
 BFS pathfinding through valley with moving blizzards.
