@@ -58,6 +58,9 @@ func Day17(line string, rocks int) uint {
 		}
 	)
 
+	// Track height incrementally to avoid recalculation
+	var currentHeight uint
+
 	// Cycle detection for part 2
 	type State struct {
 		rockIdx int
@@ -70,24 +73,26 @@ func Day17(line string, rocks int) uint {
 	})
 
 	// Helper to get surface profile (top 50 rows for better cycle detection)
+	// Pre-allocate to avoid repeated allocations
+	profileBuf := make([]byte, 0, 50*(width+1))
 	getProfile := func() string {
-		h := int(tower.Height())
+		h := int(currentHeight)
 		if h == 0 {
 			return ""
 		}
-		var profile []byte
+		profileBuf = profileBuf[:0]
 		depth := min(50, h)
 		for y := h - 1; y >= h-depth && y >= 0; y-- {
 			for x := 0; x < width; x++ {
 				if tower.rocks[complex(float64(x), float64(y))] {
-					profile = append(profile, '#')
+					profileBuf = append(profileBuf, '#')
 				} else {
-					profile = append(profile, '.')
+					profileBuf = append(profileBuf, '.')
 				}
 			}
-			profile = append(profile, '|')
+			profileBuf = append(profileBuf, '|')
 		}
-		return string(profile)
+		return string(profileBuf)
 	}
 
 	// Track cycle detection state
@@ -98,7 +103,7 @@ func Day17(line string, rocks int) uint {
 	for i := 0; i < rocks; i++ {
 		shape := shapes[i%len(shapes)] // forever next shape
 
-		position := complex(0, tower.Height())
+		position := complex(0, float64(currentHeight))
 		position += offset
 
 		for {
@@ -121,9 +126,18 @@ func Day17(line string, rocks int) uint {
 			if isValid(shape, position+south) {
 				position += south
 			} else {
-				// freeze - add rock positions to tower
+				// freeze - add rock positions to tower and update height
+				var maxHeight uint
 				for j := range shape {
-					tower.rocks[shape[j]+position] = true
+					c := shape[j] + position
+					tower.rocks[c] = true
+					h := uint(imag(c)) + 1
+					if h > maxHeight {
+						maxHeight = h
+					}
+				}
+				if maxHeight > currentHeight {
+					currentHeight = maxHeight
 				}
 				break
 			}
@@ -131,7 +145,7 @@ func Day17(line string, rocks int) uint {
 
 		// Check if we've reached the target rock count after cycle detection
 		if cycleDetected && i == targetRockCount {
-			remainderHeight := uint(tower.Height()) - cycleEndHeight
+			remainderHeight := currentHeight - cycleEndHeight
 			finalHeight := cycleEndHeight + cycleHeightGain + remainderHeight
 			return finalHeight
 		}
@@ -147,7 +161,7 @@ func Day17(line string, rocks int) uint {
 			if prev, found := seen[state]; found {
 				// Found a cycle!
 				cycleLength := i - prev.rockCount
-				cycleHeight := uint(tower.Height()) - prev.height
+				cycleHeight := currentHeight - prev.height
 
 				// Calculate how many complete cycles we can skip
 				remainingRocks := rocks - i
@@ -156,7 +170,7 @@ func Day17(line string, rocks int) uint {
 
 				// Set up to continue simulation for remainder rocks only
 				cycleDetected = true
-				cycleEndHeight = uint(tower.Height())
+				cycleEndHeight = currentHeight
 				cycleHeightGain = uint(fullCycles) * cycleHeight
 				targetRockCount = i + remainder - 1 // -1 because we check after placing
 
@@ -168,11 +182,11 @@ func Day17(line string, rocks int) uint {
 				seen[state] = struct {
 					rockCount int
 					height    uint
-				}{i, uint(tower.Height())}
+				}{i, currentHeight}
 			}
 		}
 	}
-	return uint(tower.Height())
+	return currentHeight
 }
 
 type Sprite struct {
