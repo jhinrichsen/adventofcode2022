@@ -71,7 +71,8 @@ func (bp Blueprint) maxGeodes(minutes int) int {
 	}
 
 	maxGeodes := 0
-	stack := []State{initialState}
+	stack := make([]State, 1, 100000)
+	stack[0] = initialState
 
 	// Use smaller map with more aggressive pruning
 	seen := make(map[State]struct{}, 100000)
