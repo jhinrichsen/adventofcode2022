@@ -98,37 +98,38 @@ func drawLine(rocks map[image.Point]bool, p1, p2 image.Point) {
 // dropSand simulates one unit of sand falling (part 1)
 // Returns true if sand came to rest, false if it fell into abyss
 func dropSand(rocks map[image.Point]bool, source image.Point, maxY int) bool {
-	sand := source
+	x, y := source.X, source.Y
 
 	for {
 		// Check if sand fell into abyss
-		if sand.Y > maxY {
+		if y > maxY {
 			return false
 		}
 
+		nextY := y + 1
+
 		// Try to fall down
-		down := image.Point{X: sand.X, Y: sand.Y + 1}
-		if !rocks[down] {
-			sand = down
+		if !rocks[image.Point{X: x, Y: nextY}] {
+			y = nextY
 			continue
 		}
 
 		// Try to fall down-left
-		downLeft := image.Point{X: sand.X - 1, Y: sand.Y + 1}
-		if !rocks[downLeft] {
-			sand = downLeft
+		if !rocks[image.Point{X: x - 1, Y: nextY}] {
+			x--
+			y = nextY
 			continue
 		}
 
 		// Try to fall down-right
-		downRight := image.Point{X: sand.X + 1, Y: sand.Y + 1}
-		if !rocks[downRight] {
-			sand = downRight
+		if !rocks[image.Point{X: x + 1, Y: nextY}] {
+			x++
+			y = nextY
 			continue
 		}
 
 		// Sand comes to rest
-		rocks[sand] = true
+		rocks[image.Point{X: x, Y: y}] = true
 		return true
 	}
 }
@@ -136,38 +137,39 @@ func dropSand(rocks map[image.Point]bool, source image.Point, maxY int) bool {
 // dropSandPart2 simulates one unit of sand falling (part 2 with floor)
 // Returns true if sand came to rest (not at source), false if source is blocked
 func dropSandPart2(rocks map[image.Point]bool, source image.Point, floorY int) bool {
-	sand := source
+	x, y := source.X, source.Y
 
 	for {
+		nextY := y + 1
+
 		// Check if sand reached floor
-		if sand.Y+1 == floorY {
-			rocks[sand] = true
-			return sand != source
+		if nextY == floorY {
+			rocks[image.Point{X: x, Y: y}] = true
+			return x != source.X || y != source.Y
 		}
 
 		// Try to fall down
-		down := image.Point{X: sand.X, Y: sand.Y + 1}
-		if !rocks[down] {
-			sand = down
+		if !rocks[image.Point{X: x, Y: nextY}] {
+			y = nextY
 			continue
 		}
 
 		// Try to fall down-left
-		downLeft := image.Point{X: sand.X - 1, Y: sand.Y + 1}
-		if !rocks[downLeft] {
-			sand = downLeft
+		if !rocks[image.Point{X: x - 1, Y: nextY}] {
+			x--
+			y = nextY
 			continue
 		}
 
 		// Try to fall down-right
-		downRight := image.Point{X: sand.X + 1, Y: sand.Y + 1}
-		if !rocks[downRight] {
-			sand = downRight
+		if !rocks[image.Point{X: x + 1, Y: nextY}] {
+			x++
+			y = nextY
 			continue
 		}
 
 		// Sand comes to rest
-		rocks[sand] = true
-		return sand != source
+		rocks[image.Point{X: x, Y: y}] = true
+		return x != source.X || y != source.Y
 	}
 }
