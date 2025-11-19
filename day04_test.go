@@ -2,7 +2,6 @@ package adventofcode2022
 
 import (
 	"fmt"
-	"runtime/debug"
 	"testing"
 )
 
@@ -23,13 +22,6 @@ var containsTests = []struct {
 	{2, 8, 3, 7, true, true},
 	{6, 6, 4, 6, true, true},
 	{2, 6, 4, 8, false, true},
-}
-
-func die(err error, t *testing.T) {
-	if err != nil {
-		t.Log(string(debug.Stack()))
-		t.Fatal(err)
-	}
 }
 
 func TestContains(t *testing.T) {
