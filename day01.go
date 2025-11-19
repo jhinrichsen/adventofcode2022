@@ -1,49 +1,56 @@
 package adventofcode2022
 
-import (
-	"slices"
-	"strconv"
-)
-
 // Day01 finds the sum of calories carried by the top elf (part1) or top 3 elves (part2).
 func Day01(lines []string, part1 bool) uint {
-	var elves []uint
+	var top1, top2, top3 uint
 	var current uint
 
 	for _, line := range lines {
 		if line == "" {
 			if current > 0 {
-				elves = append(elves, current)
+				// Insert into top 3
+				if current > top1 {
+					top3 = top2
+					top2 = top1
+					top1 = current
+				} else if current > top2 {
+					top3 = top2
+					top2 = current
+				} else if current > top3 {
+					top3 = current
+				}
 				current = 0
 			}
 			continue
 		}
 
-		calories, err := strconv.Atoi(line)
-		if err != nil {
-			continue // Skip invalid lines
+		// Manual parsing - faster than strconv.Atoi
+		var n uint
+		for i := 0; i < len(line); i++ {
+			c := line[i]
+			if c >= '0' && c <= '9' {
+				n = n*10 + uint(c-'0')
+			}
 		}
-		current += uint(calories)
+		current += n
 	}
 
 	// Capture final elf
 	if current > 0 {
-		elves = append(elves, current)
+		if current > top1 {
+			top3 = top2
+			top2 = top1
+			top1 = current
+		} else if current > top2 {
+			top3 = top2
+			top2 = current
+		} else if current > top3 {
+			top3 = current
+		}
 	}
 
-	// Sort descending
-	slices.Sort(elves)
-	slices.Reverse(elves)
-
-	n := 3
 	if part1 {
-		n = 1
+		return top1
 	}
-
-	var sum uint
-	for i := range min(n, len(elves)) {
-		sum += elves[i]
-	}
-
-	return sum
+	return top1 + top2 + top3
 }
