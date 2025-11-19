@@ -4,10 +4,7 @@ import "testing"
 
 func TestDay12Part1Example(t *testing.T) {
 	const want uint = 31
-	lines, err := linesFromFilename(exampleFilename(12))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, exampleFilename(12))
 	got := Day12(lines, true)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
@@ -16,10 +13,7 @@ func TestDay12Part1Example(t *testing.T) {
 
 func TestDay12Part1(t *testing.T) {
 	const want uint = 528
-	lines, err := linesFromFilename(filename(12))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, filename(12))
 	got := Day12(lines, true)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
@@ -28,10 +22,7 @@ func TestDay12Part1(t *testing.T) {
 
 func TestDay12Part2Example(t *testing.T) {
 	const want uint = 29
-	lines, err := linesFromFilename(exampleFilename(12))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, exampleFilename(12))
 	got := Day12(lines, false)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
@@ -40,10 +31,7 @@ func TestDay12Part2Example(t *testing.T) {
 
 func TestDay12Part2(t *testing.T) {
 	const want uint = 522
-	lines, err := linesFromFilename(filename(12))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, filename(12))
 	got := Day12(lines, false)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
@@ -51,23 +39,15 @@ func TestDay12Part2(t *testing.T) {
 }
 
 func BenchmarkDay12Part1(b *testing.B) {
-	lines, err := linesFromFilename(filename(12))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	lines := linesFromFilename(b, filename(12))
+	for range b.N {
 		_ = Day12(lines, true)
 	}
 }
 
 func BenchmarkDay12Part2(b *testing.B) {
-	lines, err := linesFromFilename(filename(12))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	lines := linesFromFilename(b, filename(12))
+	for range b.N {
 		_ = Day12(lines, false)
 	}
 }

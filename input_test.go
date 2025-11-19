@@ -6,72 +6,61 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strconv"
 	"strings"
 	"testing"
 )
 
-// Test helper functions
-
-func linesFromFilename(filename string) ([]string, error) {
+func linesFromFilename(tb testing.TB, filename string) []string {
+	tb.Helper()
 	f, err := os.Open(filename)
 	if err != nil {
-		return []string{}, err
+		tb.Fatal(err)
 	}
-	return linesFromReader(f)
+	lines := linesFromReader(tb, f)
+	if b, ok := tb.(*testing.B); ok {
+		b.ResetTimer()
+	}
+	return lines
 }
 
-func linesFromReader(r io.Reader) ([]string, error) {
+func linesFromReader(tb testing.TB, r io.Reader) []string {
+	tb.Helper()
 	var lines []string
 	sc := bufio.NewScanner(r)
 	for sc.Scan() {
 		line := sc.Text()
 		lines = append(lines, line)
 	}
-	return lines, nil
+	if err := sc.Err(); err != nil {
+		tb.Fatal(err)
+	}
+	return lines
 }
 
-func exampleFilename(day int) string {
-	return fmt.Sprintf("testdata/day%02d_example.txt", day)
-}
-
-func filename(day int) string {
-	return fmt.Sprintf("testdata/day%02d.txt", day)
-}
-
-func linesAsNumbers(lines []string) ([]int, error) {
-	var is []int
-	for i := range lines {
-		n, err := strconv.Atoi(lines[i])
+func numbersFromFilename(tb testing.TB, filename string) []int {
+	tb.Helper()
+	lines := linesFromFilename(tb, filename)
+	numbers := make([]int, 0, len(lines))
+	for _, line := range lines {
+		var n int
+		_, err := fmt.Sscanf(line, "%d", &n)
 		if err != nil {
-			msg := "error in line %d: cannot convert %q to number"
-			return is, fmt.Errorf(msg, i, lines[i])
+			continue // Skip lines that don't parse as integers
 		}
-		is = append(is, n)
+		numbers = append(numbers, n)
 	}
-	return is, nil
+	return numbers
 }
 
-func numbersFromFilename(filename string) ([]int, error) {
-	ls, err := linesFromFilename(filename)
-	if err != nil {
-		return nil, err
-	}
-	return linesAsNumbers(ls)
+func exampleFilename(day uint8) string {
+	return fmt.Sprintf("testdata/day%02d_example.txt", int(day))
 }
 
-func ParseCommaSeparatedNumbers(s string) ([]int, error) {
-	parts := strings.Split(s, ",")
-	is := make([]int, len(parts))
-	var err error
-	for i := range parts {
-		is[i], err = strconv.Atoi(parts[i])
-		if err != nil {
-			return is, err
-		}
-	}
-	return is, nil
+func filename(day uint8) string {
+	return fmt.Sprintf("testdata/day%02d.txt", int(day))
 }
+
+// Tests for helper functions
 
 type CompareError struct {
 	line int
@@ -106,14 +95,6 @@ func compare(want, got io.Reader) error {
 	return nil
 }
 
-func die(err error, t *testing.T) {
-	if err != nil {
-		t.Fatal(err)
-	}
-}
-
-// Tests for helper functions
-
 func TestCompareEqual(t *testing.T) {
 	err := compare(
 		strings.NewReader(strings.Join([]string{
@@ -127,7 +108,9 @@ func TestCompareEqual(t *testing.T) {
 			"line 2",
 		}, "\n")),
 	)
-	die(err, t)
+	if err != nil {
+		t.Fatal(err)
+	}
 }
 
 func TestCompareDifferent(t *testing.T) {

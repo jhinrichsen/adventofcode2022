@@ -7,10 +7,7 @@ import (
 
 func TestDay24Part1Example(t *testing.T) {
 	const want uint = 18
-	lines, err := linesFromFilename(exampleFilename(24))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, exampleFilename(24))
 	puzzle := NewDay24(lines)
 	got := Day24(puzzle, true)
 	if want != got {
@@ -20,10 +17,7 @@ func TestDay24Part1Example(t *testing.T) {
 
 func TestDay24Part1(t *testing.T) {
 	const want uint = 299
-	lines, err := linesFromFilename(filename(24))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, filename(24))
 	puzzle := NewDay24(lines)
 	got := Day24(puzzle, true)
 	if want != got {
@@ -33,10 +27,7 @@ func TestDay24Part1(t *testing.T) {
 
 func TestDay24Part2Example(t *testing.T) {
 	const want uint = 54
-	lines, err := linesFromFilename(exampleFilename(24))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, exampleFilename(24))
 	puzzle := NewDay24(lines)
 	got := Day24(puzzle, false)
 	if want != got {
@@ -46,10 +37,7 @@ func TestDay24Part2Example(t *testing.T) {
 
 func TestDay24Part2(t *testing.T) {
 	const want uint = 899
-	lines, err := linesFromFilename(filename(24))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, filename(24))
 	puzzle := NewDay24(lines)
 	got := Day24(puzzle, false)
 	if want != got {
@@ -59,10 +47,7 @@ func TestDay24Part2(t *testing.T) {
 
 // TestDay24Part1AllMinutes verifies blizzard configuration at all minutes 0-18
 func TestDay24Part1AllMinutes(t *testing.T) {
-	lines, err := linesFromFilename(exampleFilename(24))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, exampleFilename(24))
 	puzzle := NewDay24(lines)
 
 	tests := []struct {
@@ -103,25 +88,19 @@ func TestDay24Part1AllMinutes(t *testing.T) {
 }
 
 func BenchmarkDay24Part1(b *testing.B) {
-	lines, err := linesFromFilename(filename(24))
-	if err != nil {
-		b.Fatal(err)
-	}
+	lines := linesFromFilename(b, filename(24))
 	puzzle := NewDay24(lines)
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_ = Day24(puzzle, true)
 	}
 }
 
 func BenchmarkDay24Part2(b *testing.B) {
-	lines, err := linesFromFilename(filename(24))
-	if err != nil {
-		b.Fatal(err)
-	}
+	lines := linesFromFilename(b, filename(24))
 	puzzle := NewDay24(lines)
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_ = Day24(puzzle, false)
 	}
 }

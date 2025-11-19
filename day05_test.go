@@ -25,7 +25,9 @@ func TestDay05Part1Example(t *testing.T) {
 func TestDay05Part1(t *testing.T) {
 	const want = "CFFHVVHNC"
 	r, err := os.Open(filename(5))
-	die(err, t)
+	if err != nil {
+		t.Fatal(err)
+	}
 	defer r.Close()
 	got, err := Day05(r, true)
 	if err != nil {
@@ -55,7 +57,9 @@ func TestDay05Part2Example(t *testing.T) {
 func TestDay05Part2(t *testing.T) {
 	const want = "FSZWBPTBG"
 	r, err := os.Open(filename(5))
-	die(err, t)
+	if err != nil {
+		t.Fatal(err)
+	}
 	defer r.Close()
 	got, err := Day05(r, false)
 	if err != nil {
@@ -76,13 +80,19 @@ func BenchmarkDay05Part2(b *testing.B) {
 
 func bench05(b *testing.B, part1 bool) {
 	name := filename(5)
-	st, _ := os.Stat(name)
-	f, _ := os.Open(name)
+	st, err := os.Stat(name)
+	if err != nil {
+		b.Fatal(err)
+	}
+	f, err := os.Open(name)
+	if err != nil {
+		b.Fatal(err)
+	}
 	defer f.Close()
 	r := bufio.NewReaderSize(f, int(st.Size()))
 
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_, _ = Day05(r, part1)
 	}
 }

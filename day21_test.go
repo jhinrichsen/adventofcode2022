@@ -6,10 +6,7 @@ import (
 
 func TestDay21Part1Example(t *testing.T) {
 	const want = 152
-	lines, err := linesFromFilename(exampleFilename(21))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, exampleFilename(21))
 	got := Day21(lines, true)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
@@ -18,10 +15,7 @@ func TestDay21Part1Example(t *testing.T) {
 
 func TestDay21Part1(t *testing.T) {
 	const want = 194501589693264
-	lines, err := linesFromFilename(filename(21))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, filename(21))
 	got := Day21(lines, true)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
@@ -29,22 +23,15 @@ func TestDay21Part1(t *testing.T) {
 }
 
 func BenchmarkDay21Part1(b *testing.B) {
-	lines, err := linesFromFilename(filename(21))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	lines := linesFromFilename(b, filename(21))
+	for range b.N {
 		Day21(lines, true)
 	}
 }
 
 func TestDay21Part2Example(t *testing.T) {
 	const want = 301
-	lines, err := linesFromFilename(exampleFilename(21))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, exampleFilename(21))
 	got := Day21(lines, false)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
@@ -53,10 +40,7 @@ func TestDay21Part2Example(t *testing.T) {
 
 func TestDay21Part2(t *testing.T) {
 	const want = 3887609741189
-	lines, err := linesFromFilename(filename(21))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, filename(21))
 	got := Day21(lines, false)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
@@ -64,12 +48,8 @@ func TestDay21Part2(t *testing.T) {
 }
 
 func BenchmarkDay21Part2(b *testing.B) {
-	lines, err := linesFromFilename(filename(21))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	lines := linesFromFilename(b, filename(21))
+	for range b.N {
 		Day21(lines, false)
 	}
 }

@@ -8,17 +8,16 @@ import (
 func testDay09(t *testing.T, example int, tails int, want int) {
 	var f = func() func(int) string {
 		if example == 0 {
-			return filename
+			return func(day int) string {
+				return filename(uint8(day))
+			}
 		}
 		return func(_ int) string {
 			return fmt.Sprintf("testdata/day09_example%d.txt",
 				example)
 		}
 	}()
-	lines, err := linesFromFilename(f(9))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, f(9))
 	got := Day09(lines, make([]complex128, tails))
 	if want != got {
 		t.Fatalf("want %d but got %d\n", want, got)
@@ -34,12 +33,8 @@ func TestDay09Part1(t *testing.T) {
 }
 
 func BenchmarkDay09Part1(b *testing.B) {
-	lines, err := linesFromFilename(filename(9))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	lines := linesFromFilename(b, filename(9))
+	for range b.N {
 		_ = Day09(lines, []complex128{0 + 0i})
 	}
 }
@@ -57,12 +52,8 @@ func TestDay09Part2(t *testing.T) {
 }
 
 func BenchmarkDay09Part2(b *testing.B) {
-	lines, err := linesFromFilename(filename(9))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	lines := linesFromFilename(b, filename(9))
+	for range b.N {
 		_ = Day09(lines, []complex128{
 			0 + 0i, // 1
 			0 + 0i, // 2

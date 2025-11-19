@@ -6,10 +6,7 @@ import (
 
 func TestDay20Part1Example(t *testing.T) {
 	const want = 3
-	ns, err := numbersFromFilename(exampleFilename(20))
-	if err != nil {
-		t.Fatal(err)
-	}
+	ns := numbersFromFilename(t, exampleFilename(20))
 	got := Day20(ns, 1, true)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
@@ -18,10 +15,7 @@ func TestDay20Part1Example(t *testing.T) {
 
 func TestDay20Part1(t *testing.T) {
 	const want = 11616
-	ns, err := numbersFromFilename(filename(20))
-	if err != nil {
-		t.Fatal(err)
-	}
+	ns := numbersFromFilename(t, filename(20))
 	got := Day20(ns, 1, true)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
@@ -29,10 +23,7 @@ func TestDay20Part1(t *testing.T) {
 }
 
 func TestDay20Part2ExampleRounds(t *testing.T) {
-	ns, err := numbersFromFilename(exampleFilename(20))
-	if err != nil {
-		t.Fatal(err)
-	}
+	ns := numbersFromFilename(t, exampleFilename(20))
 
 	// Test each round of mixing
 	tests := []struct {
@@ -70,10 +61,7 @@ func TestDay20Part2ExampleRounds(t *testing.T) {
 
 func TestDay20Part2Example(t *testing.T) {
 	const want = 1623178306
-	ns, err := numbersFromFilename(exampleFilename(20))
-	if err != nil {
-		t.Fatal(err)
-	}
+	ns := numbersFromFilename(t, exampleFilename(20))
 	got := Day20(ns, 10, false)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
@@ -82,10 +70,7 @@ func TestDay20Part2Example(t *testing.T) {
 
 func TestDay20Part2(t *testing.T) {
 	const want = 9937909178485
-	ns, err := numbersFromFilename(filename(20))
-	if err != nil {
-		t.Fatal(err)
-	}
+	ns := numbersFromFilename(t, filename(20))
 	got := Day20(ns, 10, false)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
@@ -149,23 +134,15 @@ func mixAndGetArrangement(srcs []int, mixRounds int, part1 bool) []int {
 }
 
 func BenchmarkDay20Part1(b *testing.B) {
-	ns, err := numbersFromFilename(filename(20))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	ns := numbersFromFilename(b, filename(20))
+	for range b.N {
 		_ = Day20(ns, 1, true)
 	}
 }
 
 func BenchmarkDay20Part2(b *testing.B) {
-	ns, err := numbersFromFilename(filename(20))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	ns := numbersFromFilename(b, filename(20))
+	for range b.N {
 		_ = Day20(ns, 10, false)
 	}
 }
