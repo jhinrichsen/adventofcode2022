@@ -60,6 +60,36 @@ func filename(day uint8) string {
 	return fmt.Sprintf("testdata/day%02d.txt", int(day))
 }
 
+// file reads the main input file bytes for day N (zero-padded).
+//
+//nolint:unused // Generic helper from adventofcode2023/2024 pattern
+func file(tb testing.TB, day uint8) []byte {
+	tb.Helper()
+	buf, err := os.ReadFile(filename(day))
+	if err != nil {
+		tb.Fatal(err)
+	}
+	if b, ok := tb.(*testing.B); ok {
+		b.ResetTimer()
+	}
+	return buf
+}
+
+// fileFromFilename reads file bytes using a filename function (e.g., filename or exampleFilename).
+//
+//nolint:unused // Generic helper from adventofcode2023/2024 pattern
+func fileFromFilename(tb testing.TB, filenameFunc func(uint8) string, day uint8) []byte {
+	tb.Helper()
+	buf, err := os.ReadFile(filenameFunc(day))
+	if err != nil {
+		tb.Fatal(err)
+	}
+	if b, ok := tb.(*testing.B); ok {
+		b.ResetTimer()
+	}
+	return buf
+}
+
 // Tests for helper functions
 
 type CompareError struct {
