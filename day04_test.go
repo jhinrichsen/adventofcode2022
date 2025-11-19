@@ -101,6 +101,6 @@ func bench04(b *testing.B, part1 bool) {
 	lines, _ := linesFromFilename(filename(4))
 	b.ResetTimer()
 	for range b.N {
-		Day04(lines, part1)
+		_, _ = Day04(lines, part1)
 	}
 }

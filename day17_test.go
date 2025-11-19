@@ -8,8 +8,8 @@ import (
 
 func TestDay17Part1Example(t *testing.T) {
 	const (
-		rocks    = 2022
-		want uint = 3068
+		rocks      = 2022
+		want  uint = 3068
 	)
 	buf, err := os.ReadFile(exampleFilename(17))
 	if err != nil {
@@ -23,8 +23,8 @@ func TestDay17Part1Example(t *testing.T) {
 
 func TestDay17Part1(t *testing.T) {
 	const (
-		rocks    = 2022
-		want uint = 3200
+		rocks      = 2022
+		want  uint = 3200
 	)
 	// example has only one line, puzzle input has multiple lines
 	lines, err := linesFromFilename(filename(17))
@@ -39,8 +39,8 @@ func TestDay17Part1(t *testing.T) {
 
 func TestDay17Part2Example(t *testing.T) {
 	const (
-		rocks    = 1000000000000
-		want uint = 1514285714288
+		rocks      = 1000000000000
+		want  uint = 1514285714288
 	)
 	buf, err := os.ReadFile(exampleFilename(17))
 	if err != nil {
@@ -54,8 +54,8 @@ func TestDay17Part2Example(t *testing.T) {
 
 func TestDay17Part2(t *testing.T) {
 	const (
-		rocks    = 1000000000000
-		want uint = 1584927536247
+		rocks      = 1000000000000
+		want  uint = 1584927536247
 	)
 	lines, err := linesFromFilename(filename(17))
 	if err != nil {
