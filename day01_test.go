@@ -3,51 +3,25 @@ package adventofcode2022
 import "testing"
 
 func TestDay01Part1Example(t *testing.T) {
-	lines := linesFromFilename(t, exampleFilename(1))
-	got := Day01(lines, 1)
-	const want = 24000
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 1, exampleFilename, true, Day01, uint(24000))
 }
 
-func TestDay01(t *testing.T) {
-	lines := linesFromFilename(t, filename(1))
-	got := Day01(lines, 1)
-	const want = 69177
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+func TestDay01Part1(t *testing.T) {
+	testLines(t, 1, filename, true, Day01, uint(69177))
 }
 
 func TestDay01Part2Example(t *testing.T) {
-	lines := linesFromFilename(t, exampleFilename(1))
-	got := Day01(lines, 3)
-	const want = 45000
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 1, exampleFilename, false, Day01, uint(45000))
 }
 
 func TestDay01Part2(t *testing.T) {
-	lines := linesFromFilename(t, filename(1))
-	got := Day01(lines, 3)
-	const want = 207456
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 1, filename, false, Day01, uint(207456))
 }
 
 func BenchmarkDay01Part1(b *testing.B) {
-	lines := linesFromFilename(b, filename(1))
-	for b.Loop() {
-		_ = Day01(lines, 1)
-	}
+	benchLines(b, 1, true, Day01)
 }
 
 func BenchmarkDay01Part2(b *testing.B) {
-	lines := linesFromFilename(b, filename(1))
-	for b.Loop() {
-		_ = Day01(lines, 3)
-	}
+	benchLines(b, 1, false, Day01)
 }

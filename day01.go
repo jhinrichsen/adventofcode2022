@@ -1,42 +1,49 @@
 package adventofcode2022
 
 import (
-	"sort"
+	"slices"
 	"strconv"
 )
 
-// Day01 is the first puzzle.
-// It returns the most calories of any raindeer.
-// In case of an empty list 0 is returned.
-// Non-numbers are ignored.
-// No error checking for negative calories.
-func Day01(lines []string, n int) int {
-	// make sure we have one final newline
-	if lines[len(lines)-1] != "" {
-		lines = append(lines, "")
-	}
+// Day01 finds the sum of calories carried by the top elf (part1) or top 3 elves (part2).
+func Day01(lines []string, part1 bool) uint {
+	var elves []uint
+	var current uint
 
-	var calories []int // calories per raindeer
-	var sum int
 	for _, line := range lines {
 		if line == "" {
-			calories = append(calories, sum)
-			sum = 0
-		} else {
-			n, _ := strconv.Atoi(line)
-			sum += n
+			if current > 0 {
+				elves = append(elves, current)
+				current = 0
+			}
+			continue
 		}
+
+		calories, err := strconv.Atoi(line)
+		if err != nil {
+			continue // Skip invalid lines
+		}
+		current += uint(calories)
 	}
 
-	// go for the more efficient custom order instead of Reverse() Sort()
-	sort.Slice(calories, func(a, b int) bool {
-		return calories[a] > calories[b]
-	})
-
-	// first n largest calories
-	var total int
-	for i := 0; i < n; i++ {
-		total += calories[i]
+	// Capture final elf if not followed by empty line
+	if current > 0 {
+		elves = append(elves, current)
 	}
-	return total
+
+	// Sort descending
+	slices.Sort(elves)
+	slices.Reverse(elves)
+
+	n := 3
+	if part1 {
+		n = 1
+	}
+
+	var sum uint
+	for i := range min(n, len(elves)) {
+		sum += elves[i]
+	}
+
+	return sum
 }
