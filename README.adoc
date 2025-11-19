@@ -11,86 +11,39 @@ image:https://img.shields.io/badge/runtime-1.9%20s-brightgreen.svg["runtime: 1.9
 My take on https://adventofcode.com/2022/ in Go. As usual, i don't particularly
 care if i provide my solutions _fast_, i try to be _correct_ on the first
 answer, and care for being runtime efficient.
-Most, if not all, puzzles are backed by unit testing the examples, and by some
-benchmarks.
 
-Expected results are hard coded into the unit tests, so unless you are peeking
-for a solution avoid looking at those.
+Answers are hard coded into the unit tests.
 
-
-Number of tries for a correct answer:
+== Number of tries
 
 |===
-| Day | part 1 | part 2
-| 1   | 1      | 1
-| 2   | 1      | 1
-| 3   | 1      | 1
-| 4   | 2      | 1
-| 5   | 1      | 1
-| 6   | 1      | 1
-| 7   | 2      | 1
-| 8   | 1      | 1
-| 9   | 1      | 1
-| 10  | 1      | 1
-| 11  | 1      |
-| 12  | 1      | 1
-| 13  |        |
-| 14  |        |
-| 15  |        |
-| 16  |        |
-| 17  | 1      | - (+1)
-| 18  | 1      | - (+1)
-| 19  |        |
-| 20  | 3      |
-| 21  | 1      |
-| 22  | 2 |
-| 23  |  |
-| 24  | 1      |
-| 25  | 1      |
+| Day | Part 1 | Part 2
+| 1   |   1    | 1
+| 2   |   1    | 1
+| 3   |   1    | 1
+| 4   |   2    | 1
+| 5   |   1    | 1
+| 6   |   1    | 1
+| 7   |   2    | 1
+| 8   |   1    | 1
+| 9   |   1    | 1
+| 10  |   1    | 1
+| 11  |   1    | 1
+| 12  |   1    | 1
+| 13  |   1    | 1
+| 14  |   1    | 1
+| 15  |   1    | 1
+| 16  |   1    | 1
+| 17  |   1    | 2
+| 18  |   1    | 2
+| 19  |   1    | 1
+| 20  |   3    | 1
+| 21  |   1    | 1
+| 22  |   2    | 1
+| 23  |   1    | 1
+| 24  |   1    | 1
+| 25  |   1    | 1
 |===
-
-Benchmark summary
-----
-name            time/op
-Day01Part2-8    55.5µs ± 8%
-Day02-8         63.7µs ±20%
-Day03Part1-8    51.7µs ±14%
-Day03Part2-8     134µs ± 6%
-Day04Part1-8     598µs ±10%
-Day04Part2-8     575µs ±16%
-Day05-8         3.33µs ± 3%
-Day06Part1-8    8.59µs ±26%
-Day06Part2-8    33.4µs ±19%
-Day06Hashmap-8   236µs ±17%
-Day10-8         2.16µs ± 8%
-
-name            alloc/op
-Day01Part2-8    4.14kB ± 0%
-Day02-8          0.00B
-Day03Part1-8    2.40kB ± 0%
-Day03Part2-8    6.19kB ± 0%
-Day04Part1-8    96.0kB ± 0%
-Day04Part2-8    96.0kB ± 0%
-Day05-8         4.14kB ± 0%
-Day06Part1-8     0.00B
-Day06Part2-8     0.00B
-Day06Hashmap-8    653B ± 0%
-Day10-8         2.30kB ± 0%
-
-name            allocs/op
-Day01Part2-8      11.0 ± 0%
-Day02-8           0.00
-Day03Part1-8       300 ± 0%
-Day03Part2-8       368 ± 0%
-Day04Part1-8     3.00k ± 0%
-Day04Part2-8     3.00k ± 0%
-Day05-8           3.00 ± 0%
-Day06Part1-8      0.00
-Day06Part2-8      0.00
-Day06Hashmap-8    5.00 ± 0%
-Day10-8           1.00 ± 0%
-----
-
 
 == Day 1
 
@@ -751,8 +704,16 @@ The algorithm is pretty slow, about 15 times slower as a conversion to dec and t
 
 == Benchmarks
 
+The total runtime to run each the benchmark for each day (1..25), part 1 and 2 (except for day 25, which does not have a part 2) is
+
 ----
-include:benches/linux-amd64-intelr_coretm_i7-14700k.txt
+1895712088.80 ns, 1895712.089 µs, 1895.712 ms, 1.895712 s
+----
+
+Not subsecond, but close.
+
+----
+include::benches/linux-amd64-intelr_coretm_i7-14700k.txt
 ----
 
 Disabling GC will shave off ~30%

@@ -125,7 +125,7 @@ When optimizing puzzle solutions, follow this workflow to measure and document p
 
 ### Performance Targets
 
-**Goal:** Solutions should run in **under 1 second** with **minimal memory usage**
+**Goal:** "make total" should run in **under 1 second** with **minimal memory usage**
 
 Focus on:
 - Low `B/op` (bytes per operation)
