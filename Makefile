@@ -40,7 +40,7 @@ README.pdf: README.adoc
 $(BENCH_FILE): $(wildcard *.go)
 	@echo "Running benchmarks and saving to $@..."
 	@mkdir -p benches
-	$(GO) test -run=^$$ -bench=Day..Part.$$ -benchmem | tee $@
+	GOGC=off $(GO) test -run=^$$ -bench=Day..Part.$$ -benchmem | tee $@
 
 .PHONY: total
 total: $(BENCH_FILE)
