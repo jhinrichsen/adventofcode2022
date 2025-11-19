@@ -25,7 +25,7 @@ func TestPBM(t *testing.T) {
 	)
 
 	err := WritePBM(&buf, 24, 7, func(x, y int) bool {
-		return want[7-y][x*2] == '1'
+		return want[y+1][x*2] == '1'
 	})
 	if err != nil {
 		t.Fatal(err)
