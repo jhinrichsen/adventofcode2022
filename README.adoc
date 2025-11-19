@@ -1,12 +1,15 @@
 = Advent of Code 2022
 :doctype: book
-:toc:
+:toc: macro
+:sectnums:
 
 image:https://godoc.org/gitlab.com/jhinrichsen/adventofcode2022?status.svg["godoc", link="https://godoc.org/gitlab.com/jhinrichsen/adventofcode2022"]
 image:https://goreportcard.com/badge/gitlab.com/jhinrichsen/adventofcode2022["Go report card", link="https://goreportcard.com/report/gitlab.com/jhinrichsen/adventofcode2022"]
 image:https://gitlab.com/jhinrichsen/adventofcode2022/badges/main/pipeline.svg[link="https://gitlab.com/jhinrichsen/adventofcode2022/-/commits/main",title="pipeline status"]
 image:https://gitlab.com/jhinrichsen/adventofcode2022/badges/main/coverage.svg[link="https://gitlab.com/jhinrichsen/adventofcode2022/-/commits/main",title="coverage report"]
 image:https://img.shields.io/badge/runtime-1.9%20s-brightgreen.svg["runtime: 1.9 s"]
+
+toc::[]
 
 My take on https://adventofcode.com/2022/ in Go. As usual, i don't particularly
 care if i provide my solutions _fast_, i try to be _correct_ on the first
