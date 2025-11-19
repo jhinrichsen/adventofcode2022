@@ -7,11 +7,6 @@ import (
 
 // Day01 finds the sum of calories carried by the top elf (part1) or top 3 elves (part2).
 func Day01(lines []string, part1 bool) uint {
-	// Ensure final empty line to trigger append of last elf
-	if len(lines) > 0 && lines[len(lines)-1] != "" {
-		lines = append(lines, "")
-	}
-
 	var elves []uint
 	var current uint
 
@@ -29,6 +24,11 @@ func Day01(lines []string, part1 bool) uint {
 			continue // Skip invalid lines
 		}
 		current += uint(calories)
+	}
+
+	// Capture final elf
+	if current > 0 {
+		elves = append(elves, current)
 	}
 
 	// Sort descending
