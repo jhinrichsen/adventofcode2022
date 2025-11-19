@@ -153,11 +153,13 @@ func (p *Day24Puzzle) shortestPath(start, end image.Point, startTime uint) uint 
 		time uint
 	}
 
-	queue := []state{{pos: start, time: startTime}}
-	visited := make(map[state]bool)
+	queue := make([]state, 1, 10000)
+	queue[0] = state{pos: start, time: startTime}
+	visited := make(map[state]bool, 10000)
 	visited[state{pos: start, time: startTime}] = true
+	head := 0
 
-	moves := []image.Point{
+	moves := [5]image.Point{
 		{X: 0, Y: 0},  // wait
 		{X: 1, Y: 0},  // right
 		{X: -1, Y: 0}, // left
@@ -165,9 +167,9 @@ func (p *Day24Puzzle) shortestPath(start, end image.Point, startTime uint) uint 
 		{X: 0, Y: -1}, // up
 	}
 
-	for len(queue) > 0 {
-		curr := queue[0]
-		queue = queue[1:]
+	for head < len(queue) {
+		curr := queue[head]
+		head++
 
 		// Already at end
 		if curr.pos == end {

@@ -17,23 +17,26 @@ var (
 
 func Day23(lines []string, part1 bool) uint {
 	// Parse into set of elf positions
-	elves := make(map[point]struct{}, 4000)
+	elvesMap := make(map[point]struct{}, 4000)
+	elvesSlice := make([]point, 0, 4000)
 	for y := range lines {
 		for x := range lines[y] {
 			if lines[y][x] == '#' {
-				elves[point{x, y}] = struct{}{}
+				p := point{x, y}
+				elvesMap[p] = struct{}{}
+				elvesSlice = append(elvesSlice, p)
 			}
 		}
 	}
 
-	proposals := []struct {
-		checks []point
+	proposals := [4]struct {
+		checks [3]point
 		move   point
 	}{
-		{[]point{north, northEast, northWest}, north},
-		{[]point{south, southEast, southWest}, south},
-		{[]point{west, northWest, southWest}, west},
-		{[]point{east, northEast, southEast}, east},
+		{[3]point{north, northEast, northWest}, north},
+		{[3]point{south, southEast, southWest}, south},
+		{[3]point{west, northWest, southWest}, west},
+		{[3]point{east, northEast, southEast}, east},
 	}
 
 	neighbors := [8]point{north, northEast, east, southEast, south, southWest, west, northWest}
@@ -44,20 +47,23 @@ func Day23(lines []string, part1 bool) uint {
 	}
 
 	// Reuse maps to reduce allocations
-	dsts := make(map[point]point, len(elves))
-	counts := make(map[point]int, len(elves))
+	dsts := make(map[point]point, len(elvesSlice))
+	counts := make(map[point]int, len(elvesSlice))
+	proposalOffset := 0
 
 	for round := 1; round <= maxRounds; round++ {
 		// Clear maps for reuse
 		clear(dsts)
 		clear(counts)
 
-		// First half: propose moves
-		for elf := range elves {
+		// First half: propose moves - iterate over slice for better cache locality
+		for i := range elvesSlice {
+			elf := elvesSlice[i]
+
 			// Check if elf has any neighbors
 			hasNeighbor := false
 			for _, dir := range neighbors {
-				if _, exists := elves[elf.Add(dir)]; exists {
+				if _, exists := elvesMap[elf.Add(dir)]; exists {
 					hasNeighbor = true
 					break
 				}
@@ -67,11 +73,12 @@ func Day23(lines []string, part1 bool) uint {
 				continue
 			}
 
-			// Try each proposal direction
-			for _, prop := range proposals {
+			// Try each proposal direction (use offset instead of rotating slice)
+			for pi := 0; pi < 4; pi++ {
+				prop := proposals[(proposalOffset+pi)&3]
 				canMove := true
 				for _, check := range prop.checks {
-					if _, exists := elves[elf.Add(check)]; exists {
+					if _, exists := elvesMap[elf.Add(check)]; exists {
 						canMove = false
 						break
 					}
@@ -93,23 +100,27 @@ func Day23(lines []string, part1 bool) uint {
 		}
 
 		if !stable {
+			// Execute moves
 			for from, to := range dsts {
 				if counts[to] == 1 {
-					delete(elves, from)
-					elves[to] = struct{}{}
+					delete(elvesMap, from)
+					elvesMap[to] = struct{}{}
 				}
+			}
+			// Rebuild elvesSlice from updated elvesMap
+			elvesSlice = elvesSlice[:0]
+			for elf := range elvesMap {
+				elvesSlice = append(elvesSlice, elf)
 			}
 		}
 
-		// Rotate proposals
-		prop0 := proposals[0]
-		copy(proposals, proposals[1:])
-		proposals[len(proposals)-1] = prop0
+		// Rotate proposals using offset
+		proposalOffset = (proposalOffset + 1) & 3
 	}
 
 	// Count empty tiles in bounding rectangle
 	minX, maxX, minY, maxY := 1<<30, -1<<30, 1<<30, -1<<30
-	for p := range elves {
+	for p := range elvesMap {
 		if p.X < minX {
 			minX = p.X
 		}
@@ -125,5 +136,5 @@ func Day23(lines []string, part1 bool) uint {
 	}
 
 	area := (maxX - minX + 1) * (maxY - minY + 1)
-	return uint(area - len(elves))
+	return uint(area - len(elvesMap))
 }

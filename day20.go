@@ -3,6 +3,8 @@ package adventofcode2022
 type Node struct {
 	Value         int
 	OriginalIndex int
+	Prev          *Node
+	Next          *Node
 }
 
 func Day20(srcs []int, mix int, part1 bool) int {
@@ -17,53 +19,77 @@ func Day20(srcs []int, mix int, part1 bool) int {
 		}
 	}
 
-	// Create list with original indices
-	list := make([]Node, len(values))
+	n := len(values)
+	// Create circular doubly-linked list
+	nodes := make([]*Node, n)
 	for i := range values {
-		list[i] = Node{Value: values[i], OriginalIndex: i}
+		nodes[i] = &Node{Value: values[i], OriginalIndex: i}
+	}
+
+	// Link nodes in a circle
+	for i := range nodes {
+		nodes[i].Prev = nodes[(i-1+n)%n]
+		nodes[i].Next = nodes[(i+1)%n]
 	}
 
 	// Mix the specified number of times
 	for range mix {
 		// Process each number in original order
-		for origIdx := range values {
-			// Find current position of this number
-			currIdx := -1
-			for i := range list {
-				if list[i].OriginalIndex == origIdx {
-					currIdx = i
-					break
-				}
+		for i := range nodes {
+			node := nodes[i]
+			if node.Value == 0 {
+				continue
 			}
 
-			// Remove the node
-			node := list[currIdx]
-			list = append(list[:currIdx], list[currIdx+1:]...)
+			// Remove node from current position
+			node.Prev.Next = node.Next
+			node.Next.Prev = node.Prev
 
-			// Calculate new position (modulo list length after removal)
-			newIdx := currIdx + node.Value
-			if len(list) > 0 {
-				newIdx = ((newIdx % len(list)) + len(list)) % len(list)
+			// Move to new position
+			steps := node.Value % (n - 1)
+			if steps < 0 {
+				steps += (n - 1)
 			}
 
-			// Insert at new position
-			list = append(list[:newIdx], append([]Node{node}, list[newIdx:]...)...)
+			// Find insertion point
+			target := node.Prev
+			for range steps {
+				target = target.Next
+			}
+
+			// Insert after target
+			node.Next = target.Next
+			node.Prev = target
+			target.Next.Prev = node
+			target.Next = node
 		}
 	}
 
-	// Find index of 0
-	zeroIdx := -1
-	for i := range list {
-		if list[i].Value == 0 {
-			zeroIdx = i
+	// Find node with value 0
+	var zeroNode *Node
+	for i := range nodes {
+		if nodes[i].Value == 0 {
+			zeroNode = nodes[i]
 			break
 		}
 	}
 
 	// Get values at 1000, 2000, 3000 after zero
-	v1 := list[(zeroIdx+1000)%len(list)].Value
-	v2 := list[(zeroIdx+2000)%len(list)].Value
-	v3 := list[(zeroIdx+3000)%len(list)].Value
+	current := zeroNode
+	for range 1000 {
+		current = current.Next
+	}
+	v1 := current.Value
+
+	for range 1000 {
+		current = current.Next
+	}
+	v2 := current.Value
+
+	for range 1000 {
+		current = current.Next
+	}
+	v3 := current.Value
 
 	return v1 + v2 + v3
 }

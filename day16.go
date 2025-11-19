@@ -65,15 +65,17 @@ func bfs(valves map[string]*Valve, start, end string) int {
 		return 0
 	}
 
-	queue := []string{start}
+	queue := make([]string, 1, 100)
+	queue[0] = start
 	visited := make(map[string]bool)
 	visited[start] = true
 	dist := make(map[string]int)
 	dist[start] = 0
+	head := 0
 
-	for len(queue) > 0 {
-		current := queue[0]
-		queue = queue[1:]
+	for head < len(queue) {
+		current := queue[head]
+		head++
 
 		if current == end {
 			return dist[end]
@@ -89,6 +91,12 @@ func bfs(valves map[string]*Valve, start, end string) int {
 	}
 
 	return 1000 // Unreachable
+}
+
+type cacheKey struct {
+	pos    string
+	time   int
+	opened uint64
 }
 
 func day16Part1(valves map[string]*Valve) uint {
@@ -118,13 +126,13 @@ func day16Part1(valves map[string]*Valve) uint {
 		}
 	}
 
-	// DFS with memoization
-	cache := make(map[string]uint)
+	// DFS with memoization using struct key
+	cache := make(map[cacheKey]uint, 10000)
 
 	var dfs func(pos string, time int, opened uint64) uint
 	dfs = func(pos string, time int, opened uint64) uint {
 		// Create state key
-		key := pos + "," + strconv.Itoa(time) + "," + strconv.FormatUint(opened, 10)
+		key := cacheKey{pos, time, opened}
 		if cached, ok := cache[key]; ok {
 			return cached
 		}

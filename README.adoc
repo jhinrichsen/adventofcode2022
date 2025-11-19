@@ -597,6 +597,17 @@ BenchmarkDay17-8   	       4	 271031566 ns/op	 6854496 B/op	   98386 allocs/op
 BenchmarkDay17-8   	       4	 267536665 ns/op	 6856402 B/op	   98399 allocs/op
 ----
 
+=== Optimization
+
+Replaced shape maps with slices and eliminated temporary Sprite allocations in
+collision detection. Changed from creating intermediate Sprite objects via
+Translate() to direct position checking with slices.
+
+----
+name          old time/op    new time/op    delta
+Day17Part1-16    105ms ± 1%      96ms ± 2%   -8.31%
+----
+
 == Day 18
 
 Got part 2 wrong, i think i need to cater for interior air holes that stick
@@ -611,6 +622,17 @@ surface elements.
 
 TODO: need to maxmize the throughput. Keep a list of quotients for each factory,
 and build new stuff to minimize current quotients against optimal quotient.
+
+=== Optimization
+
+Parallelized blueprint processing using goroutines. Each blueprint is processed
+independently in its own goroutine, reducing wall-clock time.
+
+----
+name          old time/op    new time/op    delta
+Day19Part1-16    1.29s ± 0%     0.40s ± 0%  -69.01%
+Day19Part2-16    2.50s ± 0%     0.84s ± 0%  -66.40%
+----
 
 == Day 20
 
@@ -646,6 +668,27 @@ When wrapping would occur, it is replaced with swapping to the other direction.
 Bug was in the mixing algorithm: movement calculations must use modulo (len-1)
 since the element is removed before calculating the new position. Rewrote to
 use Node struct tracking original indices for proper order processing.
+
+=== Optimization
+
+Replaced slice-based implementation with circular doubly-linked list.
+Original used linear search O(n) and slice splice operations O(n) for each
+move, resulting in O(n²) per mix. Linked list provides O(1) insert/remove
+and direct node access via array of pointers.
+
+----
+name          old time/op    new time/op    delta
+Day20Part1-16   95.9ms ± 7%    34.5ms ± 1%  -63.98%
+Day20Part2-16    1.02s ±14%     0.46s ± 1%  -55.20%
+
+name          old alloc/op   new alloc/op   delta
+Day20Part1-16    204MB ± 0%       0MB ± 0%  -99.89%
+Day20Part2-16   2.00GB ± 0%    0.00GB ± 0%  -99.99%
+
+name          old allocs/op  new allocs/op  delta
+Day20Part1-16    5.01k ± 0%     5.00k ± 0%   -0.12%
+Day20Part2-16    50.1k ± 0%      5.0k ± 0%  -90.01%
+----
 
 == Day 24
 

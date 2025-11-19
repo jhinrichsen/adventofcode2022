@@ -3,6 +3,7 @@ package adventofcode2022
 import (
 	"strconv"
 	"strings"
+	"sync"
 )
 
 type Blueprint struct {
@@ -70,7 +71,8 @@ func (bp Blueprint) maxGeodes(minutes int) int {
 	}
 
 	maxGeodes := 0
-	stack := []State{initialState}
+	stack := make([]State, 1, 100000)
+	stack[0] = initialState
 
 	// Use smaller map with more aggressive pruning
 	seen := make(map[State]struct{}, 100000)
@@ -204,17 +206,43 @@ func Day19(lines []string, part1 bool) uint {
 	}
 
 	if part1 {
-		sum := 0
+		// Parallelize blueprint processing
+		results := make([]int, len(bps))
+		var wg sync.WaitGroup
+
 		for i := range bps {
-			sum += bps[i].QualityLevel(24)
+			wg.Add(1)
+			go func(idx int) {
+				defer wg.Done()
+				results[idx] = bps[idx].QualityLevel(24)
+			}(i)
+		}
+		wg.Wait()
+
+		sum := 0
+		for _, r := range results {
+			sum += r
 		}
 		return uint(sum)
 	}
 
-	// Part 2: first 3 blueprints, 32 minutes, multiply results
+	// Part 2: first 3 blueprints, 32 minutes, multiply results (parallelized)
+	count := min(3, len(bps))
+	results := make([]int, count)
+	var wg sync.WaitGroup
+
+	for i := range count {
+		wg.Add(1)
+		go func(idx int) {
+			defer wg.Done()
+			results[idx] = bps[idx].maxGeodes(32)
+		}(i)
+	}
+	wg.Wait()
+
 	product := 1
-	for i := range min(3, len(bps)) {
-		product *= bps[i].maxGeodes(32)
+	for _, r := range results {
+		product *= r
 	}
 	return uint(product)
 }
