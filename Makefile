@@ -1,35 +1,76 @@
 GO ?= CGO_ENABLED=0 go
-CPU_NAME := $(shell $(GO) run ./cmd/cpuname)
-BENCH_FILE := benches/$(shell $(GO) env GOOS)-$(shell $(GO) env GOARCH)-$(CPU_NAME).txt
+CPU_NAME := $(shell go run cmd/cpuname/main.go)
+BENCH_FILE := benches/$(shell go env GOOS)-$(shell go env GOARCH)-$(CPU_NAME).txt
 
 .PHONY: all
-all: lint test
+all: tidy test
 
 .PHONY: clean
 clean:
-	rm README.pdf README.html
+	$(GO) clean
+	-rm \
+		coverage.txt \
+		coverage.xml \
+		gl-code-quality-report.json \
+		govulncheck.sarif \
+		junit.xml \
+		README.html \
+		README.pdf \
+		golangci-lint.json \
+		test.log
 
 .PHONY: bench
 bench:
 	$(GO) test -bench=. -run="" -benchmem
 
-.PHONY: lint
-lint:
+.PHONY: tidy
+tidy:
+	test -z "$$(gofmt -l .)"
 	$(GO) vet
-	$(GO) run honnef.co/go/tools/cmd/staticcheck@latest
+	$(GO) run github.com/golangci/golangci-lint/cmd/golangci-lint@latest --version
+	$(GO) run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run
+
+cpu.profile:
+	$(GO) test -run=^$ -bench=Day10Part1$ -benchmem -memprofile mem.profile -cpuprofile $@
+
+.PHONY: prof
+prof: cpu.profile
+	$(GO) tool pprof $^
 
 .PHONY: test
 test:
-	$(GO) test -coverprofile=coverage.txt -covermode count gitlab.com/jhinrichsen/adventofcode2022
-	$(GO) run github.com/boumenot/gocover-cobertura@latest < coverage.txt > coverage.xml
+	$(GO) test -run=Day -short -vet=all
 
-prof:
-	$(GO) -bench=. -benchmem -memprofile mprofile.out -cpuprofile cprofile.out
-	$(GO) pprof cpu.profile
+.PHONY: sast
+sast: coverage.xml gl-code-quality-report.json govulncheck.sarif junit.xml
 
-# some asciidoc targets
-.PHONY: doc
-doc: README.html README.pdf
+coverage.txt test.log &:
+	-$(GO) test -coverprofile=coverage.txt -covermode count -short -v | tee test.log
+
+junit.xml: test.log
+	which go-junit-report || $(GO) install github.com/jstemmer/go-junit-report/v2@latest
+	go-junit-report -version
+	go-junit-report < $< > $@
+
+coverage.xml: coverage.txt
+	which gocover-cobertura || $(GO) install github.com/boumenot/gocover-cobertura@latest
+	gocover-cobertura < $< > $@
+
+gl-code-quality-report.json: golangci-lint.json
+	which golint-convert || $(GO) install github.com/banyansecurity/golint-convert@latest
+	golint-convert < $< > $@
+
+golangci-lint.json:
+	-$(GO) run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run --out-format json > $@
+
+govulncheck.sarif:
+	which govulncheck || $(GO) install golang.org/x/vuln/cmd/govulncheck@latest
+	govulncheck -version
+	govulncheck -format=sarif ./... > $@
+
+$(BENCH_FILE): $(wildcard *.go)
+	echo "Running benchmarks and saving to $@..."
+	$(GO) test -run=^$$ -bench=Day..Part.$$ -benchmem | tee $@
 
 README.html: README.adoc
 	asciidoctor $<
@@ -37,12 +78,9 @@ README.html: README.adoc
 README.pdf: README.adoc
 	asciidoctor-pdf -a allow-uri-read $<
 
-$(BENCH_FILE): $(wildcard *.go)
-	@echo "Running benchmarks and saving to $@..."
-	@mkdir -p benches
-	GOGC=off $(GO) test -run=^$$ -bench=Day..Part.$$ -benchmem | tee $@
+.PHONY: doc
+doc: README.html README.pdf
 
 .PHONY: total
 total: $(BENCH_FILE)
-	@awk -f total.awk < $(BENCH_FILE)
-
+	awk -f total.awk < $(BENCH_FILE)

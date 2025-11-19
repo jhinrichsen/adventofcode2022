@@ -117,10 +117,6 @@ func day22Part1(lines []string) uint {
 	return result
 }
 
-type face struct {
-	x, y int // top-left corner in face coordinates (0-indexed)
-}
-
 func day22Part2(lines []string) uint {
 	// Parse map
 	var mapLines []string
@@ -232,8 +228,8 @@ func wrapCubeExample(x, y, facing int) (int, int, int) {
 	//     [5][6]
 
 	faceSize := 4
-	fx, fy := x/faceSize, y/faceSize  // which face (in face coords)
-	lx, ly := x%faceSize, y%faceSize  // local position within face
+	fx, fy := x/faceSize, y/faceSize // which face (in face coords)
+	lx, ly := x%faceSize, y%faceSize // local position within face
 
 	// Determine current face
 	var faceID int

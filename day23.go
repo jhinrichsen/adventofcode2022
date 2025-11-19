@@ -5,14 +5,14 @@ import "image"
 type point = image.Point
 
 var (
-	north     = point{0, -1}
-	south     = point{0, 1}
-	west      = point{-1, 0}
-	east      = point{1, 0}
-	northEast = point{1, -1}
-	northWest = point{-1, -1}
-	southEast = point{1, 1}
-	southWest = point{-1, 1}
+	north     = point{X: 0, Y: -1}
+	south     = point{X: 0, Y: 1}
+	west      = point{X: -1, Y: 0}
+	east      = point{X: 1, Y: 0}
+	northEast = point{X: 1, Y: -1}
+	northWest = point{X: -1, Y: -1}
+	southEast = point{X: 1, Y: 1}
+	southWest = point{X: -1, Y: 1}
 )
 
 func Day23(lines []string, part1 bool) uint {
@@ -22,7 +22,7 @@ func Day23(lines []string, part1 bool) uint {
 	for y := range lines {
 		for x := range lines[y] {
 			if lines[y][x] == '#' {
-				p := point{x, y}
+				p := point{X: x, Y: y}
 				elvesMap[p] = struct{}{}
 				elvesSlice = append(elvesSlice, p)
 			}

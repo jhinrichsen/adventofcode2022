@@ -19,7 +19,7 @@ test-job:
   except:
     - README.adoc
   script:
-    - make lint test
+    - make tidy test
   coverage: '/coverage: \d+\.\d+%/'
   artifacts:
     reports:
