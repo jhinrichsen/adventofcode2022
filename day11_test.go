@@ -5,21 +5,11 @@ import (
 )
 
 func TestDay11Part1Example(t *testing.T) {
-	const want uint = 10605
-	lines := linesFromFilename(t, exampleFilename(11))
-	got := Day11(lines, true)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 11, exampleFilename, true, Day11, uint(10605))
 }
 
 func TestDay11Part1(t *testing.T) {
-	const want uint = 78960
-	lines := linesFromFilename(t, filename(11))
-	got := Day11(lines, true)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 11, filename, true, Day11, uint(78960))
 }
 
 // Part 2 intermediate round tests
@@ -156,33 +146,17 @@ func TestDay11Part2Round10000(t *testing.T) {
 }
 
 func TestDay11Part2Example(t *testing.T) {
-	const want uint = 2713310158
-	lines := linesFromFilename(t, exampleFilename(11))
-	got := Day11(lines, false)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 11, exampleFilename, false, Day11, uint(2713310158))
 }
 
 func TestDay11Part2(t *testing.T) {
-	const want uint = 14561971968
-	lines := linesFromFilename(t, filename(11))
-	got := Day11(lines, false)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 11, filename, false, Day11, uint(14561971968))
 }
 
 func BenchmarkDay11Part1(b *testing.B) {
-	lines := linesFromFilename(b, filename(11))
-	for range b.N {
-		_ = Day11(lines, true)
-	}
+	benchLines(b, 11, true, Day11)
 }
 
 func BenchmarkDay11Part2(b *testing.B) {
-	lines := linesFromFilename(b, filename(11))
-	for range b.N {
-		_ = Day11(lines, false)
-	}
+	benchLines(b, 11, false, Day11)
 }

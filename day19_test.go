@@ -3,21 +3,11 @@ package adventofcode2022
 import "testing"
 
 func TestDay19Part1Example(t *testing.T) {
-	const want uint = 33
-	lines := linesFromFilename(t, exampleFilename(19))
-	got := Day19(lines, true)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 19, exampleFilename, true, Day19, uint(33))
 }
 
 func TestDay19Part1(t *testing.T) {
-	const want uint = 1356
-	lines := linesFromFilename(t, filename(19))
-	got := Day19(lines, true)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 19, filename, true, Day19, uint(1356))
 }
 
 func TestDay19Part2ExampleBlueprints(t *testing.T) {
@@ -43,12 +33,7 @@ func TestDay19Part2ExampleBlueprints(t *testing.T) {
 }
 
 func TestDay19Part2Example(t *testing.T) {
-	const want uint = 56 * 62 // Product of first 2 blueprints (only 2 in example)
-	lines := linesFromFilename(t, exampleFilename(19))
-	got := Day19(lines, false)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 19, exampleFilename, false, Day19, uint(56*62))
 }
 
 func TestDay19Part2(t *testing.T) {
@@ -61,15 +46,9 @@ func TestDay19Part2(t *testing.T) {
 }
 
 func BenchmarkDay19Part1(b *testing.B) {
-	lines := linesFromFilename(b, filename(19))
-	for range b.N {
-		_ = Day19(lines, true)
-	}
+	benchLines(b, 19, true, Day19)
 }
 
 func BenchmarkDay19Part2(b *testing.B) {
-	lines := linesFromFilename(b, filename(19))
-	for range b.N {
-		_ = Day19(lines, false)
-	}
+	benchLines(b, 19, false, Day19)
 }
