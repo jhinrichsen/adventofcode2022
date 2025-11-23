@@ -1,98 +1,33 @@
 package adventofcode2022
 
-import (
-	"bufio"
-	"os"
-	"testing"
-)
+import "testing"
 
 func TestDay05Part1Example(t *testing.T) {
-	const want = "CMZ"
-	r, err := os.Open(exampleFilename(5))
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer r.Close()
-	got, err := Day05(r, true)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if want != got {
-		t.Fatalf("want %q but got %q", want, got)
-	}
+	testSolver(t, 5, exampleFilename, true, Day05, "CMZ")
 }
 
 func TestDay05Part1(t *testing.T) {
-	const want = "CFFHVVHNC"
-	r, err := os.Open(filename(5))
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer r.Close()
-	got, err := Day05(r, true)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if want != got {
-		t.Fatalf("want %q but got %q", want, got)
-	}
+	testSolver(t, 5, filename, true, Day05, "CFFHVVHNC")
 }
 
 func TestDay05Part2Example(t *testing.T) {
-	const want = "MCD"
-	r, err := os.Open(exampleFilename(5))
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer r.Close()
-	got, err := Day05(r, false)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if want != got {
-		t.Fatalf("want %q but got %q", want, got)
-	}
+	testSolver(t, 5, exampleFilename, false, Day05, "MCD")
 }
 
 func TestDay05Part2(t *testing.T) {
-	const want = "FSZWBPTBG"
-	r, err := os.Open(filename(5))
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer r.Close()
-	got, err := Day05(r, false)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if want != got {
-		t.Fatalf("want %q but got %q", want, got)
-	}
+	testSolver(t, 5, filename, false, Day05, "FSZWBPTBG")
 }
 
 func BenchmarkDay05Part1(b *testing.B) {
-	bench05(b, true)
+	buf := file(b, 5)
+	for b.Loop() {
+		_, _ = Day05(buf, true)
+	}
 }
 
 func BenchmarkDay05Part2(b *testing.B) {
-	bench05(b, false)
-}
-
-func bench05(b *testing.B, part1 bool) {
-	name := filename(5)
-	st, err := os.Stat(name)
-	if err != nil {
-		b.Fatal(err)
-	}
-	f, err := os.Open(name)
-	if err != nil {
-		b.Fatal(err)
-	}
-	defer f.Close()
-	r := bufio.NewReaderSize(f, int(st.Size()))
-
-	b.ResetTimer()
-	for range b.N {
-		_, _ = Day05(r, part1)
+	buf := file(b, 5)
+	for b.Loop() {
+		_, _ = Day05(buf, false)
 	}
 }

@@ -1,48 +1,52 @@
 package adventofcode2022
 
 import (
-	"bufio"
+	"bytes"
 	"fmt"
-	"io"
 	"strconv"
 	"strings"
 )
 
-func Day05(r io.Reader, part1 bool) (string, error) {
+func Day05(input []byte, part1 bool) (string, error) {
 	const width = len("[A] ")
 
-	sc := bufio.NewScanner(r)
-	// read the first line and use as template for setup
-	ok, line := sc.Scan(), sc.Text()
-	if !ok {
-		return "", fmt.Errorf("error reading from reader")
+	lines := bytes.Split(input, []byte{'\n'})
+	if len(lines) == 0 {
+		return "", fmt.Errorf("empty input")
 	}
 
+	lineIdx := 0
+	line := string(lines[lineIdx])
+	lineIdx++
+
 	n := (len(line) + 1) / len("[A] ") // number of stacks
-	crate := func(n int) byte {
+	crate := func(line string, n int) byte {
 		return line[n*width+1]
 	}
 	st := make([][]byte, n)
-	// macro like function
-	crateLine := func() {
+
+	crateLine := func(line string) {
 		for i := 0; i < n; i++ {
 			// skip empty crates/ space character
-			c := crate(i)
+			c := crate(line, i)
 			if c != ' ' {
 				st[i] = append(st[i], c)
 			}
 		}
 	}
 
-	crateLine()
-	for sc.Scan() {
-		line = sc.Text()
-		if line[1] == '1' { // reached end of stacks, switch group
-			// read next, empty line
-			sc.Scan()
+	crateLine(line)
+	for lineIdx < len(lines) {
+		line = string(lines[lineIdx])
+		lineIdx++
+		if len(line) > 1 && line[1] == '1' { // reached end of stacks
+			// skip empty line
+			lineIdx++
 			break
 		}
-		crateLine()
+		if len(line) > 0 {
+			crateLine(line)
+		}
 	}
 
 	for i := range st {
@@ -69,22 +73,29 @@ func Day05(r io.Reader, part1 bool) (string, error) {
 		st[into] = append(st[into], pick...)
 	}
 
-	for sc.Scan() {
-		cmds := strings.Fields(sc.Text())
+	for lineIdx < len(lines) {
+		line = string(lines[lineIdx])
+		lineIdx++
+		if len(line) == 0 {
+			continue
+		}
+
+		cmds := strings.Fields(line)
+		if len(cmds) < 6 {
+			continue
+		}
+
 		n, err := strconv.Atoi(cmds[1])
 		if err != nil {
-			return "", fmt.Errorf("error parsing move %q",
-				cmds[1])
+			return "", fmt.Errorf("error parsing move %q", cmds[1])
 		}
 		from, err := strconv.Atoi(cmds[3])
 		if err != nil {
-			return "", fmt.Errorf("error parsing from %q",
-				cmds[3])
+			return "", fmt.Errorf("error parsing from %q", cmds[3])
 		}
 		into, err := strconv.Atoi(cmds[5])
 		if err != nil {
-			return "", fmt.Errorf("error parsing to %q",
-				cmds[5])
+			return "", fmt.Errorf("error parsing to %q", cmds[5])
 		}
 
 		if part1 {
@@ -97,7 +108,9 @@ func Day05(r io.Reader, part1 bool) (string, error) {
 	// gather last of each stack
 	var sb strings.Builder
 	for i := 0; i < n; i++ {
-		sb.WriteByte(st[i][len(st[i])-1])
+		if len(st[i]) > 0 {
+			sb.WriteByte(st[i][len(st[i])-1])
+		}
 	}
 	return sb.String(), nil
 }
