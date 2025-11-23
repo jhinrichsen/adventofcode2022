@@ -38,63 +38,25 @@ func TestContains(t *testing.T) {
 }
 
 func TestDay04Part1Example(t *testing.T) {
-	const want = 2
-	lines := linesFromFilename(t, exampleFilename(4))
-	got, err := Day04(lines, true)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 4, exampleFilename, true, Day04, 2)
 }
 
 func TestDay04Part1(t *testing.T) {
-	const want = 580
-	lines := linesFromFilename(t, filename(4))
-	got, err := Day04(lines, true)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 4, filename, true, Day04, 580)
 }
 
 func TestDay04Part2Example(t *testing.T) {
-	const want = 4
-	lines := linesFromFilename(t, exampleFilename(4))
-	got, err := Day04(lines, false)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 4, exampleFilename, false, Day04, 4)
 }
 
 func TestDay04Part2(t *testing.T) {
-	const want = 895
-	lines := linesFromFilename(t, filename(4))
-	got, err := Day04(lines, false)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 4, filename, false, Day04, 895)
 }
 
 func BenchmarkDay04Part1(b *testing.B) {
-	lines := linesFromFilename(b, filename(4))
-	for b.Loop() {
-		_, _ = Day04(lines, true)
-	}
+	benchLines(b, 4, true, Day04)
 }
 
 func BenchmarkDay04Part2(b *testing.B) {
-	lines := linesFromFilename(b, filename(4))
-	for b.Loop() {
-		_, _ = Day04(lines, false)
-	}
+	benchLines(b, 4, false, Day04)
 }
