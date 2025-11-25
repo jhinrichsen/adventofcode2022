@@ -1,12 +1,6 @@
 package adventofcode2022
 
-import (
-	"os"
-	"testing"
-)
-
-const day06SizePart1 = 4
-const day06SizePart2 = 14
+import "testing"
 
 var day06Tests = []struct {
 	stream string
@@ -22,86 +16,44 @@ var day06Tests = []struct {
 
 func TestDay06ExamplesPart1(t *testing.T) {
 	for _, tt := range day06Tests {
-		id := tt.stream
-		t.Run(id, func(t *testing.T) {
-			want := tt.part1
-			got := Day06(tt.stream, day06SizePart1)
-			if want != got {
-				t.Fatalf("want %d but got %d", want, got)
+		t.Run(tt.stream, func(t *testing.T) {
+			got, _ := Day06([]byte(tt.stream), true)
+			if tt.part1 != got {
+				t.Fatalf("want %d but got %d", tt.part1, got)
+			}
+		})
+	}
+}
+
+func TestDay06ExamplesPart2(t *testing.T) {
+	for _, tt := range day06Tests {
+		t.Run(tt.stream, func(t *testing.T) {
+			got, _ := Day06([]byte(tt.stream), false)
+			if tt.part2 != got {
+				t.Fatalf("want %d but got %d", tt.part2, got)
 			}
 		})
 	}
 }
 
 func TestDay06Part1(t *testing.T) {
-	const want = 1876
-	buf, err := os.ReadFile(filename(6))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day06(string(buf), day06SizePart1)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
-}
-
-func BenchmarkDay06Part1(b *testing.B) {
-	buf, err := os.ReadFile(filename(6))
-	if err != nil {
-		b.Fatal(err)
-	}
-	s := string(buf)
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		Day06(s, day06SizePart1)
-	}
-}
-
-func TestDay06ExamplesPart2(t *testing.T) {
-	for _, tt := range day06Tests {
-		id := tt.stream
-		t.Run(id, func(t *testing.T) {
-			want := tt.part2
-			got := Day06(tt.stream, day06SizePart2)
-			if want != got {
-				t.Fatalf("want %d but got %d", want, got)
-			}
-		})
-	}
+	testSolver(t, 6, filename, true, Day06, 1876)
 }
 
 func TestDay06Part2(t *testing.T) {
-	const want = 2202
-	buf, err := os.ReadFile(filename(6))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day06(string(buf), day06SizePart2)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
+	testSolver(t, 6, filename, false, Day06, 2202)
+}
+
+func BenchmarkDay06Part1(b *testing.B) {
+	buf := file(b, 6)
+	for b.Loop() {
+		_, _ = Day06(buf, true)
 	}
 }
 
 func BenchmarkDay06Part2(b *testing.B) {
-	buf, err := os.ReadFile(filename(6))
-	if err != nil {
-		b.Fatal(err)
-	}
-	s := string(buf)
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		Day06(s, day06SizePart2)
-	}
-}
-
-func BenchmarkDay06Hashmap(b *testing.B) {
-	buf, err := os.ReadFile(filename(6))
-	if err != nil {
-		b.Fatal(err)
-	}
-	s := string(buf)
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		day06Hashmap(s, 14)
+	buf := file(b, 6)
+	for b.Loop() {
+		_, _ = Day06(buf, false)
 	}
 }
