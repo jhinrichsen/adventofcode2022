@@ -1,6 +1,6 @@
 package adventofcode2022
 
-func Day25(lines []string) Snafu {
+func Day25(lines []string, part1 bool) Snafu {
 	sum := Snafu("0")
 	for _, line := range lines {
 		sum = AddSnafu(sum, Snafu(line))

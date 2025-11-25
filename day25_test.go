@@ -131,21 +131,11 @@ func TestDay25ExampleDec(t *testing.T) {
 }
 
 func TestDay25Part1Example(t *testing.T) {
-	const want = "2=-1=0"
-	lines := linesFromFilename(t, exampleFilename(25))
-	got := Day25(lines)
-	if want != got {
-		t.Fatalf("want %q but got %q", want, got)
-	}
+	testLines(t, 25, exampleFilename, true, Day25, Snafu("2=-1=0"))
 }
 
 func TestDay25Part1(t *testing.T) {
-	const want = "122-12==0-01=00-0=02"
-	lines := linesFromFilename(t, filename(25))
-	got := Day25(lines)
-	if want != got {
-		t.Fatalf("want %q but got %q", want, got)
-	}
+	testLines(t, 25, filename, true, Day25, Snafu("122-12==0-01=00-0=02"))
 }
 
 func TestDay25ReverseDec(t *testing.T) {
@@ -154,7 +144,7 @@ func TestDay25ReverseDec(t *testing.T) {
 	for _, line := range lines {
 		want += SnafuToDec(Snafu(line))
 	}
-	got := SnafuToDec(Day25(lines))
+	got := SnafuToDec(Day25(lines, true))
 	if want != got {
 		t.Fatalf("want %q but got %q", want, got)
 	}
@@ -163,7 +153,7 @@ func TestDay25ReverseDec(t *testing.T) {
 func BenchmarkDay25StraightAdd(b *testing.B) {
 	lines := linesFromFilename(b, filename(25))
 	for b.Loop() {
-		_ = Day25(lines)
+		_ = Day25(lines, true)
 	}
 }
 
