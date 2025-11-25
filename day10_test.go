@@ -27,7 +27,7 @@ func TestDay10Part1(t *testing.T) {
 
 func BenchmarkDay10Part1(b *testing.B) {
 	lines := linesFromFilename(b, filename(10))
-	for range b.N {
+	for b.Loop() {
 		_, _ = Day10(lines, true)
 	}
 }
@@ -50,7 +50,7 @@ func TestDay10Part2(t *testing.T) {
 
 func BenchmarkDay10Part2(b *testing.B) {
 	lines := linesFromFilename(b, filename(10))
-	for range b.N {
+	for b.Loop() {
 		_, _ = Day10(lines, false)
 	}
 }
