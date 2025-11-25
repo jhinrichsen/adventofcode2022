@@ -19,71 +19,25 @@ func TestDay23Part2Example0(t *testing.T) {
 }
 
 func TestDay23Part1Example(t *testing.T) {
-	const want uint = 110
-	lines, err := linesFromFilename(exampleFilename(23))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day23(lines, true)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 23, exampleFilename, true, Day23, uint(110))
 }
 
 func TestDay23Part1(t *testing.T) {
-	const want uint = 3689
-	lines, err := linesFromFilename(filename(23))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day23(lines, true)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 23, filename, true, Day23, uint(3689))
 }
 
 func TestDay23Part2Example(t *testing.T) {
-	const want uint = 20
-	lines, err := linesFromFilename(exampleFilename(23))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day23(lines, false)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 23, exampleFilename, false, Day23, uint(20))
 }
 
 func TestDay23Part2(t *testing.T) {
-	const want uint = 965
-	lines, err := linesFromFilename(filename(23))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day23(lines, false)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 23, filename, false, Day23, uint(965))
 }
 
 func BenchmarkDay23Part1(b *testing.B) {
-	lines, err := linesFromFilename(filename(23))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		_ = Day23(lines, true)
-	}
+	benchLines(b, 23, true, Day23)
 }
 
 func BenchmarkDay23Part2(b *testing.B) {
-	lines, err := linesFromFilename(filename(23))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		_ = Day23(lines, false)
-	}
+	benchLines(b, 23, false, Day23)
 }

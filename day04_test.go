@@ -2,7 +2,6 @@ package adventofcode2022
 
 import (
 	"fmt"
-	"runtime/debug"
 	"testing"
 )
 
@@ -25,13 +24,6 @@ var containsTests = []struct {
 	{2, 6, 4, 8, false, true},
 }
 
-func die(err error, t *testing.T) {
-	if err != nil {
-		t.Log(string(debug.Stack()))
-		t.Fatal(err)
-	}
-}
-
 func TestContains(t *testing.T) {
 	for _, tt := range containsTests {
 		id := fmt.Sprintf("[%d-%d] <-> [%d-%d]", tt.a1, tt.a2,
@@ -46,61 +38,25 @@ func TestContains(t *testing.T) {
 }
 
 func TestDay04Part1Example(t *testing.T) {
-	const want = 2
-	lines, err := linesFromFilename(exampleFilename(4))
-	die(err, t)
-	got, err := Day04(lines, true)
-	die(err, t)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 4, exampleFilename, true, Day04, 2)
 }
 
 func TestDay04Part1(t *testing.T) {
-	const want = 580
-	lines, err := linesFromFilename(filename(4))
-	die(err, t)
-	got, err := Day04(lines, true)
-	die(err, t)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 4, filename, true, Day04, 580)
 }
 
 func TestDay04Part2Example(t *testing.T) {
-	const want = 4
-	lines, err := linesFromFilename(exampleFilename(4))
-	die(err, t)
-	got, err := Day04(lines, false)
-	die(err, t)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 4, exampleFilename, false, Day04, 4)
 }
 
 func TestDay04Part2(t *testing.T) {
-	const want = 895
-	lines, err := linesFromFilename(filename(4))
-	die(err, t)
-	got, err := Day04(lines, false)
-	die(err, t)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 4, filename, false, Day04, 895)
 }
 
 func BenchmarkDay04Part1(b *testing.B) {
-	bench04(b, true)
+	benchLines(b, 4, true, Day04)
 }
 
 func BenchmarkDay04Part2(b *testing.B) {
-	bench04(b, false)
-}
-
-func bench04(b *testing.B, part1 bool) {
-	lines, _ := linesFromFilename(filename(4))
-	b.ResetTimer()
-	for range b.N {
-		_, _ = Day04(lines, part1)
-	}
+	benchLines(b, 4, false, Day04)
 }

@@ -1,42 +1,56 @@
 package adventofcode2022
 
-import (
-	"sort"
-	"strconv"
-)
+// Day01 finds the sum of calories carried by the top elf (part1) or top 3 elves (part2).
+func Day01(lines []string, part1 bool) uint {
+	var top1, top2, top3 uint
+	var current uint
 
-// Day01 is the first puzzle.
-// It returns the most calories of any raindeer.
-// In case of an empty list 0 is returned.
-// Non-numbers are ignored.
-// No error checking for negative calories.
-func Day01(lines []string, n int) int {
-	// make sure we have one final newline
-	if lines[len(lines)-1] != "" {
-		lines = append(lines, "")
-	}
-
-	var calories []int // calories per raindeer
-	var sum int
 	for _, line := range lines {
 		if line == "" {
-			calories = append(calories, sum)
-			sum = 0
-		} else {
-			n, _ := strconv.Atoi(line)
-			sum += n
+			if current > 0 {
+				// Insert into top 3
+				if current > top1 {
+					top3 = top2
+					top2 = top1
+					top1 = current
+				} else if current > top2 {
+					top3 = top2
+					top2 = current
+				} else if current > top3 {
+					top3 = current
+				}
+				current = 0
+			}
+			continue
+		}
+
+		// Manual parsing - faster than strconv.Atoi
+		var n uint
+		for i := 0; i < len(line); i++ {
+			c := line[i]
+			if c >= '0' && c <= '9' {
+				n = n*10 + uint(c-'0')
+			}
+		}
+		current += n
+	}
+
+	// Capture final elf
+	if current > 0 {
+		if current > top1 {
+			top3 = top2
+			top2 = top1
+			top1 = current
+		} else if current > top2 {
+			top3 = top2
+			top2 = current
+		} else if current > top3 {
+			top3 = current
 		}
 	}
 
-	// go for the more efficient custom order instead of Reverse() Sort()
-	sort.Slice(calories, func(a, b int) bool {
-		return calories[a] > calories[b]
-	})
-
-	// first n largest calories
-	var total int
-	for i := 0; i < n; i++ {
-		total += calories[i]
+	if part1 {
+		return top1
 	}
-	return total
+	return top1 + top2 + top3
 }

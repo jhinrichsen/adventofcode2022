@@ -3,34 +3,15 @@ package adventofcode2022
 import "testing"
 
 func TestDay19Part1Example(t *testing.T) {
-	const want uint = 33
-	lines, err := linesFromFilename(exampleFilename(19))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day19(lines, true)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 19, exampleFilename, true, Day19, uint(33))
 }
 
 func TestDay19Part1(t *testing.T) {
-	const want uint = 1356
-	lines, err := linesFromFilename(filename(19))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day19(lines, true)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 19, filename, true, Day19, uint(1356))
 }
 
 func TestDay19Part2ExampleBlueprints(t *testing.T) {
-	lines, err := linesFromFilename(exampleFilename(19))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, exampleFilename(19))
 
 	tests := []struct {
 		blueprintIdx int
@@ -52,22 +33,11 @@ func TestDay19Part2ExampleBlueprints(t *testing.T) {
 }
 
 func TestDay19Part2Example(t *testing.T) {
-	const want uint = 56 * 62 // Product of first 2 blueprints (only 2 in example)
-	lines, err := linesFromFilename(exampleFilename(19))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day19(lines, false)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 19, exampleFilename, false, Day19, uint(56*62))
 }
 
 func TestDay19Part2(t *testing.T) {
-	lines, err := linesFromFilename(filename(19))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, filename(19))
 	got := Day19(lines, false)
 	if got == 0 {
 		t.Fatal("got 0, expected non-zero result")
@@ -76,23 +46,9 @@ func TestDay19Part2(t *testing.T) {
 }
 
 func BenchmarkDay19Part1(b *testing.B) {
-	lines, err := linesFromFilename(filename(19))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		_ = Day19(lines, true)
-	}
+	benchLines(b, 19, true, Day19)
 }
 
 func BenchmarkDay19Part2(b *testing.B) {
-	lines, err := linesFromFilename(filename(19))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		_ = Day19(lines, false)
-	}
+	benchLines(b, 19, false, Day19)
 }

@@ -9,10 +9,7 @@ import (
 
 func TestDay10Part1Example(t *testing.T) {
 	const want uint = 13140
-	lines, err := linesFromFilename(exampleFilename(10))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, exampleFilename(10))
 	got, _ := Day10(lines, true)
 	if want != got {
 		t.Fatalf("want %d but got %d\n", want, got)
@@ -21,10 +18,7 @@ func TestDay10Part1Example(t *testing.T) {
 
 func TestDay10Part1(t *testing.T) {
 	const want uint = 15140
-	lines, err := linesFromFilename(filename(10))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, filename(10))
 	got, _ := Day10(lines, true)
 	if want != got {
 		t.Fatalf("want %d but got %d\n", want, got)
@@ -32,12 +26,8 @@ func TestDay10Part1(t *testing.T) {
 }
 
 func BenchmarkDay10Part1(b *testing.B) {
-	lines, err := linesFromFilename(filename(10))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for range b.N {
+	lines := linesFromFilename(b, filename(10))
+	for b.Loop() {
 		_, _ = Day10(lines, true)
 	}
 }
@@ -47,10 +37,7 @@ func BenchmarkDay10Part1(b *testing.B) {
 func TestDay10Part2(t *testing.T) {
 	const want = "BPJAZGAP"
 
-	lines, err := linesFromFilename(filename(10))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, filename(10))
 	_, crt := Day10(lines, false)
 	got, err := aococr.ParseLetters(strings.Join(crt, "\n"), map[rune]bool{'#': true})
 	if err != nil {
@@ -62,12 +49,8 @@ func TestDay10Part2(t *testing.T) {
 }
 
 func BenchmarkDay10Part2(b *testing.B) {
-	lines, err := linesFromFilename(filename(10))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for range b.N {
+	lines := linesFromFilename(b, filename(10))
+	for b.Loop() {
 		_, _ = Day10(lines, false)
 	}
 }

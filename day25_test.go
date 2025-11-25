@@ -120,10 +120,7 @@ func TestDayRandomAddSnafu(t *testing.T) {
 
 func TestDay25ExampleDec(t *testing.T) {
 	const want = 4890
-	lines, err := linesFromFilename(exampleFilename(25))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, exampleFilename(25))
 	var got int
 	for _, line := range lines {
 		got += SnafuToDec(Snafu(line))
@@ -134,62 +131,35 @@ func TestDay25ExampleDec(t *testing.T) {
 }
 
 func TestDay25Part1Example(t *testing.T) {
-	const want = "2=-1=0"
-	lines, err := linesFromFilename(exampleFilename(25))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day25(lines)
-	if want != got {
-		t.Fatalf("want %q but got %q", want, got)
-	}
+	testLines(t, 25, exampleFilename, true, Day25, Snafu("2=-1=0"))
 }
 
 func TestDay25Part1(t *testing.T) {
-	const want = "122-12==0-01=00-0=02"
-	lines, err := linesFromFilename(filename(25))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day25(lines)
-	if want != got {
-		t.Fatalf("want %q but got %q", want, got)
-	}
+	testLines(t, 25, filename, true, Day25, Snafu("122-12==0-01=00-0=02"))
 }
 
 func TestDay25ReverseDec(t *testing.T) {
-	lines, err := linesFromFilename(filename(25))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, filename(25))
 	var want int
 	for _, line := range lines {
 		want += SnafuToDec(Snafu(line))
 	}
-	got := SnafuToDec(Day25(lines))
+	got := SnafuToDec(Day25(lines, true))
 	if want != got {
 		t.Fatalf("want %q but got %q", want, got)
 	}
 }
 
 func BenchmarkDay25StraightAdd(b *testing.B) {
-	lines, err := linesFromFilename(filename(25))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		_ = Day25(lines)
+	lines := linesFromFilename(b, filename(25))
+	for b.Loop() {
+		_ = Day25(lines, true)
 	}
 }
 
 func BenchmarkDay25SnafuToDec(b *testing.B) {
-	lines, err := linesFromFilename(filename(25))
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	lines := linesFromFilename(b, filename(25))
+	for b.Loop() {
 		var sum int
 		for _, line := range lines {
 			sum += SnafuToDec(Snafu(line))

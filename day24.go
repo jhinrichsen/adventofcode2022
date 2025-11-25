@@ -14,7 +14,7 @@ type Day24Puzzle struct {
 	blizzardCache map[uint]map[image.Point]bool
 }
 
-func NewDay24(lines []string) Day24Puzzle {
+func NewDay24(lines []string) (Day24Puzzle, error) {
 	p := Day24Puzzle{
 		height:        uint(len(lines)),
 		width:         uint(len(lines[0])),
@@ -43,7 +43,7 @@ func NewDay24(lines []string) Day24Puzzle {
 		}
 	}
 
-	return p
+	return p, nil
 }
 
 func (p *Day24Puzzle) blizzardPosition(b blizzard, time uint) image.Point {

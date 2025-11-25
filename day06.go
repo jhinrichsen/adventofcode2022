@@ -1,57 +1,29 @@
 package adventofcode2022
 
-import "math/bits"
+import (
+	"bytes"
+	"math/bits"
+)
 
-func Day06(s string, size int) int {
-	// return day06Hashmap(s, size)
-	return day06OnesCount(s, size)
-}
+// Day06 finds the position of the first start-of-packet (part1, size=4) or
+// start-of-message (part2, size=14) marker in the datastream.
+func Day06(input []byte, part1 bool) (int, error) {
+	s := string(bytes.TrimSpace(input))
 
-func day06Hashmap(s string, size int) int {
-	window := make(map[byte]int)
-	add := func(c byte) {
-		window[c] += 1
-	}
-	del := func(c byte) {
-		n := window[c]
-		if n > 1 {
-			window[c] -= 1
-		} else {
-			delete(window, c)
-		}
-	}
-	hasMarker := func() bool {
-		return len(window) == size
+	size := 14
+	if part1 {
+		size = 4
 	}
 
-	// populate window
-	for i := 0; i < size; i++ {
-		add(s[i])
-	}
-	if hasMarker() {
-		return size
-	}
-
-	// slide window through stream
-	for i := size; i < len(s); i++ {
-		del(s[i-size])
-		add(s[i])
-		if hasMarker() {
-			return i + 1 // 1-based position
-		}
-	}
-	return 0
-}
-
-func day06OnesCount(s string, size int) int {
+	// Optimized bitset approach using OnesCount
 	for i := 0; i < len(s)-size; i++ {
 		var marker uint32
 		for j := i; j < i+size; j++ {
 			marker |= 1 << (s[j] - 'a')
 		}
 		if bits.OnesCount32(marker) == size {
-			return i + size
+			return i + size, nil
 		}
 	}
-	return 0
+	return 0, nil
 }

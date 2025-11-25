@@ -3,71 +3,25 @@ package adventofcode2022
 import "testing"
 
 func TestDay14Part1Example(t *testing.T) {
-	const want uint = 24
-	lines, err := linesFromFilename(exampleFilename(14))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day14(lines, true)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 14, exampleFilename, true, Day14, uint(24))
 }
 
 func TestDay14Part1(t *testing.T) {
-	const want uint = 779
-	lines, err := linesFromFilename(filename(14))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day14(lines, true)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 14, filename, true, Day14, uint(779))
 }
 
 func TestDay14Part2Example(t *testing.T) {
-	const want uint = 93
-	lines, err := linesFromFilename(exampleFilename(14))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day14(lines, false)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 14, exampleFilename, false, Day14, uint(93))
 }
 
 func TestDay14Part2(t *testing.T) {
-	const want uint = 27426
-	lines, err := linesFromFilename(filename(14))
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := Day14(lines, false)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testLines(t, 14, filename, false, Day14, uint(27426))
 }
 
 func BenchmarkDay14Part1(b *testing.B) {
-	lines, err := linesFromFilename(filename(14))
-	if err != nil {
-		b.Skip("input file not found")
-	}
-	b.ResetTimer()
-	for range b.N {
-		_ = Day14(lines, true)
-	}
+	benchLines(b, 14, true, Day14)
 }
 
 func BenchmarkDay14Part2(b *testing.B) {
-	lines, err := linesFromFilename(filename(14))
-	if err != nil {
-		b.Skip("input file not found")
-	}
-	b.ResetTimer()
-	for range b.N {
-		_ = Day14(lines, false)
-	}
+	benchLines(b, 14, false, Day14)
 }

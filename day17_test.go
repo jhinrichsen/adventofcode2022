@@ -27,10 +27,7 @@ func TestDay17Part1(t *testing.T) {
 		want  uint = 3200
 	)
 	// example has only one line, puzzle input has multiple lines
-	lines, err := linesFromFilename(filename(17))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, filename(17))
 	got := Day17(strings.Join(lines, ""), rocks)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
@@ -57,10 +54,7 @@ func TestDay17Part2(t *testing.T) {
 		rocks      = 1000000000000
 		want  uint = 1584927536247
 	)
-	lines, err := linesFromFilename(filename(17))
-	if err != nil {
-		t.Fatal(err)
-	}
+	lines := linesFromFilename(t, filename(17))
 	got := Day17(strings.Join(lines, ""), rocks)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
@@ -71,12 +65,9 @@ func BenchmarkDay17Part1(b *testing.B) {
 	const (
 		rocks = 2022
 	)
-	lines, err := linesFromFilename(filename(17))
-	if err != nil {
-		b.Fatal(err)
-	}
+	lines := linesFromFilename(b, filename(17))
 	input := strings.Join(lines, "")
-	for range b.N {
+	for b.Loop() {
 		Day17(input, rocks)
 	}
 }
@@ -85,12 +76,9 @@ func BenchmarkDay17Part2(b *testing.B) {
 	const (
 		rocks = 1000000000000
 	)
-	lines, err := linesFromFilename(filename(17))
-	if err != nil {
-		b.Fatal(err)
-	}
+	lines := linesFromFilename(b, filename(17))
 	input := strings.Join(lines, "")
-	for range b.N {
+	for b.Loop() {
 		Day17(input, rocks)
 	}
 }

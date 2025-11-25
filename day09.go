@@ -7,7 +7,13 @@ import (
 	"strings"
 )
 
-func Day09(lines []string, knots []complex128) int {
+func Day09(lines []string, part1 bool) int {
+	numKnots := 10
+	if part1 {
+		numKnots = 2
+	}
+	knots := make([]complex128, numKnots)
+
 	var directions = map[byte]complex128{
 		'U': 0 + 1i,
 		'R': 1 + 0i,

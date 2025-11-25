@@ -6,64 +6,28 @@ import (
 )
 
 func TestDay24Part1Example(t *testing.T) {
-	const want uint = 18
-	lines, err := linesFromFilename(exampleFilename(24))
-	if err != nil {
-		t.Fatal(err)
-	}
-	puzzle := NewDay24(lines)
-	got := Day24(puzzle, true)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testWithParser(t, 24, exampleFilename, true, NewDay24, Day24, uint(18))
 }
 
 func TestDay24Part1(t *testing.T) {
-	const want uint = 299
-	lines, err := linesFromFilename(filename(24))
-	if err != nil {
-		t.Fatal(err)
-	}
-	puzzle := NewDay24(lines)
-	got := Day24(puzzle, true)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testWithParser(t, 24, filename, true, NewDay24, Day24, uint(299))
 }
 
 func TestDay24Part2Example(t *testing.T) {
-	const want uint = 54
-	lines, err := linesFromFilename(exampleFilename(24))
-	if err != nil {
-		t.Fatal(err)
-	}
-	puzzle := NewDay24(lines)
-	got := Day24(puzzle, false)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testWithParser(t, 24, exampleFilename, false, NewDay24, Day24, uint(54))
 }
 
 func TestDay24Part2(t *testing.T) {
-	const want uint = 899
-	lines, err := linesFromFilename(filename(24))
-	if err != nil {
-		t.Fatal(err)
-	}
-	puzzle := NewDay24(lines)
-	got := Day24(puzzle, false)
-	if want != got {
-		t.Fatalf("want %d but got %d", want, got)
-	}
+	testWithParser(t, 24, filename, false, NewDay24, Day24, uint(899))
 }
 
 // TestDay24Part1AllMinutes verifies blizzard configuration at all minutes 0-18
 func TestDay24Part1AllMinutes(t *testing.T) {
-	lines, err := linesFromFilename(exampleFilename(24))
+	lines := linesFromFilename(t, exampleFilename(24))
+	puzzle, err := NewDay24(lines)
 	if err != nil {
 		t.Fatal(err)
 	}
-	puzzle := NewDay24(lines)
 
 	tests := []struct {
 		minute   uint
@@ -103,25 +67,9 @@ func TestDay24Part1AllMinutes(t *testing.T) {
 }
 
 func BenchmarkDay24Part1(b *testing.B) {
-	lines, err := linesFromFilename(filename(24))
-	if err != nil {
-		b.Fatal(err)
-	}
-	puzzle := NewDay24(lines)
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		_ = Day24(puzzle, true)
-	}
+	benchWithParser(b, 24, true, NewDay24, Day24)
 }
 
 func BenchmarkDay24Part2(b *testing.B) {
-	lines, err := linesFromFilename(filename(24))
-	if err != nil {
-		b.Fatal(err)
-	}
-	puzzle := NewDay24(lines)
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		_ = Day24(puzzle, false)
-	}
+	benchWithParser(b, 24, false, NewDay24, Day24)
 }
