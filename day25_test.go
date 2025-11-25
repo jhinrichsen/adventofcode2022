@@ -162,14 +162,14 @@ func TestDay25ReverseDec(t *testing.T) {
 
 func BenchmarkDay25StraightAdd(b *testing.B) {
 	lines := linesFromFilename(b, filename(25))
-	for range b.N {
+	for b.Loop() {
 		_ = Day25(lines)
 	}
 }
 
 func BenchmarkDay25SnafuToDec(b *testing.B) {
 	lines := linesFromFilename(b, filename(25))
-	for range b.N {
+	for b.Loop() {
 		var sum int
 		for _, line := range lines {
 			sum += SnafuToDec(Snafu(line))
