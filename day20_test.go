@@ -135,14 +135,14 @@ func mixAndGetArrangement(srcs []int, mixRounds int, part1 bool) []int {
 
 func BenchmarkDay20Part1(b *testing.B) {
 	ns := numbersFromFilename(b, filename(20))
-	for range b.N {
+	for b.Loop() {
 		_ = Day20(ns, 1, true)
 	}
 }
 
 func BenchmarkDay20Part2(b *testing.B) {
 	ns := numbersFromFilename(b, filename(20))
-	for range b.N {
+	for b.Loop() {
 		_ = Day20(ns, 10, false)
 	}
 }
