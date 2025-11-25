@@ -67,7 +67,7 @@ func BenchmarkDay17Part1(b *testing.B) {
 	)
 	lines := linesFromFilename(b, filename(17))
 	input := strings.Join(lines, "")
-	for range b.N {
+	for b.Loop() {
 		Day17(input, rocks)
 	}
 }
@@ -78,7 +78,7 @@ func BenchmarkDay17Part2(b *testing.B) {
 	)
 	lines := linesFromFilename(b, filename(17))
 	input := strings.Join(lines, "")
-	for range b.N {
+	for b.Loop() {
 		Day17(input, rocks)
 	}
 }
