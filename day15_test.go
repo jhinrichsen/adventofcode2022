@@ -40,14 +40,14 @@ func TestDay15Part2(t *testing.T) {
 
 func BenchmarkDay15Part1(b *testing.B) {
 	lines := linesFromFilename(b, filename(15))
-	for range b.N {
+	for b.Loop() {
 		_ = Day15(lines, 2000000, 4000000, true) // Real puzzle uses y=2000000, max=4000000
 	}
 }
 
 func BenchmarkDay15Part2(b *testing.B) {
 	lines := linesFromFilename(b, filename(15))
-	for range b.N {
+	for b.Loop() {
 		_ = Day15(lines, 2000000, 4000000, false) // Real puzzle uses max=4000000
 	}
 }
