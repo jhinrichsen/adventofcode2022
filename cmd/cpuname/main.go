@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
@@ -10,42 +9,26 @@ import (
 )
 
 func main() {
-	// Run a minimal test to get CPU name from go test output (line 4)
-	cmd := exec.Command("go", "test", "-bench=Day01Part1", "-run=^$", "-benchtime=1x")
+	cmd := exec.Command("go", "test", "-run=^$", "-bench=BenchmarkDetectCPU", "-benchtime=1ns", "./cmd/cpuname")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "go test failed: %v\n", err)
+		fmt.Fprintf(os.Stderr, "failed to detect CPU: %v\n", err)
 		os.Exit(1)
 	}
 
-	// Parse the output to find "cpu: " line
-	scanner := bufio.NewScanner(strings.NewReader(string(output)))
-	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.HasPrefix(line, "cpu: ") {
-			cpuName := strings.TrimPrefix(line, "cpu: ")
-			// Clean up the CPU name for use in filename (make-safe)
-			cpuName = cleanCPUName(cpuName)
-			fmt.Print(cpuName)
-			return
-		}
+	re := regexp.MustCompile(`(?m)^cpu:\s+(.+)$`)
+	matches := re.FindStringSubmatch(string(output))
+	if len(matches) < 2 {
+		fmt.Fprintf(os.Stderr, "could not find CPU info in benchmark output\n")
+		os.Exit(1)
 	}
 
-	fmt.Fprintf(os.Stderr, "CPU line not found in go test output\n")
-	os.Exit(1)
-}
+	cpuName := matches[1]
+	// Remove only parentheses (interfere with Make)
+	cpuName = strings.ReplaceAll(cpuName, "(", "")
+	cpuName = strings.ReplaceAll(cpuName, ")", "")
+	// Replace spaces with underscores (Make requirement)
+	cpuName = strings.ReplaceAll(cpuName, " ", "_")
 
-func cleanCPUName(cpuName string) string {
-	// Remove "CPU @ speed" suffix
-	cpuName = regexp.MustCompile(`\s+CPU.*$`).ReplaceAllString(cpuName, "")
-	cpuName = regexp.MustCompile(`\s+@.*$`).ReplaceAllString(cpuName, "")
-	// Replace special characters (make-unsafe chars) with underscores
-	cpuName = regexp.MustCompile(`[()@/\s]+`).ReplaceAllString(cpuName, "_")
-	// Collapse multiple underscores
-	cpuName = regexp.MustCompile(`_+`).ReplaceAllString(cpuName, "_")
-	// Trim leading/trailing underscore
-	cpuName = strings.Trim(cpuName, "_")
-	// Lowercase for consistency
-	cpuName = strings.ToLower(cpuName)
-	return cpuName
+	fmt.Print(cpuName)
 }
