@@ -1,13 +1,3 @@
-coverage.txt
-coverage.xml
-test.log
-junit.xml
-golangci-lint.json
-gl-code-quality-report.json
-govulncheck.sarif
-17
-template_test.go
-template.go
-testdata/day00_example.txt
-README.html
-README.pdf
+.cpuname
+.vscode/
+target/
